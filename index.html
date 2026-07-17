@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Control de Gastos · Beta</title>
+
+<style>
+/* =========================================================
+   TOKENS DE DISEÑO
+   Todo el look está centralizado aquí. Cuando llegue la
+   propuesta de branding, solo hay que cambiar estas variables
+   (y la tipografía importada abajo) — el resto de la app no
+   necesita tocarse.
+   ========================================================= */
+:root{
+  --bg:        #EFEAE0;   /* fondo general, tono "papel kraft" */
+  --paper:     #FBF8F2;   /* tarjetas / recibo */
+  --ink:       #232323;   /* texto principal */
+  --muted:     #6f6a5e;   /* texto secundario */
+  --line:      #d8d0bd;   /* líneas y bordes */
+  --accent:    #2f6f5e;   /* verde tinta — acciones principales */
+  --accent-2:  #b5482c;   /* terracota oscuro — alertas / gasto */
+  --ok:        #2f6f5e;
+  --danger:    #b5482c;
+  --radius:    10px;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'Space Mono', 'Courier New', monospace;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+*{ box-sizing: border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app{
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--bg);
+  padding-bottom: 88px; /* espacio para nav inferior */
+  position: relative;
+}
+
+/* ---------- Header ---------- */
+header.top{
+  padding: 22px 20px 16px;
+  border-bottom: 2px solid var(--ink);
+}
+header.top h1{
+  font-family: var(--font-display);
+  font-size: 26px;
+  margin: 0 0 2px;
+  letter-spacing: 0.3px;
+}
+header.top p{
+  margin:0;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ---------- Cards resumen ---------- */
+.summary-row{
+  display:flex;
+  gap:10px;
+  padding: 16px 20px 4px;
+}
+.summary-card{
+  flex:1;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 10px;
+  text-align:center;
+}
+.summary-card .label{
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+.summary-card .value{
+  font-family: var(--font-mono);
+  font-weight:700;
+  font-size: 17px;
+  margin-top: 4px;
+}
+
+/* ---------- Botones grandes de acción ---------- */
+.action-row{
+  display:flex;
+  gap: 10px;
+  padding: 14px 20px 6px;
+}
+.big-btn{
+  flex:1;
+  border:none;
+  border-radius: var(--radius);
+  padding: 16px 10px;
+  font-family: var(--font-body);
+  font-weight:600;
+  font-size: 14px;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  transition: transform .08s ease;
+}
+.big-btn:active{ transform: scale(0.97); }
+.big-btn .icon{ font-size: 22px; }
+.big-btn.primary{ background: var(--accent); color: #fff; }
+.big-btn.secondary{ background: var(--paper); color: var(--ink); border:1px solid var(--line); }
+
+/* ---------- Tabs ---------- */
+.tabs{
+  display:flex;
+  gap:6px;
+  padding: 18px 20px 8px;
+}
+.tab{
+  flex:1;
+  text-align:center;
+  padding: 8px 4px;
+  font-size: 12.5px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--line);
+  color: var(--muted);
+  cursor:pointer;
+  background:none;
+  border-top:none; border-left:none; border-right:none;
+}
+.tab.active{
+  color: var(--ink);
+  border-bottom: 2px solid var(--ink);
+  font-weight: 700;
+}
+
+/* ---------- Secciones ---------- */
+section{ padding: 6px 20px 10px; }
+.section-title{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 14px 0 8px;
+}
+
+/* ---------- Recibo / lista de tickets ---------- */
+.ticket{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  display:flex;
+  gap: 10px;
+  align-items:center;
+  position:relative;
+}
+.ticket .thumb{
+  width: 40px; height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: var(--line);
+  flex-shrink:0;
+}
+.ticket .info{ flex:1; min-width:0; }
+.ticket .store{ font-weight:600; font-size: 14px; }
+.ticket .meta{ font-size: 11.5px; color: var(--muted); margin-top:2px; }
+.ticket .amount{
+  font-family: var(--font-mono);
+  font-weight:700;
+  font-size: 15px;
+  white-space:nowrap;
+}
+.ticket .del{
+  background:none; border:none; color: var(--muted);
+  font-size: 15px; cursor:pointer; padding: 4px;
+}
+.empty-state{
+  text-align:center;
+  color: var(--muted);
+  font-size: 13.5px;
+  padding: 30px 10px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+/* ---------- Barras categoría (mensual) ---------- */
+.cat-bar-row{ margin-bottom: 10px; }
+.cat-bar-row .cat-top{
+  display:flex; justify-content:space-between;
+  font-size: 12.5px; margin-bottom: 4px;
+}
+.cat-bar-row .cat-top .amt{ font-family: var(--font-mono); font-weight:700; }
+.cat-bar-track{
+  background: var(--line);
+  border-radius: 6px;
+  height: 8px;
+  overflow:hidden;
+}
+.cat-bar-fill{
+  height:100%;
+  background: var(--accent);
+  border-radius: 6px;
+}
+
+/* ---------- Formulario (edición / nuevo) ---------- */
+.form-view{ padding: 16px 20px 20px; }
+.form-view .back{
+  background:none; border:none; color: var(--muted);
+  font-family: var(--font-mono); font-size: 12px;
+  cursor:pointer; padding: 0 0 12px; text-transform:uppercase;
+}
+.preview-wrap{ text-align:center; margin-bottom: 14px; }
+.preview-wrap img{
+  max-width: 100%;
+  max-height: 220px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+}
+.field{ margin-bottom: 14px; }
+.field label{
+  display:block;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.field input, .field select{
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+}
+.field input:focus, .field select:focus{ outline: 2px solid var(--accent); outline-offset: 1px; }
+.field.amount input{ font-family: var(--font-mono); font-weight:700; font-size: 18px; }
+.hint{ font-size: 11.5px; color: var(--muted); margin-top: 4px; }
+.hint.warn{ color: var(--accent-2); }
+
+.items-section{
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  padding: 12px 12px 6px;
+  margin-bottom: 14px;
+}
+.items-section .items-title{
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.item-row{
+  display:grid;
+  grid-template-columns: 1fr 44px 64px 24px;
+  gap: 6px;
+  align-items:center;
+  margin-bottom: 8px;
+}
+.item-row input{
+  width: 100%;
+  padding: 8px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+.item-row input.qty, .item-row input.cost{ font-family: var(--font-mono); text-align:right; }
+.item-row .item-del{
+  background:none; border:none; color: var(--muted);
+  font-size: 15px; cursor:pointer; padding:2px;
+}
+.item-row-labels{
+  display:grid;
+  grid-template-columns: 1fr 44px 64px 24px;
+  gap:6px;
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.add-item-btn{
+  width:100%;
+  background: none;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 9px;
+  font-size: 13px;
+  color: var(--accent);
+  font-weight:600;
+  cursor:pointer;
+  margin: 4px 0 10px;
+}
+.items-summary{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+  margin-bottom: 4px;
+  font-size: 12.5px;
+}
+.items-summary .sum-val{ font-family: var(--font-mono); font-weight:700; }
+.use-sum-btn{
+  background:none;
+  border:none;
+  color: var(--accent);
+  font-size: 11.5px;
+  text-decoration: underline;
+  cursor:pointer;
+  padding: 0;
+}
+.items-empty{
+  font-size: 12px;
+  color: var(--muted);
+  text-align:center;
+  padding: 6px 0 2px;
+}
+
+.save-btn{
+  width:100%;
+  background: var(--accent);
+  color:#fff;
+  border:none;
+  padding: 15px;
+  border-radius: var(--radius);
+  font-weight:700;
+  font-size: 15px;
+  cursor:pointer;
+  margin-top: 6px;
+}
+.cancel-link{
+  display:block;
+  text-align:center;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  background:none; border:none; cursor:pointer;
+  text-decoration: underline;
+}
+
+/* ---------- Overlay de carga (OCR) ---------- */
+#loadingOverlay{
+  position: fixed; inset:0;
+  background: rgba(35,35,35,0.88);
+  color:#fff;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:14px;
+  z-index: 999;
+  text-align:center;
+  padding: 20px;
+}
+#loadingOverlay.show{ display:flex; }
+.spinner{
+  width: 34px; height:34px;
+  border: 3px solid rgba(255,255,255,0.25);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg); } }
+#loadingOverlay .pct{ font-family: var(--font-mono); font-size: 13px; color: #ddd; }
+
+/* ---------- Nav inferior ---------- */
+nav.bottom{
+  position: fixed;
+  bottom:0; left:50%; transform: translateX(-50%);
+  width: 100%; max-width: 480px;
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+  display:flex;
+  z-index: 50;
+}
+nav.bottom button{
+  flex:1;
+  background:none; border:none;
+  padding: 12px 4px 10px;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  font-size: 10.5px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor:pointer;
+}
+nav.bottom button .ic{ font-size: 19px; }
+nav.bottom button.active{ color: var(--ink); font-weight:700; }
+
+.view{ display:none; }
+.view.active{ display:block; }
+
+#fileInputCamera, #fileInputManualHidden{ display:none; }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ HEADER ============ -->
+  <header class="top">
+    <h1>Control de Gastos</h1>
+    <p id="todayLabel">—</p>
+  </header>
+
+  <!-- ============ VISTA: DASHBOARD ============ -->
+  <div class="view active" id="view-dashboard">
+
+    <div class="summary-row">
+      <div class="summary-card">
+        <div class="label">Hoy</div>
+        <div class="value" id="sumToday">$0.00</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Semana</div>
+        <div class="value" id="sumWeek">$0.00</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Mes</div>
+        <div class="value" id="sumMonth">$0.00</div>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="big-btn primary" id="btnPhoto">
+        <span class="icon">📷</span> Subir foto
+      </button>
+      <button class="big-btn secondary" id="btnManual">
+        <span class="icon">✏️</span> Crear ticket
+      </button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-period="day">Diario</button>
+      <button class="tab" data-period="week">Semanal</button>
+      <button class="tab" data-period="month">Mensual</button>
+    </div>
+
+    <section id="periodContent"></section>
+
+  </div>
+
+  <!-- ============ VISTA: HISTORIAL ============ -->
+  <div class="view" id="view-history">
+    <section>
+      <div class="section-title">Todos los tickets</div>
+      <div id="historyList"></div>
+    </section>
+  </div>
+
+  <!-- ============ VISTA: FORMULARIO (editar/crear) ============ -->
+  <div class="view" id="view-form">
+    <div class="form-view">
+      <button class="back" id="btnBack">← Cancelar</button>
+
+      <div class="preview-wrap" id="previewWrap" style="display:none;">
+        <img id="previewImg" alt="Foto del ticket">
+      </div>
+
+      <div id="ocrHint" class="hint" style="display:none; margin-bottom:12px;"></div>
+
+      <div class="field">
+        <label for="fStore">Comercio</label>
+        <select id="fStore"></select>
+      </div>
+
+      <div class="field" id="fStoreOtherWrap" style="display:none;">
+        <label for="fStoreOther">Nombre del comercio</label>
+        <input type="text" id="fStoreOther" placeholder="Ej. Tienda local">
+      </div>
+
+      <div class="field">
+        <label for="fCategory">Categoría</label>
+        <select id="fCategory"></select>
+      </div>
+
+      <div class="field">
+        <label for="fDescription">Descripción</label>
+        <input type="text" id="fDescription" placeholder="Ej. Despensa de la semana">
+      </div>
+
+      <div class="field">
+        <label for="fDate">Fecha</label>
+        <input type="date" id="fDate">
+      </div>
+
+      <div class="items-section">
+        <div class="items-title">Productos (opcional)</div>
+        <div class="item-row-labels" id="itemLabels" style="display:none;">
+          <span>Descripción</span><span>Cant.</span><span>Costo</span><span></span>
+        </div>
+        <div id="itemsContainer"></div>
+        <div class="items-empty" id="itemsEmptyMsg">Agrega los productos del ticket si quieres llevar el detalle.</div>
+        <button type="button" class="add-item-btn" id="btnAddItem">+ Agregar producto</button>
+        <div class="items-summary" id="itemsSummaryRow" style="display:none;">
+          <span>Suma de productos: <span class="sum-val" id="itemsSumValue">$0.00</span></span>
+          <button type="button" class="use-sum-btn" id="btnUseSumAsTotal">Usar como total</button>
+        </div>
+      </div>
+
+      <div class="field amount">
+        <label for="fAmount">Total (MXN)</label>
+        <input type="number" id="fAmount" step="0.01" min="0" placeholder="0.00">
+        <div class="hint" id="totalMismatchHint" style="display:none;"></div>
+      </div>
+
+      <button class="save-btn" id="btnSave">Guardar gasto</button>
+      <button class="cancel-link" id="btnCancel2">Cancelar</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Overlay de procesamiento OCR -->
+<div id="loadingOverlay">
+  <div class="spinner"></div>
+  <div>Leyendo el ticket…</div>
+  <div class="pct" id="ocrPct">0%</div>
+</div>
+
+<!-- Inputs de archivo (ocultos) -->
+<input type="file" accept="image/*" capture="environment" id="fileInputCamera">
+<input type="file" accept="image/*" id="fileInputManualHidden">
+
+<!-- ============ NAV INFERIOR ============ -->
+<nav class="bottom">
+  <button data-view="dashboard" class="active"><span class="ic">🏠</span>Inicio</button>
+  <button data-view="form-new"><span class="ic">➕</span>Nuevo</button>
+  <button data-view="history"><span class="ic">🧾</span>Historial</button>
+</nav>
+
+<!-- Tesseract.js vía CDN — necesario para el OCR en el navegador -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<script>
+/* =========================================================
+   DATOS: comercios de México y categorías
+   ========================================================= */
+const STORES = [
+  { name: "OXXO", category: "Conveniencia" },
+  { name: "7-Eleven", category: "Conveniencia" },
+  { name: "Waldo's", category: "Conveniencia" },
+  { name: "Walmart", category: "Supermercado" },
+  { name: "Walmart Express", category: "Supermercado" },
+  { name: "Bodega Aurrerá", category: "Supermercado" },
+  { name: "Sam's Club", category: "Club de precios" },
+  { name: "Costco", category: "Club de precios" },
+  { name: "Chedraui", category: "Supermercado" },
+  { name: "Soriana", category: "Supermercado" },
+  { name: "La Comer / City Market", category: "Supermercado" },
+  { name: "HEB", category: "Supermercado" },
+  { name: "Casa Ley", category: "Supermercado" },
+  { name: "Farmacias Guadalajara", category: "Salud/Farmacia" },
+  { name: "Farmacias del Ahorro", category: "Salud/Farmacia" },
+  { name: "Farmacias Similares", category: "Salud/Farmacia" },
+  { name: "Home Depot", category: "Hogar/Ferretería" },
+  { name: "Liverpool", category: "Tienda departamental" },
+  { name: "Coppel", category: "Tienda departamental" },
+  { name: "Elektra", category: "Tienda departamental" },
+  { name: "Otro", category: "" }
+];
+
+const CATEGORIES = [
+  "Supermercado","Conveniencia","Club de precios","Salud/Farmacia",
+  "Hogar/Ferretería","Tienda departamental","Comida/Restaurante",
+  "Transporte","Entretenimiento","Servicios","Otros"
+];
+
+// Alias para detectar el comercio dentro del texto OCR (todo en mayúsculas, sin acentos)
+const STORE_ALIASES = [
+  { match: "OXXO", store: "OXXO" },
+  { match: "7 ELEVEN", store: "7-Eleven" },
+  { match: "7-ELEVEN", store: "7-Eleven" },
+  { match: "WALDOS", store: "Waldo's" },
+  { match: "BODEGA AURRERA", store: "Bodega Aurrerá" },
+  { match: "WALMART EXPRESS", store: "Walmart Express" },
+  { match: "WALMART", store: "Walmart" },
+  { match: "SAMS CLUB", store: "Sam's Club" },
+  { match: "SAM'S CLUB", store: "Sam's Club" },
+  { match: "COSTCO", store: "Costco" },
+  { match: "CHEDRAUI", store: "Chedraui" },
+  { match: "SORIANA", store: "Soriana" },
+  { match: "CITY MARKET", store: "La Comer / City Market" },
+  { match: "LA COMER", store: "La Comer / City Market" },
+  { match: "HEB", store: "HEB" },
+  { match: "CASA LEY", store: "Casa Ley" },
+  { match: "FARMACIAS GUADALAJARA", store: "Farmacias Guadalajara" },
+  { match: "FARMACIA GUADALAJARA", store: "Farmacias Guadalajara" },
+  { match: "FARMACIAS DEL AHORRO", store: "Farmacias del Ahorro" },
+  { match: "FARMACIAS SIMILARES", store: "Farmacias Similares" },
+  { match: "HOME DEPOT", store: "Home Depot" },
+  { match: "LIVERPOOL", store: "Liverpool" },
+  { match: "COPPEL", store: "Coppel" },
+  { match: "ELEKTRA", store: "Elektra" }
+];
+
+/* =========================================================
+   INDEXEDDB — almacenamiento local del dispositivo
+   Nota: es local al navegador/dispositivo. Si el usuario borra
+   datos del navegador o cambia de celular, se pierde el historial.
+   Para el beta está bien; a futuro conviene sincronizar con backend.
+   ========================================================= */
+let db;
+function openDB(){
+  return new Promise((resolve, reject)=>{
+    const req = indexedDB.open("gastosDB", 1);
+    req.onupgradeneeded = (e)=>{
+      const _db = e.target.result;
+      if(!_db.objectStoreNames.contains("tickets")){
+        const store = _db.createObjectStore("tickets", { keyPath:"id", autoIncrement:true });
+        store.createIndex("date", "date", { unique:false });
+      }
+    };
+    req.onsuccess = (e)=>{ db = e.target.result; resolve(db); };
+    req.onerror = (e)=> reject(e);
+  });
+}
+function addTicket(ticket){
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction("tickets","readwrite");
+    const req = tx.objectStore("tickets").add(ticket);
+    req.onsuccess = ()=> resolve(req.result);
+    req.onerror = (e)=> reject(e);
+  });
+}
+function getAllTickets(){
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction("tickets","readonly");
+    const req = tx.objectStore("tickets").getAll();
+    req.onsuccess = ()=> resolve(req.result.sort((a,b)=> b.date.localeCompare(a.date) || b.id-a.id));
+    req.onerror = (e)=> reject(e);
+  });
+}
+function deleteTicket(id){
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction("tickets","readwrite");
+    const req = tx.objectStore("tickets").delete(id);
+    req.onsuccess = ()=> resolve();
+    req.onerror = (e)=> reject(e);
+  });
+}
+
+/* =========================================================
+   UTILIDADES DE FECHA
+   ========================================================= */
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function fmtMoney(n){ return "$" + (Number(n)||0).toFixed(2); }
+function startOfWeek(d){
+  const date = new Date(d);
+  const day = (date.getDay()+6)%7; // lunes=0
+  date.setDate(date.getDate()-day);
+  return date;
+}
+function isInCurrentWeek(dateStr){
+  const d = new Date(dateStr+"T00:00:00");
+  const now = new Date();
+  const start = startOfWeek(now); start.setHours(0,0,0,0);
+  const end = new Date(start); end.setDate(end.getDate()+6); end.setHours(23,59,59,999);
+  return d>=start && d<=end;
+}
+function isInCurrentMonth(dateStr){
+  const d = new Date(dateStr+"T00:00:00");
+  const now = new Date();
+  return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+}
+const DIAS = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
+
+/* =========================================================
+   OCR: extracción heurística de comercio / fecha / total
+   Esto es "mejor esfuerzo" — por eso SIEMPRE se muestra la
+   pantalla de edición para que el usuario confirme o corrija.
+   ========================================================= */
+function parseTicketText(rawText){
+  const text = (rawText||"").toUpperCase();
+  const lines = text.split("\n").map(l=>l.trim()).filter(Boolean);
+
+  // 1) Comercio
+  let detectedStore = "";
+  for(const alias of STORE_ALIASES){
+    if(text.includes(alias.match)){ detectedStore = alias.store; break; }
+  }
+
+  // 2) Fecha (formato típico MX: dd/mm/aaaa)
+  let detectedDate = "";
+  const dateMatch = text.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
+  if(dateMatch){
+    let [, d, m, y] = dateMatch;
+    if(y.length===2) y = "20"+y;
+    const dd = d.padStart(2,"0"), mm = m.padStart(2,"0");
+    if(Number(mm)>=1 && Number(mm)<=12 && Number(dd)>=1 && Number(dd)<=31){
+      detectedDate = `${y}-${mm}-${dd}`;
+    }
+  }
+
+  // 3) Total — prioriza la línea que dice "TOTAL" (y no "SUBTOTAL")
+  const moneyRegex = /\d{1,3}(?:,\d{3})*(?:\.\d{2})|\d+\.\d{2}/g;
+  let detectedTotal = "";
+  const totalLine = lines.find(l => l.includes("TOTAL") && !l.includes("SUBTOTAL"));
+  if(totalLine){
+    const nums = totalLine.match(moneyRegex);
+    if(nums) detectedTotal = nums[nums.length-1].replace(/,/g,"");
+  }
+  if(!detectedTotal){
+    const all = text.match(moneyRegex) || [];
+    const nums = all.map(n=>parseFloat(n.replace(/,/g,""))).filter(n=>!isNaN(n));
+    if(nums.length) detectedTotal = Math.max(...nums).toFixed(2);
+  }
+
+  return { store: detectedStore, date: detectedDate, total: detectedTotal };
+}
+
+/* =========================================================
+   IMAGEN: redimensionar/comprimir antes de OCR y guardado
+   (evita imágenes gigantes de la cámara y acelera el OCR)
+   ========================================================= */
+function fileToCompressedDataURL(file, maxWidth){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const scale = Math.min(1, maxWidth/img.width);
+        const w = Math.round(img.width*scale), h = Math.round(img.height*scale);
+        const canvas = document.createElement("canvas");
+        canvas.width=w; canvas.height=h;
+        canvas.getContext("2d").drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL("image/jpeg", 0.78));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* =========================================================
+   ESTADO Y NAVEGACIÓN ENTRE VISTAS
+   ========================================================= */
+let currentPeriod = "day";
+let pendingImageData = null; // imagen (dataURL comprimido) del ticket en edición
+
+function showView(name){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById("view-"+name).classList.add("active");
+  document.querySelectorAll("nav.bottom button").forEach(b=>b.classList.remove("active"));
+  const navBtn = document.querySelector(`nav.bottom button[data-view="${name==='form-new'?'form-new':name}"]`);
+  if(navBtn) navBtn.classList.add("active");
+  if(name==="dashboard") refreshDashboard();
+  if(name==="history") refreshHistory();
+}
+
+/* Poblar selects del formulario */
+const fStore = document.getElementById("fStore");
+const fCategory = document.getElementById("fCategory");
+STORES.forEach(s=>{
+  const opt = document.createElement("option");
+  opt.value = s.name; opt.textContent = s.name;
+  fStore.appendChild(opt);
+});
+CATEGORIES.forEach(c=>{
+  const opt = document.createElement("option");
+  opt.value = c; opt.textContent = c;
+  fCategory.appendChild(opt);
+});
+
+fStore.addEventListener("change", ()=>{
+  const otherWrap = document.getElementById("fStoreOtherWrap");
+  otherWrap.style.display = fStore.value==="Otro" ? "block" : "none";
+  const found = STORES.find(s=>s.name===fStore.value);
+  if(found && found.category) fCategory.value = found.category;
+});
+
+/* =========================================================
+   PRODUCTOS DEL TICKET (descripción, cantidad, costo)
+   La suma de productos NO se copia automáticamente al Total:
+   muchos tickets tienen impuestos, propina o descuentos que
+   no aparecen como líneas de producto, así que forzar
+   total = suma de productos generaría reportes incorrectos.
+   El usuario decide con el botón "Usar como total".
+   ========================================================= */
+let itemRowSeq = 0;
+const itemsContainer = document.getElementById("itemsContainer");
+
+function addItemRow(data={ description:"", quantity:1, cost:"" }){
+  const rowId = "item-" + (itemRowSeq++);
+  const row = document.createElement("div");
+  row.className = "item-row";
+  row.dataset.rowId = rowId;
+  row.innerHTML = `
+    <input type="text" class="desc" placeholder="Producto" value="${escapeAttr(data.description)}">
+    <input type="number" class="qty" min="0" step="1" value="${data.quantity}">
+    <input type="number" class="cost" min="0" step="0.01" value="${data.cost}">
+    <button type="button" class="item-del" title="Eliminar producto">✕</button>
+  `;
+  itemsContainer.appendChild(row);
+  row.querySelector(".item-del").addEventListener("click", ()=>{ row.remove(); refreshItemsUI(); });
+  row.querySelectorAll("input").forEach(inp=> inp.addEventListener("input", refreshItemsUI));
+  refreshItemsUI();
+}
+
+function escapeAttr(str){
+  return (str||"").replace(/"/g,"&quot;");
+}
+
+function getItemsData(){
+  return Array.from(itemsContainer.querySelectorAll(".item-row")).map(row=>{
+    const description = row.querySelector(".desc").value.trim();
+    const quantity = parseFloat(row.querySelector(".qty").value) || 0;
+    const cost = parseFloat(row.querySelector(".cost").value) || 0;
+    return { description, quantity, cost, subtotal: quantity*cost };
+  });
+}
+
+function refreshItemsUI(){
+  const items = getItemsData();
+  const hasItems = items.length>0;
+  document.getElementById("itemLabels").style.display = hasItems ? "grid" : "none";
+  document.getElementById("itemsEmptyMsg").style.display = hasItems ? "none" : "block";
+  const sum = items.reduce((a,i)=>a+i.subtotal,0);
+  document.getElementById("itemsSummaryRow").style.display = hasItems ? "flex" : "none";
+  document.getElementById("itemsSumValue").textContent = fmtMoney(sum);
+  checkTotalMismatch(sum, hasItems);
+}
+
+function checkTotalMismatch(itemsSum, hasItems){
+  const hint = document.getElementById("totalMismatchHint");
+  const totalVal = parseFloat(document.getElementById("fAmount").value) || 0;
+  if(hasItems && totalVal>0 && Math.abs(totalVal-itemsSum) > 0.01){
+    hint.style.display = "block";
+    hint.className = "hint warn";
+    hint.textContent = `El total no coincide con la suma de productos (${fmtMoney(itemsSum)}). Puede ser normal si hay impuestos, propina o descuento.`;
+  } else {
+    hint.style.display = "none";
+  }
+}
+
+document.getElementById("btnAddItem").addEventListener("click", ()=> addItemRow());
+document.getElementById("btnUseSumAsTotal").addEventListener("click", ()=>{
+  const items = getItemsData();
+  const sum = items.reduce((a,i)=>a+i.subtotal,0);
+  document.getElementById("fAmount").value = sum.toFixed(2);
+  checkTotalMismatch(sum, items.length>0);
+});
+document.getElementById("fAmount").addEventListener("input", ()=>{
+  const items = getItemsData();
+  const sum = items.reduce((a,i)=>a+i.subtotal,0);
+  checkTotalMismatch(sum, items.length>0);
+});
+
+function clearItemsUI(){
+  itemsContainer.innerHTML = "";
+  refreshItemsUI();
+}
+
+/* Abrir formulario en blanco o con datos de OCR */
+function openForm({ image=null, store="", date="", total="", ocrMessage="" }={}){
+  pendingImageData = image;
+  const previewWrap = document.getElementById("previewWrap");
+  const previewImg = document.getElementById("previewImg");
+  if(image){ previewImg.src = image; previewWrap.style.display="block"; }
+  else{ previewWrap.style.display="none"; }
+
+  const ocrHint = document.getElementById("ocrHint");
+  if(ocrMessage){ ocrHint.style.display="block"; ocrHint.textContent = ocrMessage; ocrHint.className = "hint warn"; }
+  else{ ocrHint.style.display="none"; }
+
+  // Comercio
+  const matchStore = STORES.find(s=>s.name===store);
+  fStore.value = matchStore ? store : "Otro";
+  document.getElementById("fStoreOtherWrap").style.display = fStore.value==="Otro" ? "block":"none";
+  document.getElementById("fStoreOther").value = matchStore ? "" : store;
+
+  // Categoría
+  fCategory.value = matchStore && matchStore.category ? matchStore.category : "Otros";
+
+  document.getElementById("fDescription").value = "";
+  document.getElementById("fDate").value = date || todayISO();
+  document.getElementById("fAmount").value = total || "";
+  clearItemsUI();
+
+  showView("form");
+}
+
+/* Guardar ticket */
+document.getElementById("btnSave").addEventListener("click", async ()=>{
+  const storeName = fStore.value==="Otro" ? (document.getElementById("fStoreOther").value.trim() || "Otro") : fStore.value;
+  const amount = parseFloat(document.getElementById("fAmount").value);
+  const date = document.getElementById("fDate").value || todayISO();
+
+  if(!amount || amount<=0){
+    alert("Ingresa un total válido antes de guardar.");
+    return;
+  }
+
+  const items = getItemsData().filter(i=> i.description || i.quantity || i.cost);
+
+  const ticket = {
+    store: storeName,
+    category: fCategory.value,
+    description: document.getElementById("fDescription").value.trim(),
+    date,
+    amount,
+    items,
+    image: pendingImageData,
+    createdAt: Date.now()
+  };
+  await addTicket(ticket);
+  pendingImageData = null;
+  showView("dashboard");
+});
+
+document.getElementById("btnBack").addEventListener("click", ()=> showView("dashboard"));
+document.getElementById("btnCancel2").addEventListener("click", ()=> showView("dashboard"));
+
+/* =========================================================
+   CAPTURA DE FOTO + OCR
+   ========================================================= */
+document.getElementById("btnPhoto").addEventListener("click", ()=>{
+  document.getElementById("fileInputCamera").click();
+});
+document.getElementById("btnManual").addEventListener("click", ()=>{
+  openForm({});
+});
+document.querySelector('nav.bottom button[data-view="form-new"]').addEventListener("click", ()=>{
+  openForm({});
+});
+
+document.getElementById("fileInputCamera").addEventListener("change", async (e)=>{
+  const file = e.target.files[0];
+  e.target.value = ""; // permite volver a elegir el mismo archivo después
+  if(!file) return;
+
+  const overlay = document.getElementById("loadingOverlay");
+  const pctEl = document.getElementById("ocrPct");
+  overlay.classList.add("show");
+  pctEl.textContent = "0%";
+
+  try{
+    const imageData = await fileToCompressedDataURL(file, 1400);
+
+    const result = await Tesseract.recognize(imageData, "spa", {
+      logger: (m)=>{
+        if(m.status==="recognizing text"){
+          pctEl.textContent = Math.round(m.progress*100) + "%";
+        }
+      }
+    });
+
+    const parsed = parseTicketText(result.data.text);
+    overlay.classList.remove("show");
+
+    let ocrMessage = "";
+    if(!parsed.total){
+      ocrMessage = "No pudimos leer el total automáticamente. Revisa la foto y complétalo a mano.";
+    } else {
+      ocrMessage = "Datos leídos automáticamente — revisa que estén correctos antes de guardar.";
+    }
+
+    openForm({
+      image: imageData,
+      store: parsed.store,
+      date: parsed.date,
+      total: parsed.total,
+      ocrMessage
+    });
+
+  }catch(err){
+    console.error(err);
+    overlay.classList.remove("show");
+    openForm({
+      image: null,
+      ocrMessage: "Ocurrió un error al procesar la imagen. Completa los datos manualmente."
+    });
+  }
+});
+
+/* =========================================================
+   DASHBOARD: resumen diario / semanal / mensual
+   ========================================================= */
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    currentPeriod = tab.dataset.period;
+    renderPeriodContent();
+  });
+});
+
+let allTicketsCache = [];
+
+async function refreshDashboard(){
+  allTicketsCache = await getAllTickets();
+  const today = todayISO();
+
+  const todayTotal = allTicketsCache.filter(t=>t.date===today).reduce((a,t)=>a+t.amount,0);
+  const weekTotal = allTicketsCache.filter(t=>isInCurrentWeek(t.date)).reduce((a,t)=>a+t.amount,0);
+  const monthTotal = allTicketsCache.filter(t=>isInCurrentMonth(t.date)).reduce((a,t)=>a+t.amount,0);
+
+  document.getElementById("sumToday").textContent = fmtMoney(todayTotal);
+  document.getElementById("sumWeek").textContent = fmtMoney(weekTotal);
+  document.getElementById("sumMonth").textContent = fmtMoney(monthTotal);
+
+  renderPeriodContent();
+}
+
+function renderPeriodContent(){
+  const container = document.getElementById("periodContent");
+  const today = todayISO();
+
+  if(currentPeriod==="day"){
+    const list = allTicketsCache.filter(t=>t.date===today);
+    container.innerHTML = `<div class="section-title">Gastos de hoy</div>` + renderTicketList(list);
+  }
+
+  if(currentPeriod==="week"){
+    const list = allTicketsCache.filter(t=>isInCurrentWeek(t.date));
+    const start = startOfWeek(new Date());
+    const byDay = {};
+    for(let i=0;i<7;i++){
+      const d = new Date(start); d.setDate(d.getDate()+i);
+      byDay[d.toISOString().slice(0,10)] = 0;
+    }
+    list.forEach(t=>{ byDay[t.date] = (byDay[t.date]||0) + t.amount; });
+    const max = Math.max(1, ...Object.values(byDay));
+
+    let html = `<div class="section-title">Esta semana por día</div>`;
+    Object.keys(byDay).forEach((dateStr, idx)=>{
+      const val = byDay[dateStr];
+      html += `
+        <div class="cat-bar-row">
+          <div class="cat-top"><span>${DIAS[idx]} · ${dateStr.slice(5)}</span><span class="amt">${fmtMoney(val)}</span></div>
+          <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(val/max*100)}%"></div></div>
+        </div>`;
+    });
+    html += `<div class="section-title">Detalle</div>` + renderTicketList(list);
+    container.innerHTML = html;
+  }
+
+  if(currentPeriod==="month"){
+    const list = allTicketsCache.filter(t=>isInCurrentMonth(t.date));
+    const byCat = {};
+    list.forEach(t=>{ byCat[t.category] = (byCat[t.category]||0) + t.amount; });
+    const max = Math.max(1, ...Object.values(byCat), 0);
+
+    let html = `<div class="section-title">Este mes por categoría</div>`;
+    if(Object.keys(byCat).length===0){
+      html += `<div class="empty-state">Aún no hay gastos registrados este mes.</div>`;
+    } else {
+      Object.entries(byCat).sort((a,b)=>b[1]-a[1]).forEach(([cat,val])=>{
+        html += `
+          <div class="cat-bar-row">
+            <div class="cat-top"><span>${cat}</span><span class="amt">${fmtMoney(val)}</span></div>
+            <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(val/max*100)}%"></div></div>
+          </div>`;
+      });
+    }
+    html += `<div class="section-title">Detalle</div>` + renderTicketList(list);
+    container.innerHTML = html;
+  }
+}
+
+function renderTicketList(list){
+  if(!list.length) return `<div class="empty-state">No hay tickets registrados en este período.</div>`;
+  return list.map(t=>`
+    <div class="ticket">
+      ${t.image ? `<img class="thumb" src="${t.image}">` : `<div class="thumb"></div>`}
+      <div class="info">
+        <div class="store">${escapeHtml(t.store)}</div>
+        <div class="meta">${t.category} · ${t.date}${t.description ? " · "+escapeHtml(t.description) : ""}${t.items && t.items.length ? " · "+t.items.length+" producto"+(t.items.length>1?"s":"") : ""}</div>
+      </div>
+      <div class="amount">${fmtMoney(t.amount)}</div>
+      <button class="del" data-id="${t.id}" title="Eliminar">🗑</button>
+    </div>
+  `).join("");
+}
+
+function escapeHtml(str){
+  const div = document.createElement("div");
+  div.textContent = str||"";
+  return div.innerHTML;
+}
+
+/* Delegación de eventos para el botón eliminar */
+document.addEventListener("click", async (e)=>{
+  if(e.target.classList.contains("del")){
+    const id = Number(e.target.dataset.id);
+    if(confirm("¿Eliminar este ticket?")){
+      await deleteTicket(id);
+      await refreshDashboard();
+      await refreshHistory();
+    }
+  }
+});
+
+/* =========================================================
+   HISTORIAL COMPLETO
+   ========================================================= */
+async function refreshHistory(){
+  const list = await getAllTickets();
+  document.getElementById("historyList").innerHTML = renderTicketList(list);
+}
+
+/* =========================================================
+   NAV INFERIOR
+   ========================================================= */
+document.querySelectorAll("nav.bottom button").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const target = btn.dataset.view;
+    if(target==="form-new") return; // ya manejado arriba (abre formulario en blanco)
+    showView(target);
+  });
+});
+
+/* =========================================================
+   INICIO
+   ========================================================= */
+(async function init(){
+  document.getElementById("todayLabel").textContent =
+    new Date().toLocaleDateString("es-MX", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
+  await openDB();
+  await refreshDashboard();
+})();
+</script>
+</body>
+</html>
