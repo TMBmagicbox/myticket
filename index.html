@@ -161,6 +161,77 @@ section{ padding: 6px 20px 10px; }
   margin: 14px 0 8px;
 }
 
+.period-nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 4px 20px 2px;
+}
+.period-nav button{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  width: 34px; height: 34px;
+  font-size: 16px;
+  color: var(--ink);
+  cursor:pointer;
+  flex-shrink:0;
+}
+.period-nav .period-label{
+  flex:1;
+  text-align:center;
+  font-weight:700;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+.today-link{
+  background:none;
+  border:none;
+  color: var(--accent);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  text-decoration: underline;
+  cursor:pointer;
+  width:auto;
+  padding: 0 6px;
+  height:auto;
+}
+
+.store-badge{
+  width: 40px; height:40px;
+  border-radius: 10px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+  position: relative;
+  overflow:hidden;
+}
+.store-badge.mono{
+  color:#fff;
+  font-family: var(--font-mono);
+  font-weight:700;
+  font-size: 14px;
+}
+.store-badge img{
+  width: 22px; height:22px;
+  object-fit: contain;
+  background:#fff;
+  border-radius: 5px;
+  padding: 3px;
+}
+.avatar-wrap{ position:relative; flex-shrink:0; }
+.photo-dot{
+  position:absolute;
+  bottom:-2px; right:-2px;
+  background: var(--ink);
+  color:#fff;
+  font-size: 8px;
+  width:16px; height:16px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  border: 1.5px solid var(--paper);
+}
+
 /* ---------- Recibo / lista de tickets ---------- */
 .ticket{
   background: var(--paper);
@@ -172,14 +243,9 @@ section{ padding: 6px 20px 10px; }
   gap: 10px;
   align-items:center;
   position:relative;
+  cursor:pointer;
 }
-.ticket .thumb{
-  width: 40px; height: 40px;
-  border-radius: 6px;
-  object-fit: cover;
-  background: var(--line);
-  flex-shrink:0;
-}
+.ticket:active{ background: #f2ede2; }
 .ticket .info{ flex:1; min-width:0; }
 .ticket .store{ font-weight:600; font-size: 14px; }
 .ticket .meta{ font-size: 11.5px; color: var(--muted); margin-top:2px; }
@@ -276,35 +342,45 @@ section{ padding: 6px 20px 10px; }
   margin-bottom: 8px;
 }
 .item-row{
-  display:grid;
-  grid-template-columns: 1fr 44px 64px 24px;
-  gap: 6px;
-  align-items:center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px;
   margin-bottom: 8px;
 }
-.item-row input{
+.item-row .row-top{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  margin-bottom: 6px;
+}
+.item-row .row-top input.desc{ flex:1; }
+.item-row .row-bottom{
+  display:grid;
+  grid-template-columns: 1.3fr 50px 70px;
+  gap: 6px;
+}
+.item-row input, .item-row select{
   width: 100%;
   padding: 8px 8px;
   border-radius: 6px;
   border: 1px solid var(--line);
   background: #fff;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 12.5px;
 }
+.item-row select.cat{ font-size: 12px; }
 .item-row input.qty, .item-row input.cost{ font-family: var(--font-mono); text-align:right; }
 .item-row .item-del{
   background:none; border:none; color: var(--muted);
-  font-size: 15px; cursor:pointer; padding:2px;
+  font-size: 16px; cursor:pointer; padding:2px 4px; flex-shrink:0;
 }
-.item-row-labels{
-  display:grid;
-  grid-template-columns: 1fr 44px 64px 24px;
-  gap:6px;
-  font-size: 9.5px;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
+.item-row .item-subtotal{
+  font-size: 10.5px;
   color: var(--muted);
-  margin-bottom: 4px;
+  text-align:right;
+  margin-top: 4px;
+  font-family: var(--font-mono);
 }
 .add-item-btn{
   width:100%;
@@ -342,6 +418,140 @@ section{ padding: 6px 20px 10px; }
   color: var(--muted);
   text-align:center;
   padding: 6px 0 2px;
+}
+
+.deducible-box{
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  background: var(--paper);
+}
+.deducible-check{
+  display:flex;
+  align-items:center;
+  gap: 9px;
+  font-size: 14px;
+  font-weight:600;
+  cursor:pointer;
+}
+.deducible-check input{ width:17px; height:17px; accent-color: var(--accent); }
+.hint.disclaimer{
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  line-height:1.4;
+}
+
+/* ---------- Vista de recibo digital ---------- */
+.receipt-page{ padding: 16px 20px 24px; }
+.receipt-card{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 20px 18px 16px;
+  font-family: var(--font-mono);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+.receipt-head{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.receipt-head .store-badge{ width:48px; height:48px; border-radius:12px; }
+.receipt-head .store-badge img{ width:26px; height:26px; }
+.receipt-head-text .rh-store{
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height:1.15;
+}
+.receipt-head-text .rh-date{
+  font-size: 11.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top:2px;
+}
+.receipt-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom: 14px; }
+.chip{
+  font-size: 10.5px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.chip.ded{ background: var(--accent); color:#fff; border-color: var(--accent); }
+.receipt-dashes{
+  border-top: 1px dashed var(--muted);
+  margin: 10px 0;
+}
+.receipt-item-line{
+  display:flex;
+  justify-content:space-between;
+  gap: 10px;
+  font-size: 12.5px;
+  margin-bottom: 6px;
+}
+.receipt-item-line .ri-desc{ flex:1; }
+.receipt-item-line .ri-desc .ri-cat{
+  display:block;
+  font-size: 9.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.receipt-item-line .ri-amt{ white-space:nowrap; font-weight:700; }
+.receipt-total-row{
+  display:flex;
+  justify-content:space-between;
+  font-size: 18px;
+  font-weight:700;
+  margin-top: 4px;
+}
+.receipt-note{
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 10px;
+  font-family: var(--font-body);
+}
+.receipt-photo-block{ margin-top: 14px; text-align:center; }
+.receipt-photo-block img{
+  max-width: 100%;
+  max-height: 260px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+.receipt-barcode{
+  margin-top: 18px;
+  height: 34px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 3px, var(--ink) 3px 4px, transparent 4px 7px, var(--ink) 7px 9px, transparent 9px 11px);
+  opacity: 0.85;
+}
+.receipt-barcode-label{
+  text-align:center;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.receipt-actions{
+  display:flex;
+  gap:10px;
+  margin-top: 18px;
+}
+.receipt-actions .save-btn{ margin-top:0; }
+.danger-btn{
+  flex-shrink:0;
+  background: none;
+  border: 1px solid var(--accent-2);
+  color: var(--accent-2);
+  border-radius: var(--radius);
+  padding: 15px 14px;
+  font-weight:700;
+  font-size: 13px;
+  cursor:pointer;
 }
 
 .save-btn{
@@ -464,6 +674,15 @@ nav.bottom button.active{ color: var(--ink); font-weight:700; }
       <button class="tab" data-period="month">Mensual</button>
     </div>
 
+    <div class="period-nav">
+      <button id="btnPeriodPrev" aria-label="Periodo anterior">‹</button>
+      <span class="period-label" id="periodLabel">—</span>
+      <button id="btnPeriodNext" aria-label="Periodo siguiente">›</button>
+    </div>
+    <div style="text-align:center; padding: 0 20px 4px;">
+      <button class="today-link" id="btnPeriodToday">Ir a hoy</button>
+    </div>
+
     <section id="periodContent"></section>
 
   </div>
@@ -513,10 +732,7 @@ nav.bottom button.active{ color: var(--ink); font-weight:700; }
       </div>
 
       <div class="items-section">
-        <div class="items-title">Productos (opcional)</div>
-        <div class="item-row-labels" id="itemLabels" style="display:none;">
-          <span>Descripción</span><span>Cant.</span><span>Costo</span><span></span>
-        </div>
+        <div class="items-title">Productos (opcional) — para saber cuánto gastas por tipo (carne, bebidas, etc.)</div>
         <div id="itemsContainer"></div>
         <div class="items-empty" id="itemsEmptyMsg">Agrega los productos del ticket si quieres llevar el detalle.</div>
         <button type="button" class="add-item-btn" id="btnAddItem">+ Agregar producto</button>
@@ -532,8 +748,29 @@ nav.bottom button.active{ color: var(--ink); font-weight:700; }
         <div class="hint" id="totalMismatchHint" style="display:none;"></div>
       </div>
 
+      <div class="deducible-box">
+        <label class="deducible-check">
+          <input type="checkbox" id="fDeducible">
+          <span>Marcar como posible gasto deducible</span>
+        </label>
+        <div class="hint" id="deducibleHint"></div>
+        <div class="hint disclaimer">Esto es solo una guía general para tu control personal, no es asesoría fiscal. Para deducir ante el SAT normalmente necesitas la <strong>factura (CFDI)</strong> a tu nombre — el ticket por sí solo casi nunca es suficiente.</div>
+      </div>
+
       <button class="save-btn" id="btnSave">Guardar gasto</button>
       <button class="cancel-link" id="btnCancel2">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ============ VISTA: RECIBO DIGITAL ============ -->
+  <div class="view" id="view-receipt">
+    <div class="receipt-page">
+      <button class="back" id="btnReceiptBack">← Volver</button>
+      <div id="receiptContent"></div>
+      <div class="receipt-actions">
+        <button class="save-btn" id="btnReceiptEdit">✏️ Editar</button>
+        <button class="danger-btn" id="btnReceiptDelete">🗑 Eliminar ticket</button>
+      </div>
     </div>
   </div>
 
@@ -565,9 +802,10 @@ nav.bottom button.active{ color: var(--ink); font-weight:700; }
    DATOS: comercios de México y categorías
    ========================================================= */
 const STORES = [
-  { name: "OXXO", category: "Conveniencia" },
-  { name: "7-Eleven", category: "Conveniencia" },
-  { name: "Waldo's", category: "Conveniencia" },
+  { name: "OXXO", category: "Conveniencia/Tiendita" },
+  { name: "7-Eleven", category: "Conveniencia/Tiendita" },
+  { name: "Waldo's", category: "Conveniencia/Tiendita" },
+  { name: "Tiendita/Abarrotes local", category: "Conveniencia/Tiendita" },
   { name: "Walmart", category: "Supermercado" },
   { name: "Walmart Express", category: "Supermercado" },
   { name: "Bodega Aurrerá", category: "Supermercado" },
@@ -581,18 +819,166 @@ const STORES = [
   { name: "Farmacias Guadalajara", category: "Salud/Farmacia" },
   { name: "Farmacias del Ahorro", category: "Salud/Farmacia" },
   { name: "Farmacias Similares", category: "Salud/Farmacia" },
-  { name: "Home Depot", category: "Hogar/Ferretería" },
+  { name: "Home Depot", category: "Ferretería/Hogar" },
+  { name: "Ferretería local", category: "Ferretería/Hogar" },
   { name: "Liverpool", category: "Tienda departamental" },
   { name: "Coppel", category: "Tienda departamental" },
   { name: "Elektra", category: "Tienda departamental" },
+  { name: "Pemex", category: "Gasolina" },
+  { name: "Shell", category: "Gasolina" },
+  { name: "BP", category: "Gasolina" },
+  { name: "Mobil", category: "Gasolina" },
+  { name: "CFE (luz)", category: "Servicios (agua, luz, internet)" },
+  { name: "Agua (organismo operador)", category: "Servicios (agua, luz, internet)" },
+  { name: "Telmex", category: "Servicios (agua, luz, internet)" },
+  { name: "Izzi", category: "Servicios (agua, luz, internet)" },
+  { name: "Totalplay", category: "Servicios (agua, luz, internet)" },
+  { name: "Netflix", category: "Streaming y plataformas" },
+  { name: "Spotify", category: "Streaming y plataformas" },
+  { name: "Disney+", category: "Streaming y plataformas" },
+  { name: "Amazon Prime Video", category: "Streaming y plataformas" },
+  { name: "HBO Max", category: "Streaming y plataformas" },
   { name: "Otro", category: "" }
 ];
 
 const CATEGORIES = [
-  "Supermercado","Conveniencia","Club de precios","Salud/Farmacia",
-  "Hogar/Ferretería","Tienda departamental","Comida/Restaurante",
-  "Transporte","Entretenimiento","Servicios","Otros"
+  "Supermercado","Conveniencia/Tiendita","Club de precios","Salud/Farmacia",
+  "Ferretería/Hogar","Tienda departamental","Comida/Restaurante","Gasolina",
+  "Transporte","Servicios (agua, luz, internet)","Streaming y plataformas",
+  "Entretenimiento","Otros"
 ];
+
+// Pistas educativas sobre deducibilidad fiscal por categoría.
+// OJO: esto NO es asesoría fiscal — solo orienta. En México, para que un
+// gasto sea deducible ante el SAT casi siempre se necesita el CFDI (factura)
+// a tu nombre/RFC; el ticket o nota de venta por sí solo normalmente no basta.
+const DEDUCIBLE_HINTS = {
+  "Gasolina": "Puede ser deducible con factura (CFDI) si pagaste con tarjeta o transferencia (el SAT no acepta efectivo para este gasto).",
+  "Servicios (agua, luz, internet)": "Deducible solo si facturas a tu nombre y usas parte del gasto para trabajo/negocio (ej. oficina en casa).",
+  "Salud/Farmacia": "Los gastos médicos y de farmacia con factura suelen ser deducibles en la declaración anual de personas físicas.",
+  "Comida/Restaurante": "Solo deducible como gasto de negocio: con factura, pago electrónico, y hasta un porcentaje límite.",
+  "Ferretería/Hogar": "Deducible únicamente si es un gasto de negocio con factura.",
+  "default": "Generalmente no es deducible para gasto personal, salvo que sea un gasto de negocio respaldado con factura."
+};
+
+// Dominios y colores para mostrar el logo/ícono del comercio en tickets y recibos.
+// No usamos imágenes de logos guardadas en el repo (evita temas de derechos de marca);
+// en su lugar se intenta cargar el favicon público del sitio del comercio, y si falla
+// se muestra una insignia con iniciales y color de marca aproximado.
+const STORE_DOMAINS = {
+  "OXXO": "oxxo.com", "7-Eleven": "7-eleven.com.mx", "Waldo's": "waldos.com.mx",
+  "Walmart": "walmart.com.mx", "Walmart Express": "walmart.com.mx",
+  "Bodega Aurrerá": "bodegaaurrera.com.mx", "Sam's Club": "sams.com.mx",
+  "Costco": "costco.com.mx", "Chedraui": "chedraui.com.mx", "Soriana": "soriana.com",
+  "La Comer / City Market": "lacomer.com.mx", "HEB": "heb.com.mx", "Casa Ley": "masley.com.mx",
+  "Farmacias Guadalajara": "farmaciasguadalajara.com", "Farmacias del Ahorro": "fahorro.com.mx",
+  "Farmacias Similares": "farmaciasimilares.com.mx", "Home Depot": "homedepot.com.mx",
+  "Liverpool": "liverpool.com.mx", "Coppel": "coppel.com", "Elektra": "elektra.com.mx",
+  "Pemex": "pemex.com", "Shell": "shell.com.mx", "BP": "bp.com", "Mobil": "mobil.com",
+  "CFE (luz)": "cfe.mx", "Telmex": "telmex.com", "Izzi": "izzi.mx", "Totalplay": "totalplay.com.mx",
+  "Netflix": "netflix.com", "Spotify": "spotify.com", "Disney+": "disneyplus.com",
+  "Amazon Prime Video": "primevideo.com", "HBO Max": "max.com"
+};
+const STORE_COLORS = {
+  "OXXO": "#E4032E", "7-Eleven": "#00703C", "Waldo's": "#F7941E",
+  "Walmart": "#0071CE", "Walmart Express": "#0071CE", "Bodega Aurrerá": "#FFC220",
+  "Sam's Club": "#004F9F", "Costco": "#E31837", "Chedraui": "#F58220", "Soriana": "#EE2E24",
+  "La Comer / City Market": "#6CC24A", "HEB": "#E4002B", "Casa Ley": "#004B87",
+  "Farmacias Guadalajara": "#0072BC", "Farmacias del Ahorro": "#00A651",
+  "Farmacias Similares": "#FDB913", "Home Depot": "#F96302", "Ferretería local": "#6f6a5e",
+  "Liverpool": "#5C2D91", "Coppel": "#E4032E", "Elektra": "#FFD100",
+  "Pemex": "#00693C", "Shell": "#FBCE07", "BP": "#00914A", "Mobil": "#EE2E24",
+  "CFE (luz)": "#00A14B", "Telmex": "#0057A6", "Izzi": "#5C2D91", "Totalplay": "#E4032E",
+  "Netflix": "#E50914", "Spotify": "#1DB954", "Disney+": "#113CCF",
+  "Amazon Prime Video": "#00A8E1", "HBO Max": "#000000", "Tiendita/Abarrotes local": "#8a6d3b",
+  "Otro": "#6f6a5e"
+};
+
+// Categorías de PRODUCTO (no de comercio) — sirven para responder
+// "¿cuánto gasté en carne / bebidas / limpieza...?" sin importar en qué tienda se compró.
+const PRODUCT_CATEGORIES = [
+  "Carnes y pescados",
+  "Lácteos y huevo",
+  "Frutas y verduras",
+  "Bebidas",
+  "Panadería y tortillería",
+  "Botanas y dulces",
+  "Abarrotes y despensa",
+  "Limpieza del hogar",
+  "Higiene personal",
+  "Mascotas",
+  "Otros"
+];
+
+// Palabras clave (en el texto del ticket, ya en mayúsculas) para sugerir
+// la categoría de cada producto detectado por OCR. Es un punto de partida:
+// el usuario siempre puede corregirla en el selector de cada producto.
+const PRODUCT_CATEGORY_KEYWORDS = [
+  { cat:"Carnes y pescados", words:["POLLO","RES","CERDO","CARNE","JAMON","CHULETA","MILANESA","CHORIZO","TOCINO","PESCADO","CAMARON","ATUN","SALCHICHA","BISTEC","MOLIDA"] },
+  { cat:"Lácteos y huevo", words:["LECHE","QUESO","YOGUR","HUEVO","CREMA","MANTEQUILLA","YOGURT"] },
+  { cat:"Frutas y verduras", words:["MANZANA","PLATANO","TOMATE","JITOMATE","CEBOLLA","LECHUGA","PAPA","AGUACATE","LIMON","NARANJA","ZANAHORIA","CHILE","FRUTA","VERDURA"] },
+  { cat:"Bebidas", words:["REFRESCO","COCA","AGUA","CERVEZA","JUGO","PEPSI","SODA","VINO","CAFE","TE ","GATORADE","BOING"] },
+  { cat:"Panadería y tortillería", words:["PAN","BOLILLO","TORTILLA","PASTEL","DONA","BIRROTE"] },
+  { cat:"Botanas y dulces", words:["PAPAS","SABRITAS","GALLETA","CHOCOLATE","DULCE","CHICLE","CACAHUATE","FRITOS","CHETOS"] },
+  { cat:"Limpieza del hogar", words:["JABON","DETERGENTE","CLORO","FABULOSO","PINOL","SUAVITEL","SERVILLETA","TRAPEADOR","ESCOBA"] },
+  { cat:"Higiene personal", words:["SHAMPOO","PASTA DENTAL","PAPEL HIGIENICO","DESODORANTE","CEPILLO","RASTRILLO","TOALLA FEMENINA","JABON DE TOCADOR"] },
+  { cat:"Mascotas", words:["CROQUETAS","PURINA","DOGCHOW","WHISKAS","PEDIGREE"] }
+];
+
+function guessProductCategory(description){
+  const text = (description||"").toUpperCase();
+  for(const entry of PRODUCT_CATEGORY_KEYWORDS){
+    if(entry.words.some(w=>text.includes(w))) return entry.cat;
+  }
+  return "Otros";
+}
+
+/* =========================================================
+   INSIGNIA DE COMERCIO (logo o iniciales)
+   No guardamos imágenes de logos de terceros en el repo (temas de
+   marca registrada). En su lugar intentamos cargar el favicon público
+   del sitio del comercio (Google favicon service, sin necesidad de
+   API key). Si falla o el comercio no tiene dominio conocido, se
+   muestra una insignia con iniciales y un color aproximado de marca.
+   ========================================================= */
+function getInitials(name){
+  const clean = (name||"?").replace(/[^a-zA-Z0-9À-ÿ\s]/g," ").trim();
+  const words = clean.split(/\s+/).filter(Boolean);
+  if(words.length===0) return "?";
+  if(words.length===1) return words[0].slice(0,2).toUpperCase();
+  return (words[0][0]+words[1][0]).toUpperCase();
+}
+function hashColor(str){
+  let hash = 0;
+  for(let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
+  const hue = Math.abs(hash)%360;
+  return `hsl(${hue},45%,42%)`;
+}
+function storeColor(name){ return STORE_COLORS[name] || hashColor(name||"?"); }
+
+function storeBadgeHTML(name){
+  const domain = STORE_DOMAINS[name];
+  const color = storeColor(name);
+  const initials = getInitials(name);
+  if(domain){
+    return `<div class="store-badge img-badge" style="background:${color}" data-initials="${escapeAttr(initials)}" data-color="${color}">
+      <img src="https://www.google.com/s2/favicons?sz=64&domain=${domain}" alt="">
+    </div>`;
+  }
+  return `<div class="store-badge mono" style="background:${color}">${initials}</div>`;
+}
+// Reemplaza el favicon por la insignia de iniciales si la imagen no carga
+// (offline, dominio caído, etc.). Se llama después de insertar el HTML en el DOM.
+function attachLogoFallbacks(container){
+  container.querySelectorAll(".img-badge img").forEach(img=>{
+    img.addEventListener("error", ()=>{
+      const badge = img.parentElement;
+      badge.classList.remove("img-badge");
+      badge.classList.add("mono");
+      badge.textContent = badge.dataset.initials || "?";
+    }, { once:true });
+  });
+}
 
 // Alias para detectar el comercio dentro del texto OCR (todo en mayúsculas, sin acentos)
 const STORE_ALIASES = [
@@ -619,7 +1005,11 @@ const STORE_ALIASES = [
   { match: "HOME DEPOT", store: "Home Depot" },
   { match: "LIVERPOOL", store: "Liverpool" },
   { match: "COPPEL", store: "Coppel" },
-  { match: "ELEKTRA", store: "Elektra" }
+  { match: "ELEKTRA", store: "Elektra" },
+  { match: "PEMEX", store: "Pemex" },
+  { match: "SHELL", store: "Shell" },
+  { match: "MOBIL", store: "Mobil" },
+  { match: "CFE", store: "CFE (luz)" }
 ];
 
 /* =========================================================
@@ -659,6 +1049,14 @@ function getAllTickets(){
     req.onerror = (e)=> reject(e);
   });
 }
+function updateTicket(ticket){
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction("tickets","readwrite");
+    const req = tx.objectStore("tickets").put(ticket);
+    req.onsuccess = ()=> resolve(req.result);
+    req.onerror = (e)=> reject(e);
+  });
+}
 function deleteTicket(id){
   return new Promise((resolve, reject)=>{
     const tx = db.transaction("tickets","readwrite");
@@ -671,7 +1069,13 @@ function deleteTicket(id){
 /* =========================================================
    UTILIDADES DE FECHA
    ========================================================= */
-function todayISO(){ return new Date().toISOString().slice(0,10); }
+function todayISO(){ return toLocalISODate(new Date()); }
+function toLocalISODate(d){
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  const dd = String(d.getDate()).padStart(2,"0");
+  return `${yyyy}-${mm}-${dd}`;
+}
 function fmtMoney(n){ return "$" + (Number(n)||0).toFixed(2); }
 function startOfWeek(d){
   const date = new Date(d);
@@ -679,17 +1083,15 @@ function startOfWeek(d){
   date.setDate(date.getDate()-day);
   return date;
 }
-function isInCurrentWeek(dateStr){
+function isInWeekOf(dateStr, refDate=new Date()){
   const d = new Date(dateStr+"T00:00:00");
-  const now = new Date();
-  const start = startOfWeek(now); start.setHours(0,0,0,0);
+  const start = startOfWeek(refDate); start.setHours(0,0,0,0);
   const end = new Date(start); end.setDate(end.getDate()+6); end.setHours(23,59,59,999);
   return d>=start && d<=end;
 }
-function isInCurrentMonth(dateStr){
+function isInMonthOf(dateStr, refDate=new Date()){
   const d = new Date(dateStr+"T00:00:00");
-  const now = new Date();
-  return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+  return d.getFullYear()===refDate.getFullYear() && d.getMonth()===refDate.getMonth();
 }
 const DIAS = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 
@@ -738,6 +1140,57 @@ function parseTicketText(rawText){
 }
 
 /* =========================================================
+   DETECCIÓN DE PRODUCTOS (líneas del ticket)
+   IMPORTANTE — límite honesto de este enfoque:
+   Tesseract solo entrega texto plano, sin columnas. No sabemos
+   con certeza qué número es "cantidad" y cuál es "precio", así
+   que NO se intenta adivinar cantidad (para no combinar dos
+   heurísticas erróneas). Cada línea con un precio al final se
+   toma como 1 producto con cantidad=1 y costo=ese precio.
+   El usuario debe revisar/corregir cantidades y categorías.
+   Para una extracción realmente confiable línea por línea
+   (con cantidades correctas) se necesitaría un modelo con
+   visión en vez de OCR de texto plano.
+   ========================================================= */
+const IGNORE_LINE_WORDS = [
+  "TOTAL","SUBTOTAL","IVA","EFECTIVO","TARJETA","CAMBIO","PAGO","GRACIAS",
+  "TICKET","FOLIO","CAJA","ATIENDE","RFC","FECHA","HORA","CLIENTE",
+  "DIRECCION","TEL","WWW","ARTICULOS","PIEZAS","DESCUENTO","PROPINA",
+  "AUTORIZACION","APROBADO","REFERENCIA","TERMINAL","CAJERO","SUCURSAL"
+];
+
+function parseLineItems(rawText){
+  const lines = (rawText||"").split("\n").map(l=>l.trim()).filter(Boolean);
+  const moneyAtEnd = /(\d{1,3}(?:,\d{3})*\.\d{2}|\d+\.\d{2})\s*$/;
+  const items = [];
+
+  for(const line of lines){
+    const upper = line.toUpperCase();
+    if(IGNORE_LINE_WORDS.some(w=>upper.includes(w))) continue;
+
+    const m = line.match(moneyAtEnd);
+    if(!m) continue;
+
+    const price = parseFloat(m[1].replace(/,/g,""));
+    if(isNaN(price) || price<=0 || price>50000) continue;
+
+    let description = line.slice(0, m.index).trim();
+    description = description.replace(/^[\d\s.xX*]+/, "").trim(); // quita código/cantidad suelta al inicio
+    if(description.length < 2) continue;
+
+    items.push({
+      description: description,
+      quantity: 1,
+      cost: price,
+      category: guessProductCategory(description)
+    });
+
+    if(items.length>=25) break; // límite de seguridad
+  }
+  return items;
+}
+
+/* =========================================================
    IMAGEN: redimensionar/comprimir antes de OCR y guardado
    (evita imágenes gigantes de la cámara y acelera el OCR)
    ========================================================= */
@@ -766,6 +1219,7 @@ function fileToCompressedDataURL(file, maxWidth){
    ESTADO Y NAVEGACIÓN ENTRE VISTAS
    ========================================================= */
 let currentPeriod = "day";
+let viewDate = new Date(); // fecha de referencia navegable (día/semana/mes que se está viendo)
 let pendingImageData = null; // imagen (dataURL comprimido) del ticket en edición
 
 function showView(name){
@@ -797,7 +1251,14 @@ fStore.addEventListener("change", ()=>{
   otherWrap.style.display = fStore.value==="Otro" ? "block" : "none";
   const found = STORES.find(s=>s.name===fStore.value);
   if(found && found.category) fCategory.value = found.category;
+  updateDeducibleHint();
 });
+
+function updateDeducibleHint(){
+  const hintEl = document.getElementById("deducibleHint");
+  hintEl.textContent = DEDUCIBLE_HINTS[fCategory.value] || DEDUCIBLE_HINTS.default;
+}
+fCategory.addEventListener("change", updateDeducibleHint);
 
 /* =========================================================
    PRODUCTOS DEL TICKET (descripción, cantidad, costo)
@@ -810,20 +1271,31 @@ fStore.addEventListener("change", ()=>{
 let itemRowSeq = 0;
 const itemsContainer = document.getElementById("itemsContainer");
 
-function addItemRow(data={ description:"", quantity:1, cost:"" }){
+function addItemRow(data={ description:"", quantity:1, cost:"", category:"Otros" }){
   const rowId = "item-" + (itemRowSeq++);
   const row = document.createElement("div");
   row.className = "item-row";
   row.dataset.rowId = rowId;
+
+  const catOptions = PRODUCT_CATEGORIES.map(c=>
+    `<option value="${c}" ${c===data.category?"selected":""}>${c}</option>`
+  ).join("");
+
   row.innerHTML = `
-    <input type="text" class="desc" placeholder="Producto" value="${escapeAttr(data.description)}">
-    <input type="number" class="qty" min="0" step="1" value="${data.quantity}">
-    <input type="number" class="cost" min="0" step="0.01" value="${data.cost}">
-    <button type="button" class="item-del" title="Eliminar producto">✕</button>
+    <div class="row-top">
+      <input type="text" class="desc" placeholder="Producto (ej. Leche 1L)" value="${escapeAttr(data.description)}">
+      <button type="button" class="item-del" title="Eliminar producto">✕</button>
+    </div>
+    <div class="row-bottom">
+      <select class="cat">${catOptions}</select>
+      <input type="number" class="qty" min="0" step="1" value="${data.quantity}" title="Cantidad">
+      <input type="number" class="cost" min="0" step="0.01" value="${data.cost}" title="Costo unitario">
+    </div>
+    <div class="item-subtotal"></div>
   `;
   itemsContainer.appendChild(row);
   row.querySelector(".item-del").addEventListener("click", ()=>{ row.remove(); refreshItemsUI(); });
-  row.querySelectorAll("input").forEach(inp=> inp.addEventListener("input", refreshItemsUI));
+  row.querySelectorAll("input, select").forEach(inp=> inp.addEventListener("input", refreshItemsUI));
   refreshItemsUI();
 }
 
@@ -836,14 +1308,20 @@ function getItemsData(){
     const description = row.querySelector(".desc").value.trim();
     const quantity = parseFloat(row.querySelector(".qty").value) || 0;
     const cost = parseFloat(row.querySelector(".cost").value) || 0;
-    return { description, quantity, cost, subtotal: quantity*cost };
+    const category = row.querySelector(".cat").value;
+    return { description, quantity, cost, category, subtotal: quantity*cost };
   });
 }
 
 function refreshItemsUI(){
+  const rows = Array.from(itemsContainer.querySelectorAll(".item-row"));
+  rows.forEach(row=>{
+    const quantity = parseFloat(row.querySelector(".qty").value) || 0;
+    const cost = parseFloat(row.querySelector(".cost").value) || 0;
+    row.querySelector(".item-subtotal").textContent = "Subtotal: " + fmtMoney(quantity*cost);
+  });
   const items = getItemsData();
   const hasItems = items.length>0;
-  document.getElementById("itemLabels").style.display = hasItems ? "grid" : "none";
   document.getElementById("itemsEmptyMsg").style.display = hasItems ? "none" : "block";
   const sum = items.reduce((a,i)=>a+i.subtotal,0);
   document.getElementById("itemsSummaryRow").style.display = hasItems ? "flex" : "none";
@@ -882,7 +1360,10 @@ function clearItemsUI(){
 }
 
 /* Abrir formulario en blanco o con datos de OCR */
-function openForm({ image=null, store="", date="", total="", ocrMessage="" }={}){
+let editingTicketId = null;
+
+function openForm({ image=null, store="", date="", total="", items=[], ocrMessage="", description="", category="", deducible=false, editingId=null }={}){
+  editingTicketId = editingId;
   pendingImageData = image;
   const previewWrap = document.getElementById("previewWrap");
   const previewImg = document.getElementById("previewImg");
@@ -899,14 +1380,18 @@ function openForm({ image=null, store="", date="", total="", ocrMessage="" }={})
   document.getElementById("fStoreOtherWrap").style.display = fStore.value==="Otro" ? "block":"none";
   document.getElementById("fStoreOther").value = matchStore ? "" : store;
 
-  // Categoría
-  fCategory.value = matchStore && matchStore.category ? matchStore.category : "Otros";
+  // Categoría (si viene explícita, ej. al editar, se respeta; si no, se deriva del comercio)
+  fCategory.value = category || (matchStore && matchStore.category ? matchStore.category : "Otros");
 
-  document.getElementById("fDescription").value = "";
+  document.getElementById("fDescription").value = description || "";
   document.getElementById("fDate").value = date || todayISO();
   document.getElementById("fAmount").value = total || "";
+  document.getElementById("fDeducible").checked = !!deducible;
+  updateDeducibleHint();
   clearItemsUI();
+  items.forEach(it=> addItemRow(it));
 
+  document.getElementById("btnSave").textContent = editingId ? "Guardar cambios" : "Guardar gasto";
   showView("form");
 }
 
@@ -930,11 +1415,19 @@ document.getElementById("btnSave").addEventListener("click", async ()=>{
     date,
     amount,
     items,
+    deducible: document.getElementById("fDeducible").checked,
     image: pendingImageData,
-    createdAt: Date.now()
+    createdAt: editingTicketId ? (ticketsById[editingTicketId]?.createdAt || Date.now()) : Date.now()
   };
-  await addTicket(ticket);
+
+  if(editingTicketId){
+    ticket.id = editingTicketId;
+    await updateTicket(ticket);
+  } else {
+    await addTicket(ticket);
+  }
   pendingImageData = null;
+  editingTicketId = null;
   showView("dashboard");
 });
 
@@ -976,11 +1469,14 @@ document.getElementById("fileInputCamera").addEventListener("change", async (e)=
     });
 
     const parsed = parseTicketText(result.data.text);
+    const detectedItems = parseLineItems(result.data.text);
     overlay.classList.remove("show");
 
     let ocrMessage = "";
     if(!parsed.total){
       ocrMessage = "No pudimos leer el total automáticamente. Revisa la foto y complétalo a mano.";
+    } else if(detectedItems.length){
+      ocrMessage = `Se detectaron ${detectedItems.length} producto(s) — revisa cantidades, costos y categorías antes de guardar.`;
     } else {
       ocrMessage = "Datos leídos automáticamente — revisa que estén correctos antes de guardar.";
     }
@@ -990,6 +1486,7 @@ document.getElementById("fileInputCamera").addEventListener("change", async (e)=
       store: parsed.store,
       date: parsed.date,
       total: parsed.total,
+      items: detectedItems,
       ocrMessage
     });
 
@@ -1016,14 +1513,16 @@ document.querySelectorAll(".tab").forEach(tab=>{
 });
 
 let allTicketsCache = [];
+let ticketsById = {}; // lookup rápido id->ticket para abrir la vista de recibo
 
 async function refreshDashboard(){
   allTicketsCache = await getAllTickets();
+  allTicketsCache.forEach(t=> ticketsById[t.id]=t);
   const today = todayISO();
 
   const todayTotal = allTicketsCache.filter(t=>t.date===today).reduce((a,t)=>a+t.amount,0);
-  const weekTotal = allTicketsCache.filter(t=>isInCurrentWeek(t.date)).reduce((a,t)=>a+t.amount,0);
-  const monthTotal = allTicketsCache.filter(t=>isInCurrentMonth(t.date)).reduce((a,t)=>a+t.amount,0);
+  const weekTotal = allTicketsCache.filter(t=>isInWeekOf(t.date)).reduce((a,t)=>a+t.amount,0);
+  const monthTotal = allTicketsCache.filter(t=>isInMonthOf(t.date)).reduce((a,t)=>a+t.amount,0);
 
   document.getElementById("sumToday").textContent = fmtMoney(todayTotal);
   document.getElementById("sumWeek").textContent = fmtMoney(weekTotal);
@@ -1032,70 +1531,158 @@ async function refreshDashboard(){
   renderPeriodContent();
 }
 
+function fmtPeriodLabel(){
+  if(currentPeriod==="day"){
+    return viewDate.toLocaleDateString("es-MX", { weekday:"long", day:"numeric", month:"long" });
+  }
+  if(currentPeriod==="week"){
+    const start = startOfWeek(viewDate);
+    const end = new Date(start); end.setDate(end.getDate()+6);
+    const sameMonth = start.getMonth()===end.getMonth();
+    const startStr = start.toLocaleDateString("es-MX", { day:"numeric", month: sameMonth?undefined:"short" });
+    const endStr = end.toLocaleDateString("es-MX", { day:"numeric", month:"short", year:"numeric" });
+    return `${startStr} – ${endStr}`;
+  }
+  if(currentPeriod==="month"){
+    return viewDate.toLocaleDateString("es-MX", { month:"long", year:"numeric" });
+  }
+}
+
+function shiftViewDate(direction){
+  if(currentPeriod==="day") viewDate.setDate(viewDate.getDate()+direction);
+  if(currentPeriod==="week") viewDate.setDate(viewDate.getDate()+direction*7);
+  if(currentPeriod==="month"){ viewDate.setDate(1); viewDate.setMonth(viewDate.getMonth()+direction); }
+  renderPeriodContent();
+}
+
+document.getElementById("btnPeriodPrev").addEventListener("click", ()=> shiftViewDate(-1));
+document.getElementById("btnPeriodNext").addEventListener("click", ()=> shiftViewDate(1));
+document.getElementById("btnPeriodToday").addEventListener("click", ()=>{
+  viewDate = new Date();
+  renderPeriodContent();
+});
+
+/* Desglose de gasto por categoría de PRODUCTO (carne, bebidas, etc.)
+   Los tickets sin productos detallados se agrupan aparte, para no
+   mezclar cifras exactas (por producto) con montos globales del ticket. */
+function aggregateByProductCategory(list){
+  const byCat = {};
+  let sinDetalle = 0;
+  list.forEach(t=>{
+    if(t.items && t.items.length){
+      t.items.forEach(it=>{
+        const cat = it.category || "Otros";
+        byCat[cat] = (byCat[cat]||0) + (it.subtotal!=null ? it.subtotal : it.quantity*it.cost);
+      });
+    } else {
+      sinDetalle += t.amount;
+    }
+  });
+  return { byCat, sinDetalle };
+}
+
+function renderCategoryBars(byCat, max){
+  return Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>`
+    <div class="cat-bar-row">
+      <div class="cat-top"><span>${cat}</span><span class="amt">${fmtMoney(val)}</span></div>
+      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(val/max*100)}%"></div></div>
+    </div>`).join("");
+}
+
+function renderProductCategorySection(list){
+  const { byCat, sinDetalle } = aggregateByProductCategory(list);
+  const allVals = Object.values(byCat).concat(sinDetalle>0?[sinDetalle]:[]);
+  const max = Math.max(1, ...allVals);
+  if(Object.keys(byCat).length===0 && sinDetalle===0){
+    return "";
+  }
+  let html = `<div class="section-title">Gasto por tipo de producto</div>`;
+  html += renderCategoryBars(byCat, max);
+  if(sinDetalle>0){
+    html += `
+      <div class="cat-bar-row">
+        <div class="cat-top"><span>Sin desglose (ticket sin productos)</span><span class="amt">${fmtMoney(sinDetalle)}</span></div>
+        <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(sinDetalle/max*100)}%; background: var(--muted);"></div></div>
+      </div>`;
+  }
+  return html;
+}
+
+function renderDeducibleSummary(list){
+  const marked = list.filter(t=>t.deducible);
+  if(!marked.length) return "";
+  const sum = marked.reduce((a,t)=>a+t.amount,0);
+  return `
+    <div class="cat-bar-row" style="margin-top:2px;">
+      <div class="cat-top"><span>🧷 Marcados como deducibles (${marked.length})</span><span class="amt">${fmtMoney(sum)}</span></div>
+    </div>
+    <div class="hint" style="margin-bottom:10px;">Recuerda: solo cuenta si tienes la factura (CFDI) de cada uno — esta marca es únicamente para tu control personal.</div>`;
+}
+
 function renderPeriodContent(){
   const container = document.getElementById("periodContent");
-  const today = todayISO();
+  document.getElementById("periodLabel").textContent = fmtPeriodLabel();
+  const viewISO = toLocalISODate(viewDate);
 
   if(currentPeriod==="day"){
-    const list = allTicketsCache.filter(t=>t.date===today);
-    container.innerHTML = `<div class="section-title">Gastos de hoy</div>` + renderTicketList(list);
+    const list = allTicketsCache.filter(t=>t.date===viewISO);
+    let html = `<div class="section-title">Gastos del día</div>`;
+    html += renderProductCategorySection(list);
+    html += renderDeducibleSummary(list);
+    html += `<div class="section-title">Tickets</div>` + renderTicketList(list);
+    container.innerHTML = html;
   }
 
   if(currentPeriod==="week"){
-    const list = allTicketsCache.filter(t=>isInCurrentWeek(t.date));
-    const start = startOfWeek(new Date());
+    const list = allTicketsCache.filter(t=>isInWeekOf(t.date, viewDate));
+    const start = startOfWeek(viewDate);
     const byDay = {};
     for(let i=0;i<7;i++){
       const d = new Date(start); d.setDate(d.getDate()+i);
-      byDay[d.toISOString().slice(0,10)] = 0;
+      byDay[toLocalISODate(d)] = 0;
     }
     list.forEach(t=>{ byDay[t.date] = (byDay[t.date]||0) + t.amount; });
-    const max = Math.max(1, ...Object.values(byDay));
+    const maxDay = Math.max(1, ...Object.values(byDay));
 
-    let html = `<div class="section-title">Esta semana por día</div>`;
+    let html = `<div class="section-title">Por día</div>`;
     Object.keys(byDay).forEach((dateStr, idx)=>{
       const val = byDay[dateStr];
       html += `
         <div class="cat-bar-row">
           <div class="cat-top"><span>${DIAS[idx]} · ${dateStr.slice(5)}</span><span class="amt">${fmtMoney(val)}</span></div>
-          <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(val/max*100)}%"></div></div>
+          <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(val/maxDay*100)}%"></div></div>
         </div>`;
     });
-    html += `<div class="section-title">Detalle</div>` + renderTicketList(list);
+    html += renderProductCategorySection(list);
+    html += renderDeducibleSummary(list);
+    html += `<div class="section-title">Tickets</div>` + renderTicketList(list);
     container.innerHTML = html;
   }
 
   if(currentPeriod==="month"){
-    const list = allTicketsCache.filter(t=>isInCurrentMonth(t.date));
-    const byCat = {};
-    list.forEach(t=>{ byCat[t.category] = (byCat[t.category]||0) + t.amount; });
-    const max = Math.max(1, ...Object.values(byCat), 0);
-
-    let html = `<div class="section-title">Este mes por categoría</div>`;
-    if(Object.keys(byCat).length===0){
-      html += `<div class="empty-state">Aún no hay gastos registrados este mes.</div>`;
+    const list = allTicketsCache.filter(t=>isInMonthOf(t.date, viewDate));
+    let html = "";
+    if(list.length===0){
+      html += `<div class="empty-state">Sin gastos registrados en este mes.</div>`;
     } else {
-      Object.entries(byCat).sort((a,b)=>b[1]-a[1]).forEach(([cat,val])=>{
-        html += `
-          <div class="cat-bar-row">
-            <div class="cat-top"><span>${cat}</span><span class="amt">${fmtMoney(val)}</span></div>
-            <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(val/max*100)}%"></div></div>
-          </div>`;
-      });
+      html += renderProductCategorySection(list);
+      html += renderDeducibleSummary(list);
     }
-    html += `<div class="section-title">Detalle</div>` + renderTicketList(list);
+    html += `<div class="section-title">Tickets</div>` + renderTicketList(list);
     container.innerHTML = html;
   }
+
+  attachLogoFallbacks(container);
 }
 
 function renderTicketList(list){
   if(!list.length) return `<div class="empty-state">No hay tickets registrados en este período.</div>`;
   return list.map(t=>`
-    <div class="ticket">
-      ${t.image ? `<img class="thumb" src="${t.image}">` : `<div class="thumb"></div>`}
+    <div class="ticket" data-id="${t.id}">
+      ${t.image ? `<div class="avatar-wrap">${storeBadgeHTML(t.store)}<span class="photo-dot">📷</span></div>` : storeBadgeHTML(t.store)}
       <div class="info">
         <div class="store">${escapeHtml(t.store)}</div>
-        <div class="meta">${t.category} · ${t.date}${t.description ? " · "+escapeHtml(t.description) : ""}${t.items && t.items.length ? " · "+t.items.length+" producto"+(t.items.length>1?"s":"") : ""}</div>
+        <div class="meta">${t.category} · ${t.date}${t.description ? " · "+escapeHtml(t.description) : ""}${t.items && t.items.length ? " · "+t.items.length+" producto"+(t.items.length>1?"s":"") : ""}${t.deducible ? ' · <span style="color:var(--accent);font-weight:600;">Deducible</span>' : ""}</div>
       </div>
       <div class="amount">${fmtMoney(t.amount)}</div>
       <button class="del" data-id="${t.id}" title="Eliminar">🗑</button>
@@ -1109,6 +1696,100 @@ function escapeHtml(str){
   return div.innerHTML;
 }
 
+/* =========================================================
+   VISTA DE RECIBO DIGITAL
+   Muestra el ticket guardado con un formato parecido a un
+   recibo real: insignia del comercio, productos, total y
+   la foto original (si existe).
+   ========================================================= */
+function renderReceiptHTML(t){
+  const dateFmt = new Date(t.date+"T00:00:00").toLocaleDateString("es-MX", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+
+  let itemsHtml = "";
+  if(t.items && t.items.length){
+    itemsHtml = t.items.map(it=>`
+      <div class="receipt-item-line">
+        <div class="ri-desc">${escapeHtml(it.description || "Producto")}<span class="ri-cat">${escapeHtml(it.category||"Otros")} · ${it.quantity} x ${fmtMoney(it.cost)}</span></div>
+        <div class="ri-amt">${fmtMoney(it.quantity*it.cost)}</div>
+      </div>`).join("");
+  } else {
+    itemsHtml = `<div class="receipt-note">Este ticket no tiene productos detallados.</div>`;
+  }
+
+  const chips = `
+    <span class="chip">${escapeHtml(t.category)}</span>
+    ${t.deducible ? `<span class="chip ded">Deducible</span>` : ""}`;
+
+  const photoBlock = t.image ? `
+    <div class="receipt-photo-block">
+      <div class="section-title" style="text-align:center;">Foto original</div>
+      <img src="${t.image}" alt="Foto del ticket">
+    </div>` : "";
+
+  return `
+    <div class="receipt-card">
+      <div class="receipt-head">
+        ${storeBadgeHTML(t.store)}
+        <div class="receipt-head-text">
+          <div class="rh-store">${escapeHtml(t.store)}</div>
+          <div class="rh-date">${dateFmt}</div>
+        </div>
+      </div>
+      <div class="receipt-chips">${chips}</div>
+      ${t.description ? `<div class="receipt-note" style="margin-bottom:10px;">${escapeHtml(t.description)}</div>` : ""}
+      <div class="receipt-dashes"></div>
+      ${itemsHtml}
+      <div class="receipt-dashes"></div>
+      <div class="receipt-total-row"><span>TOTAL</span><span>${fmtMoney(t.amount)}</span></div>
+      ${t.deducible ? `<div class="receipt-note">Marcado como posible deducible — recuerda que necesitas la factura (CFDI) correspondiente para que aplique ante el SAT.</div>` : ""}
+      ${photoBlock}
+      <div class="receipt-barcode"></div>
+      <div class="receipt-barcode-label">MYTICKET · #${String(t.id).padStart(6,"0")}</div>
+    </div>
+  `;
+}
+
+let currentReceiptId = null;
+
+function openReceiptView(id){
+  const t = ticketsById[id];
+  if(!t) return;
+  currentReceiptId = id;
+  const content = document.getElementById("receiptContent");
+  content.innerHTML = renderReceiptHTML(t);
+  attachLogoFallbacks(content);
+  showView("receipt");
+}
+
+document.getElementById("btnReceiptBack").addEventListener("click", ()=> showView("dashboard"));
+
+document.getElementById("btnReceiptEdit").addEventListener("click", ()=>{
+  const t = ticketsById[currentReceiptId];
+  if(!t) return;
+  openForm({
+    image: t.image || null,
+    store: t.store,
+    date: t.date,
+    total: t.amount,
+    items: t.items || [],
+    description: t.description || "",
+    category: t.category,
+    deducible: !!t.deducible,
+    editingId: t.id
+  });
+});
+
+document.getElementById("btnReceiptDelete").addEventListener("click", async ()=>{
+  if(!currentReceiptId) return;
+  if(confirm("¿Eliminar este ticket? Esta acción no se puede deshacer.")){
+    await deleteTicket(currentReceiptId);
+    currentReceiptId = null;
+    await refreshDashboard();
+    await refreshHistory();
+    showView("dashboard");
+  }
+});
+
 /* Delegación de eventos para el botón eliminar */
 document.addEventListener("click", async (e)=>{
   if(e.target.classList.contains("del")){
@@ -1118,6 +1799,11 @@ document.addEventListener("click", async (e)=>{
       await refreshDashboard();
       await refreshHistory();
     }
+    return;
+  }
+  const ticketEl = e.target.closest(".ticket");
+  if(ticketEl){
+    openReceiptView(Number(ticketEl.dataset.id));
   }
 });
 
@@ -1126,7 +1812,10 @@ document.addEventListener("click", async (e)=>{
    ========================================================= */
 async function refreshHistory(){
   const list = await getAllTickets();
-  document.getElementById("historyList").innerHTML = renderTicketList(list);
+  list.forEach(t=> ticketsById[t.id]=t);
+  const historyEl = document.getElementById("historyList");
+  historyEl.innerHTML = renderTicketList(list);
+  attachLogoFallbacks(historyEl);
 }
 
 /* =========================================================
