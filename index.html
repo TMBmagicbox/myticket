@@ -3,33 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Control de Gastos · Beta</title>
+<title>Outgo · Control de gastos</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%238C7AE6'/%3E%3Cpath d='M 30 62 Q 42 76 58 58 Q 67 48 61 36' stroke='%23FFFFFF' stroke-width='7' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='65' cy='32' rx='10' ry='5.5' fill='%232ED9C3' transform='rotate(-35 65 32)'/%3E%3C/svg%3E">
 
 <style>
 /* =========================================================
-   TOKENS DE DISEÑO
-   Todo el look está centralizado aquí. Cuando llegue la
-   propuesta de branding, solo hay que cambiar estas variables
-   (y la tipografía importada abajo) — el resto de la app no
-   necesita tocarse.
+   TOKENS DE DISEÑO — Marca "Outgo"
+   Púrpura Suave (marca/wordmark "Out") + Turquesa Menta (acento
+   principal "go"). Tipografía redondeada (Poppins) para títulos,
+   Inter para texto de cuerpo. Todo centralizado aquí: para
+   ajustar el branding más adelante, solo hay que tocar estas
+   variables.
    ========================================================= */
 :root{
-  --bg:        #EFEAE0;   /* fondo general, tono "papel kraft" */
-  --paper:     #FBF8F2;   /* tarjetas / recibo */
-  --ink:       #232323;   /* texto principal */
-  --muted:     #6f6a5e;   /* texto secundario */
-  --line:      #d8d0bd;   /* líneas y bordes */
-  --accent:    #2f6f5e;   /* verde tinta — acciones principales */
-  --accent-2:  #b5482c;   /* terracota oscuro — alertas / gasto */
-  --ok:        #2f6f5e;
-  --danger:    #b5482c;
-  --radius:    10px;
-  --font-display: 'DM Serif Display', Georgia, serif;
+  --bg:            #F6F4FC;   /* fondo general, blanco con tinte lavanda */
+  --paper:         #FFFFFF;   /* tarjetas / recibo */
+  --ink:           #2B2640;   /* texto principal, gris-morado oscuro */
+  --muted:         #8B87A0;   /* texto secundario */
+  --line:          #E4E0F2;   /* líneas y bordes */
+  --accent:        #2ED9C3;   /* Turquesa Menta — acciones principales ("go") */
+  --accent-2:      #E0554A;   /* rojo suave — alertas / eliminar */
+  --brand-purple:  #8C7AE6;   /* Púrpura Suave — marca / wordmark ("Out") */
+  --ok:            #2ED9C3;
+  --danger:        #E0554A;
+  --radius:        14px;
+  --font-display: 'Poppins', -apple-system, sans-serif;
   --font-body: 'Inter', -apple-system, sans-serif;
   --font-mono: 'Space Mono', 'Courier New', monospace;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 *{ box-sizing: border-box; }
 html,body{ margin:0; padding:0; }
@@ -52,22 +55,32 @@ body{
 
 /* ---------- Header ---------- */
 header.top{
-  padding: 22px 20px 16px;
-  border-bottom: 2px solid var(--ink);
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
 }
+.brand-row{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+.brand-icon{ flex-shrink:0; }
 header.top h1{
   font-family: var(--font-display);
-  font-size: 26px;
-  margin: 0 0 2px;
-  letter-spacing: 0.3px;
+  font-weight: 600;
+  font-size: 27px;
+  margin: 0;
+  letter-spacing: 0.2px;
 }
+.brand-out{ color: var(--brand-purple); font-weight:600; }
+.brand-go{ color: var(--accent); font-weight:700; }
 header.top p{
-  margin:0;
-  font-size: 12.5px;
+  margin: 6px 0 0;
+  font-size: 12px;
   color: var(--muted);
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-family: var(--font-body);
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
 }
 
 /* ---------- Cards resumen ---------- */
@@ -266,6 +279,62 @@ section{ padding: 6px 20px 10px; }
   padding: 30px 10px;
   border: 1px dashed var(--line);
   border-radius: var(--radius);
+}
+
+/* ---------- Vista de análisis de productos ---------- */
+.product-search{
+  width:100%;
+  padding: 11px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-family: var(--font-body);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.product-search:focus{ outline: 2px solid var(--accent); outline-offset:1px; }
+.sort-toggle{ display:flex; gap:8px; margin-bottom: 14px; }
+.sort-btn{
+  flex:1;
+  padding: 8px 6px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight:600;
+  cursor:pointer;
+}
+.sort-btn.active{ background: var(--brand-purple); color:#fff; border-color: var(--brand-purple); }
+
+.product-card{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  cursor:pointer;
+}
+.pc-top{ display:flex; justify-content:space-between; gap:10px; }
+.pc-name{ font-weight:600; font-size: 14px; }
+.pc-meta{ font-size: 11.5px; color: var(--muted); margin-top:2px; }
+.pc-amt{ font-family: var(--font-mono); font-weight:700; font-size: 15px; white-space:nowrap; }
+.pc-last{ font-size: 11.5px; color: var(--muted); margin-top:6px; }
+.price-change{ font-weight:700; margin-left:4px; }
+.price-change.up{ color: var(--accent-2); }
+.price-change.down{ color: var(--accent); }
+.pc-history{
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+}
+.pc-hist-row{
+  display:flex;
+  justify-content:space-between;
+  font-size: 11.5px;
+  color: var(--ink);
+  margin-bottom: 5px;
+  font-family: var(--font-mono);
 }
 
 /* ---------- Barras categoría (mensual) ---------- */
@@ -637,7 +706,14 @@ nav.bottom button.active{ color: var(--ink); font-weight:700; }
 
   <!-- ============ HEADER ============ -->
   <header class="top">
-    <h1>Control de Gastos</h1>
+    <div class="brand-row">
+      <svg class="brand-icon" viewBox="0 0 100 100" width="38" height="38" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="#8C7AE6"/>
+        <path d="M 30 62 Q 42 76 58 58 Q 67 48 61 36" stroke="#FFFFFF" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <ellipse cx="65" cy="32" rx="10" ry="5.5" fill="#2ED9C3" transform="rotate(-35 65 32)"/>
+      </svg>
+      <h1><span class="brand-out">Out</span><span class="brand-go">go</span></h1>
+    </div>
     <p id="todayLabel">—</p>
   </header>
 
@@ -685,6 +761,19 @@ nav.bottom button.active{ color: var(--ink); font-weight:700; }
 
     <section id="periodContent"></section>
 
+  </div>
+
+  <!-- ============ VISTA: PRODUCTOS (análisis) ============ -->
+  <div class="view" id="view-products">
+    <section>
+      <div class="section-title">Qué compras y cuánto te cuesta</div>
+      <input type="text" id="productSearch" class="product-search" placeholder="Buscar producto (ej. leche, refresco...)">
+      <div class="sort-toggle">
+        <button class="sort-btn active" data-sort="spent">Por gasto total</button>
+        <button class="sort-btn" data-sort="qty">Por más comprado</button>
+      </div>
+      <div id="productsList"></div>
+    </section>
   </div>
 
   <!-- ============ VISTA: HISTORIAL ============ -->
@@ -791,6 +880,7 @@ nav.bottom button.active{ color: var(--ink); font-weight:700; }
 <nav class="bottom">
   <button data-view="dashboard" class="active"><span class="ic">🏠</span>Inicio</button>
   <button data-view="form-new"><span class="ic">➕</span>Nuevo</button>
+  <button data-view="products"><span class="ic">📦</span>Productos</button>
   <button data-view="history"><span class="ic">🧾</span>Historial</button>
 </nav>
 
@@ -828,6 +918,10 @@ const STORES = [
   { name: "Shell", category: "Gasolina" },
   { name: "BP", category: "Gasolina" },
   { name: "Mobil", category: "Gasolina" },
+  { name: "G500", category: "Gasolina" },
+  { name: "Gas Tomza", category: "Gas LP (cocina)" },
+  { name: "Zeta Gas", category: "Gas LP (cocina)" },
+  { name: "Gas Express Nieto", category: "Gas LP (cocina)" },
   { name: "CFE (luz)", category: "Servicios (agua, luz, internet)" },
   { name: "Agua (organismo operador)", category: "Servicios (agua, luz, internet)" },
   { name: "Telmex", category: "Servicios (agua, luz, internet)" },
@@ -844,7 +938,7 @@ const STORES = [
 const CATEGORIES = [
   "Supermercado","Conveniencia/Tiendita","Club de precios","Salud/Farmacia",
   "Ferretería/Hogar","Tienda departamental","Comida/Restaurante","Gasolina",
-  "Transporte","Servicios (agua, luz, internet)","Streaming y plataformas",
+  "Gas LP (cocina)","Transporte","Servicios (agua, luz, internet)","Streaming y plataformas",
   "Entretenimiento","Otros"
 ];
 
@@ -854,6 +948,7 @@ const CATEGORIES = [
 // a tu nombre/RFC; el ticket o nota de venta por sí solo normalmente no basta.
 const DEDUCIBLE_HINTS = {
   "Gasolina": "Puede ser deducible con factura (CFDI) si pagaste con tarjeta o transferencia (el SAT no acepta efectivo para este gasto).",
+  "Gas LP (cocina)": "Deducible solo como gasto de negocio con factura a tu nombre (para uso doméstico normalmente no aplica).",
   "Servicios (agua, luz, internet)": "Deducible solo si facturas a tu nombre y usas parte del gasto para trabajo/negocio (ej. oficina en casa).",
   "Salud/Farmacia": "Los gastos médicos y de farmacia con factura suelen ser deducibles en la declaración anual de personas físicas.",
   "Comida/Restaurante": "Solo deducible como gasto de negocio: con factura, pago electrónico, y hasta un porcentaje límite.",
@@ -874,7 +969,8 @@ const STORE_DOMAINS = {
   "Farmacias Guadalajara": "farmaciasguadalajara.com", "Farmacias del Ahorro": "fahorro.com.mx",
   "Farmacias Similares": "farmaciasimilares.com.mx", "Home Depot": "homedepot.com.mx",
   "Liverpool": "liverpool.com.mx", "Coppel": "coppel.com", "Elektra": "elektra.com.mx",
-  "Pemex": "pemex.com", "Shell": "shell.com.mx", "BP": "bp.com", "Mobil": "mobil.com",
+  "Pemex": "pemex.com", "Shell": "shell.com.mx", "BP": "bp.com", "Mobil": "mobil.com", "G500": "g500.com.mx",
+  "Gas Tomza": "tomza.com.mx", "Zeta Gas": "zetagas.com.mx", "Gas Express Nieto": "gasnieto.com.mx",
   "CFE (luz)": "cfe.mx", "Telmex": "telmex.com", "Izzi": "izzi.mx", "Totalplay": "totalplay.com.mx",
   "Netflix": "netflix.com", "Spotify": "spotify.com", "Disney+": "disneyplus.com",
   "Amazon Prime Video": "primevideo.com", "HBO Max": "max.com"
@@ -887,7 +983,8 @@ const STORE_COLORS = {
   "Farmacias Guadalajara": "#0072BC", "Farmacias del Ahorro": "#00A651",
   "Farmacias Similares": "#FDB913", "Home Depot": "#F96302", "Ferretería local": "#6f6a5e",
   "Liverpool": "#5C2D91", "Coppel": "#E4032E", "Elektra": "#FFD100",
-  "Pemex": "#00693C", "Shell": "#FBCE07", "BP": "#00914A", "Mobil": "#EE2E24",
+  "Pemex": "#00693C", "Shell": "#FBCE07", "BP": "#00914A", "Mobil": "#EE2E24", "G500": "#F7941E",
+  "Gas Tomza": "#004B87", "Zeta Gas": "#E4032E", "Gas Express Nieto": "#F58220",
   "CFE (luz)": "#00A14B", "Telmex": "#0057A6", "Izzi": "#5C2D91", "Totalplay": "#E4032E",
   "Netflix": "#E50914", "Spotify": "#1DB954", "Disney+": "#113CCF",
   "Amazon Prime Video": "#00A8E1", "HBO Max": "#000000", "Tiendita/Abarrotes local": "#8a6d3b",
@@ -1230,6 +1327,7 @@ function showView(name){
   if(navBtn) navBtn.classList.add("active");
   if(name==="dashboard") refreshDashboard();
   if(name==="history") refreshHistory();
+  if(name==="products") refreshProductsView();
 }
 
 /* Poblar selects del formulario */
@@ -1804,6 +1902,109 @@ document.addEventListener("click", async (e)=>{
   const ticketEl = e.target.closest(".ticket");
   if(ticketEl){
     openReceiptView(Number(ticketEl.dataset.id));
+  }
+});
+
+/* =========================================================
+   ANÁLISIS DE PRODUCTOS
+   Junta todos los productos de todos los tickets (aunque sean
+   de comercios distintos) para responder: ¿qué compro más?
+   ¿ya subió de precio? Se agrupa por nombre de producto
+   (normalizado) usando SIEMPRE todo el historial, sin importar
+   el periodo que se esté viendo en el dashboard.
+   ========================================================= */
+let productSortMode = "spent"; // "spent" | "qty"
+let productSearchTerm = "";
+
+function buildProductIndex(allTickets){
+  const map = {};
+  allTickets.forEach(t=>{
+    (t.items||[]).forEach(it=>{
+      if(!it.description) return;
+      const key = it.description.trim().toUpperCase();
+      if(!key) return;
+      if(!map[key]){
+        map[key] = { displayName: it.description.trim(), category: it.category||"Otros", purchases: [], totalSpent:0, totalQty:0 };
+      }
+      const subtotal = it.quantity*it.cost;
+      map[key].purchases.push({ date: t.date, store: t.store, quantity: it.quantity, cost: it.cost, subtotal });
+      map[key].totalSpent += subtotal;
+      map[key].totalQty += it.quantity;
+    });
+  });
+  Object.values(map).forEach(p=> p.purchases.sort((a,b)=> a.date.localeCompare(b.date)));
+  return map;
+}
+
+function renderProductsListing(){
+  const idx = buildProductIndex(allTicketsCache);
+  let list = Object.values(idx);
+
+  if(productSearchTerm){
+    const s = productSearchTerm.trim().toUpperCase();
+    list = list.filter(p=> p.displayName.toUpperCase().includes(s));
+  }
+  if(productSortMode==="spent") list.sort((a,b)=> b.totalSpent-a.totalSpent);
+  else list.sort((a,b)=> b.totalQty-a.totalQty);
+
+  const container = document.getElementById("productsList");
+  if(!list.length){
+    container.innerHTML = `<div class="empty-state">${allTicketsCache.length ? "No se encontraron productos con ese nombre." : "Agrega productos al crear tickets para ver aquí qué compras más seguido y si sus precios cambian."}</div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(p=>{
+    const last = p.purchases[p.purchases.length-1];
+    const prev = p.purchases.length>1 ? p.purchases[p.purchases.length-2] : null;
+    let change = "";
+    if(prev && prev.cost>0 && Math.abs(last.cost-prev.cost)>0.001){
+      const diff = last.cost - prev.cost;
+      const pct = Math.abs(diff/prev.cost*100).toFixed(0);
+      change = `<span class="price-change ${diff>0?'up':'down'}">${diff>0?'↑':'↓'} ${pct}%</span>`;
+    }
+    const historyRows = p.purchases.slice().reverse().map(pu=>`
+      <div class="pc-hist-row"><span>${pu.date} · ${escapeHtml(pu.store)}</span><span>${pu.quantity} x ${fmtMoney(pu.cost)} = ${fmtMoney(pu.subtotal)}</span></div>
+    `).join("");
+
+    return `
+      <div class="product-card" data-key="${escapeAttr(p.displayName.toUpperCase())}">
+        <div class="pc-top">
+          <div>
+            <div class="pc-name">${escapeHtml(p.displayName)}</div>
+            <div class="pc-meta">${escapeHtml(p.category)} · ${p.purchases.length} compra${p.purchases.length>1?"s":""} · ${p.totalQty} unidad${p.totalQty!==1?"es":""}</div>
+          </div>
+          <div class="pc-amt">${fmtMoney(p.totalSpent)}</div>
+        </div>
+        <div class="pc-last">Último precio: ${fmtMoney(last.cost)} c/u (${last.store}, ${last.date}) ${change}</div>
+        <div class="pc-history" style="display:none;">${historyRows}</div>
+      </div>`;
+  }).join("");
+}
+
+async function refreshProductsView(){
+  allTicketsCache = await getAllTickets();
+  allTicketsCache.forEach(t=> ticketsById[t.id]=t);
+  renderProductsListing();
+}
+
+document.getElementById("productSearch").addEventListener("input", (e)=>{
+  productSearchTerm = e.target.value;
+  renderProductsListing();
+});
+document.querySelectorAll(".sort-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".sort-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    productSortMode = btn.dataset.sort;
+    renderProductsListing();
+  });
+});
+// Expandir/contraer el historial de precios de un producto al tocarlo
+document.addEventListener("click", (e)=>{
+  const card = e.target.closest(".product-card");
+  if(card){
+    const hist = card.querySelector(".pc-history");
+    hist.style.display = hist.style.display==="none" ? "block" : "none";
   }
 });
 
