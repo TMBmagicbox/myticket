@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Outgo · Control de gastos</title>
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22:%22Outgo%22,%22short_name%22:%22Outgo%22,%22start_url%22:%22/%22,%22display%22:%22standalone%22,%22background_color%22:%22%23F6F4FC%22,%22theme_color%22:%22%238C7AE6%22,%22icons%22:%5B%7B%22src%22:%22data:image/svg+xml,%253Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20100%20100%27%253E%253Ccircle%20cx=%2750%27%20cy=%2750%27%20r=%2746%27%20fill=%27%238C7AE6%27/%253E%253Cpath%20d=%27M%2030%2062%20Q%2042%2076%2058%2058%20Q%2067%2048%2061%2036%27%20stroke=%27%23FFFFFF%27%20stroke-width=%277%27%20fill=%27none%27%20stroke-linecap=%27round%27/%253E%253Cellipse%20cx=%2765%27%20cy=%2732%27%20rx=%2710%27%20ry=%275.5%27%20fill=%27%232ED9C3%27%20transform=%27rotate(-35%2065%2032)%27/%253E%253C/svg%253E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22%7D%5D%7D">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22:%22Outgo%22,%22short_name%22:%22Outgo%22,%22start_url%22:%22/%22,%22display%22:%22standalone%22,%22background_color%22:%22%23F6F4FC%22,%22theme_color%22:%22%238C7AE6%22%7D">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%238C7AE6'/%3E%3Cpath d='M 30 62 Q 42 76 58 58 Q 67 48 61 36' stroke='%23FFFFFF' stroke-width='7' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='65' cy='32' rx='10' ry='5.5' fill='%232ED9C3' transform='rotate(-35 65 32)'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAspElEQVR4nO2deZRdVZX/v/ucO7ypXg0ZJBMJgwkk/ERNFIJgAoJIp4O6Vr9C7SXrZ9sm3a0uHKABadar14iCgK4Y7V9X">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Outgo">
 <meta name="theme-color" content="#8C7AE6">
 
 <style>
@@ -739,6 +736,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
       </div>
     </div>
   </div>
+  <p id="authError" style="color:var(--accent-2); font-size:12px; display:none;"></p>
 </div>
 
 <div id="app" style="display:none;">
@@ -941,15 +939,14 @@ nav.bottom button.active{ color: var(--brand-purple); }
 </nav>
 
 <!-- ============ LIBRERÍAS ============ -->
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
 /* =========================================================
-   FIREBASE CONFIG
+   FIREBASE CONFIG (Compat version - compatible con vanilla JS)
    ========================================================= */
 const firebaseConfig = {
   apiKey: "AIzaSyCxwN1C5mKvPG7x3murIuJxuYhUnLzkQvw",
@@ -961,9 +958,11 @@ const firebaseConfig = {
 };
 
 // Inicializar Firebase
-const app = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+
+console.log('Firebase initialized successfully');
 
 /* =========================================================
    GLOBAL STATE
@@ -1034,12 +1033,14 @@ function initAuth() {
   auth.onAuthStateChanged(user => {
     if (user) {
       currentUser = user;
+      console.log('User signed in:', user.email);
       document.getElementById('authOverlay').classList.add('hidden');
       document.getElementById('app').style.display = 'block';
       loadTicketsFromFirestore();
       initServiceWorker();
     } else {
       currentUser = null;
+      console.log('User signed out');
       document.getElementById('authOverlay').classList.remove('hidden');
       document.getElementById('app').style.display = 'none';
     }
@@ -1049,10 +1050,12 @@ function initAuth() {
 document.getElementById('googleSignInBtn').addEventListener('click', async () => {
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
-    await auth.signInWithPopup(provider);
+    const result = await auth.signInWithPopup(provider);
+    console.log('User signed in:', result.user.email);
   } catch (err) {
     console.error('Error signing in:', err);
-    alert('Error al iniciar sesión');
+    document.getElementById('authError').textContent = 'Error: ' + err.message;
+    document.getElementById('authError').style.display = 'block';
   }
 });
 
@@ -1067,22 +1070,26 @@ document.getElementById('userMenuBtn').addEventListener('click', async () => {
    ========================================================= */
 async function loadTicketsFromFirestore() {
   try {
+    showSyncStatus('Cargando...');
     const querySnapshot = await db.collection('users').doc(currentUser.uid)
       .collection('tickets').orderBy('date', 'desc').get();
     
     tickets = [];
     querySnapshot.forEach(doc => {
+      const data = doc.data();
       tickets.push({
         id: doc.id,
-        ...doc.data(),
-        date: doc.data().date?.toDate ? doc.data().date.toDate() : new Date(doc.data().date)
+        ...data,
+        date: data.date?.toDate ? data.date.toDate() : new Date(data.date)
       });
     });
     
+    console.log('Loaded tickets:', tickets.length);
     updateUI();
-    showSyncStatus('Sincronizado');
+    showSyncStatus('Sincronizado ✓');
   } catch (err) {
     console.error('Error loading tickets:', err);
+    showSyncStatus('Error al cargar');
   }
 }
 
@@ -1109,7 +1116,7 @@ async function saveTicketToFirestore(ticket) {
     showSyncStatus('Sincronizado ✓');
   } catch (err) {
     console.error('Error saving ticket:', err);
-    alert('Error al guardar el ticket');
+    alert('Error al guardar el ticket: ' + err.message);
   }
 }
 
@@ -1697,35 +1704,12 @@ function initServiceWorker() {
   if ('serviceWorker' in navigator) {
     const swCode = `
       const CACHE_NAME = 'outgo-v1';
-      const urlsToCache = [
-        '/',
-        '/index.html',
-        'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js',
-        'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js',
-        'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap'
-      ];
       
       self.addEventListener('install', event => {
-        event.waitUntil(
-          caches.open(CACHE_NAME).then(cache => {
-            return cache.addAll(urlsToCache).catch(() => {});
-          })
-        );
         self.skipWaiting();
       });
       
       self.addEventListener('activate', event => {
-        event.waitUntil(
-          caches.keys().then(cacheNames => {
-            return Promise.all(
-              cacheNames.map(cacheName => {
-                if (cacheName !== CACHE_NAME) {
-                  return caches.delete(cacheName);
-                }
-              })
-            );
-          })
-        );
         self.clients.claim();
       });
       
