@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Outgo · Control de gastos</title>
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22:%22Outgo%22,%22short_name%22:%22Outgo%22,%22start_url%22:%22/%22,%22display%22:%22standalone%22,%22background_color%22:%22%23F6F4FC%22,%22theme_color%22:%22%238C7AE6%22,%22icons%22:%5B%7B%22src%22:%22data:image/svg+xml,%253Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20100%20100%27%253E%253Ccircle%20cx=%2750%27%20cy=%2750%27%20r=%2746%27%20fill=%27%238C7AE6%27/%253E%253Cpath%20d=%27M%2030%2062%20Q%2042%2076%2058%2058%20Q%2067%2048%2061%2036%27%20stroke=%27%23FFFFFF%27%20stroke-width=%277%27%20fill=%27none%27%20stroke-linecap=%27round%27/%253E%253Cellipse%20cx=%2765%27%20cy=%2732%27%20rx=%2710%27%20ry=%275.5%27%20fill=%27%232ED9C3%27%20transform=%27rotate(-35%2065%2032)%27/%253E%253C/svg%253E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22%7D%5D%7D">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%238C7AE6'/%3E%3Cpath d='M 30 62 Q 42 76 58 58 Q 67 48 61 36' stroke='%23FFFFFF' stroke-width='7' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='65' cy='32' rx='10' ry='5.5' fill='%232ED9C3' transform='rotate(-35 65 32)'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/png;base64,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">
-<link rel="icon" type="image/png" sizes="180x180" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAspElEQVR4nO2deZRdVZX/v/ucO7ypXg0ZJBMJgwkk/ERNFIJgAoJIp4O6Vr9C7SXrZ9sm3a0uHKABadar14iCgK4Y7V9X">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Outgo">
@@ -15,21 +15,16 @@
 <style>
 /* =========================================================
    TOKENS DE DISEÑO — Marca "Outgo"
-   Púrpura Suave (marca/wordmark "Out") + Turquesa Menta (acento
-   principal "go"). Tipografía redondeada (Poppins) para títulos,
-   Inter para texto de cuerpo. Todo centralizado aquí: para
-   ajustar el branding más adelante, solo hay que tocar estas
-   variables.
    ========================================================= */
 :root{
-  --bg:            #F6F4FC;   /* fondo general, blanco con tinte lavanda */
-  --paper:         #FFFFFF;   /* tarjetas / recibo */
-  --ink:           #2B2640;   /* texto principal, gris-morado oscuro */
-  --muted:         #8B87A0;   /* texto secundario */
-  --line:          #E4E0F2;   /* líneas y bordes */
-  --accent:        #2ED9C3;   /* Turquesa Menta — acciones principales ("go") */
-  --accent-2:      #E0554A;   /* rojo suave — alertas / eliminar */
-  --brand-purple:  #8C7AE6;   /* Púrpura Suave — marca / wordmark ("Out") */
+  --bg:            #F6F4FC;
+  --paper:         #FFFFFF;
+  --ink:           #2B2640;
+  --muted:         #8B87A0;
+  --line:          #E4E0F2;
+  --accent:        #2ED9C3;
+  --accent-2:      #E0554A;
+  --brand-purple:  #8C7AE6;
   --ok:            #2ED9C3;
   --danger:        #E0554A;
   --radius:        14px;
@@ -55,8 +50,56 @@ body{
   margin: 0 auto;
   min-height: 100vh;
   background: var(--bg);
-  padding-bottom: 88px; /* espacio para nav inferior */
+  padding-bottom: 88px;
   position: relative;
+}
+
+/* ---------- Auth Screen ---------- */
+.auth-overlay{
+  position:fixed; inset:0;
+  background: var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:20px;
+  z-index: 1000;
+  padding: 20px;
+  text-align:center;
+}
+.auth-overlay.hidden{ display:none; }
+.auth-logo{ font-size:56px; }
+.auth-title{ font-family: var(--font-display); font-size:28px; font-weight:700; margin:0; }
+.auth-subtitle{ color: var(--muted); margin:0; font-size:14px; }
+.google-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 12px 24px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-weight:600;
+  cursor:pointer;
+  font-size:14px;
+}
+.google-btn:active{ background: var(--line); }
+.user-info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding: 12px 16px;
+  background: var(--paper);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  font-size:13px;
+}
+.user-avatar{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  object-fit:cover;
 }
 
 /* ---------- Header ---------- */
@@ -64,6 +107,9 @@ header.top{
   padding: 20px 20px 16px;
   border-bottom: 1px solid var(--line);
   background: var(--paper);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 .brand-row{
   display:flex;
@@ -87,6 +133,13 @@ header.top p{
   font-family: var(--font-body);
   text-transform: capitalize;
   letter-spacing: 0.02em;
+}
+.header-user-btn{
+  background:none;
+  border:none;
+  cursor:pointer;
+  font-size:20px;
+  flex-shrink:0;
 }
 
 /* ---------- Cards resumen ---------- */
@@ -238,20 +291,8 @@ section{ padding: 6px 20px 10px; }
   border-radius: 5px;
   padding: 3px;
 }
-.avatar-wrap{ position:relative; flex-shrink:0; }
-.photo-dot{
-  position:absolute;
-  bottom:-2px; right:-2px;
-  background: var(--ink);
-  color:#fff;
-  font-size: 8px;
-  width:16px; height:16px;
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  border: 1.5px solid var(--paper);
-}
 
-/* ---------- Recibo / lista de tickets ---------- */
+/* ---------- Ticket ---------- */
 .ticket{
   background: var(--paper);
   border: 1px solid var(--line);
@@ -287,84 +328,25 @@ section{ padding: 6px 20px 10px; }
   border-radius: var(--radius);
 }
 
-.backup-box{
+/* ---------- Charts ---------- */
+.chart-container{
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--paper);
-  padding: 14px;
-  margin-bottom: 18px;
+  padding: 16px;
+  margin-bottom: 16px;
+  position:relative;
+  height: 300px;
 }
-.backup-actions{ display:flex; flex-direction:column; gap:8px; }
-.backup-btn{
-  width:100%;
-  padding: 11px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  color: var(--ink);
-  font-size: 13px;
+.chart-title{
   font-weight:600;
-  cursor:pointer;
-}
-.backup-btn:active{ background: var(--line); }
-
-/* ---------- Vista de análisis de productos ---------- */
-.product-search{
-  width:100%;
-  padding: 11px 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: var(--paper);
-  font-family: var(--font-body);
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-.product-search:focus{ outline: 2px solid var(--accent); outline-offset:1px; }
-.sort-toggle{ display:flex; gap:8px; margin-bottom: 14px; }
-.sort-btn{
-  flex:1;
-  padding: 8px 6px;
-  border-radius: 20px;
-  border: 1px solid var(--line);
-  background: var(--paper);
-  color: var(--muted);
-  font-size: 12px;
-  font-weight:600;
-  cursor:pointer;
-}
-.sort-btn.active{ background: var(--brand-purple); color:#fff; border-color: var(--brand-purple); }
-
-.product-card{
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  margin-bottom: 10px;
-  cursor:pointer;
-}
-.pc-top{ display:flex; justify-content:space-between; gap:10px; }
-.pc-name{ font-weight:600; font-size: 14px; }
-.pc-meta{ font-size: 11.5px; color: var(--muted); margin-top:2px; }
-.pc-amt{ font-family: var(--font-mono); font-weight:700; font-size: 15px; white-space:nowrap; }
-.pc-last{ font-size: 11.5px; color: var(--muted); margin-top:6px; }
-.price-change{ font-weight:700; margin-left:4px; }
-.price-change.up{ color: var(--accent-2); }
-.price-change.down{ color: var(--accent); }
-.pc-history{
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed var(--line);
-}
-.pc-hist-row{
-  display:flex;
-  justify-content:space-between;
-  font-size: 11.5px;
+  font-size:13px;
+  margin-bottom:12px;
+  text-transform:uppercase;
   color: var(--ink);
-  margin-bottom: 5px;
-  font-family: var(--font-mono);
 }
 
-/* ---------- Barras categoría (mensual) ---------- */
+/* ---------- Barras categoría ---------- */
 .cat-bar-row{ margin-bottom: 10px; }
 .cat-bar-row .cat-top{
   display:flex; justify-content:space-between;
@@ -383,7 +365,7 @@ section{ padding: 6px 20px 10px; }
   border-radius: 6px;
 }
 
-/* ---------- Formulario (edición / nuevo) ---------- */
+/* ---------- Formulario ---------- */
 .form-view{ padding: 16px 20px 20px; }
 .form-view .back{
   background:none; border:none; color: var(--muted);
@@ -516,23 +498,6 @@ section{ padding: 6px 20px 10px; }
   padding: 6px 0 2px;
 }
 
-.tax-section{ margin-bottom: 6px; }
-.tax-toggle{
-  width:100%;
-  background:none;
-  border: 1px dashed var(--line);
-  border-radius: 8px;
-  padding: 9px;
-  font-size: 12.5px;
-  color: var(--brand-purple);
-  font-weight:600;
-  cursor:pointer;
-  margin-bottom: 10px;
-}
-.tax-row{ display:flex; gap:8px; }
-.tax-row .field input{ font-size:13px; padding: 9px 8px; }
-.tax-row .field label{ font-size: 10px; }
-
 .deducible-box{
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -556,7 +521,7 @@ section{ padding: 6px 20px 10px; }
   line-height:1.4;
 }
 
-/* ---------- Vista de recibo digital ---------- */
+/* ---------- Receipt ---------- */
 .receipt-page{ padding: 16px 20px 24px; }
 .receipt-card{
   background: var(--paper);
@@ -597,21 +562,6 @@ section{ padding: 6px 20px 10px; }
   letter-spacing: 0.03em;
 }
 .chip.ded{ background: var(--accent); color:#fff; border-color: var(--accent); }
-.chip.cfdi{ background: var(--brand-purple); color:#fff; border-color: var(--brand-purple); }
-.cfdi-block{
-  background: var(--bg);
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin-top: 4px;
-}
-.cfdi-title{ font-size: 11.5px; font-weight:700; margin-bottom:6px; font-family: var(--font-body); }
-.cfdi-row{
-  display:flex; justify-content:space-between;
-  font-size: 10.5px; color: var(--muted);
-  margin-bottom:3px;
-  word-break: break-all;
-}
-.cfdi-row span:last-child{ text-align:right; margin-left:8px; }
 .receipt-dashes{
   border-top: 1px dashed var(--muted);
   margin: 10px 0;
@@ -651,19 +601,7 @@ section{ padding: 6px 20px 10px; }
   border-radius: 8px;
   border: 1px solid var(--line);
 }
-.receipt-barcode{
-  margin-top: 18px;
-  height: 34px;
-  background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 3px, var(--ink) 3px 4px, transparent 4px 7px, var(--ink) 7px 9px, transparent 9px 11px);
-  opacity: 0.85;
-}
-.receipt-barcode-label{
-  text-align:center;
-  font-size: 9.5px;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-  margin-top: 4px;
-}
+
 .receipt-actions{
   display:flex;
   gap:10px;
@@ -704,7 +642,7 @@ section{ padding: 6px 20px 10px; }
   text-decoration: underline;
 }
 
-/* ---------- Overlay de carga (OCR) ---------- */
+/* ---------- Loading overlay ---------- */
 #loadingOverlay{
   position: fixed; inset:0;
   background: rgba(35,35,35,0.88);
@@ -729,7 +667,7 @@ section{ padding: 6px 20px 10px; }
 @keyframes spin{ to{ transform: rotate(360deg); } }
 #loadingOverlay .pct{ font-family: var(--font-mono); font-size: 13px; color: #ddd; }
 
-/* ---------- Nav inferior ---------- */
+/* ---------- Bottom Nav ---------- */
 nav.bottom{
   position: fixed;
   bottom:0; left:50%; transform: translateX(-50%);
@@ -751,172 +689,59 @@ nav.bottom button{
 }
 nav.bottom button .ic{ font-size: 23px; }
 nav.bottom button.active{ color: var(--brand-purple); }
-.fab-btn{
-  position:relative;
-  background: linear-gradient(135deg, var(--brand-purple), var(--accent)) !important;
-  color:#fff !important;
-  width: 56px; height:56px;
-  min-width:56px;
-  border-radius:50% !important;
-  margin-top: -28px;
-  box-shadow: 0 8px 18px rgba(140,122,230,0.45);
-  flex:none !important;
-}
-.fab-btn .ic{ font-size:28px; line-height:1; }
 
 .view{ display:none; }
 .view.active{ display:block; }
 
 #fileInputCamera, #fileInputGallery{ display:none; }
 
-/* ---------- Hoja de acciones (crear nuevo ticket) ---------- */
-.action-sheet-overlay{
-  position:fixed; inset:0;
-  background: rgba(43,38,64,0.45);
-  display:none;
-  align-items:flex-end;
-  justify-content:center;
-  z-index: 200;
-}
-.action-sheet-overlay.show{ display:flex; }
-.action-sheet{
-  width:100%; max-width:480px;
+/* ---------- Sync status ---------- */
+.sync-status{
+  position:fixed;
+  bottom: 100px;
+  right: 20px;
   background: var(--paper);
-  border-radius: 20px 20px 0 0;
-  padding: 10px 16px 24px;
-}
-.action-sheet-btn{
-  width:100%;
-  text-align:left;
-  padding: 15px 6px;
-  background:none;
-  border:none;
-  border-bottom: 1px solid var(--line);
-  font-size: 15px;
-  font-weight:600;
-  color: var(--ink);
-  cursor:pointer;
-}
-.action-sheet-btn:last-of-type{ border-bottom:none; }
-.action-sheet-cancel{
-  width:100%;
-  margin-top: 8px;
-  padding: 13px;
-  background: var(--bg);
-  border:none;
-  border-radius: 12px;
-  font-weight:600;
-  color: var(--muted);
-  cursor:pointer;
-}
-
-/* ---------- Cámara personalizada ---------- */
-.camera-page{ padding: 16px 16px 90px; }
-.camera-wrap{
-  position:relative;
-  width:100%;
-  aspect-ratio: 9 / 16;
-  max-height: 70vh;
-  background:#000;
-  border-radius: 16px;
-  overflow:hidden;
-  margin: 0 auto;
-}
-.camera-wrap video{
-  width:100%; height:100%;
-  object-fit:cover;
-}
-.camera-guide{
-  position:absolute; inset: 6% 5%;
-  border: 2px dashed rgba(255,255,255,0.85);
-  border-radius: 10px;
-  pointer-events:none;
-  display:flex; align-items:flex-start; justify-content:center;
-}
-.camera-guide span{
-  background: rgba(0,0,0,0.55);
-  color:#fff;
-  font-size: 11.5px;
-  padding: 4px 10px;
+  border: 1px solid var(--line);
   border-radius: 20px;
-  margin-top: 10px;
-}
-.camera-controls{
-  display:flex;
+  padding: 8px 12px;
+  font-size: 11px;
+  display:none;
   align-items:center;
-  justify-content:space-between;
-  margin-top: 20px;
-  padding: 0 6px;
+  gap:6px;
+  z-index: 40;
 }
-.shutter-btn{
-  width:66px; height:66px;
-  border-radius:50%;
-  background:#fff;
-  border: 4px solid var(--brand-purple);
-  cursor:pointer;
-}
-.cam-cancel{
-  background:none; border:none;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight:600;
-  cursor:pointer;
-  width:70px;
-}
-
-/* ---------- Recortar foto ---------- */
-.crop-page{ padding: 16px 20px 20px; }
-.crop-stage{
-  position:relative;
-  width:100%;
-  max-height: 65vh;
-  overflow:hidden;
-  border-radius: 12px;
-  background:#111;
-  touch-action:none;
-}
-.crop-stage img{ display:block; width:100%; height:auto; user-select:none; -webkit-user-drag:none; }
-.crop-rect{
-  position:absolute;
-  border: 2px solid var(--accent);
-  box-shadow: 0 0 0 2000px rgba(0,0,0,0.5);
-  cursor:move;
-}
-.crop-handle{
-  position:absolute;
-  right:-9px; bottom:-9px;
-  width:22px; height:22px;
+.sync-status.show{ display:flex; }
+.sync-dot{
+  width:6px;
+  height:6px;
   border-radius:50%;
   background: var(--accent);
-  border: 3px solid #fff;
-  cursor: nwse-resize;
+  animation: pulse 2s infinite;
 }
-.crop-actions{
-  display:flex;
-  gap:8px;
-  margin-top: 16px;
-}
-.crop-actions .save-btn{ margin-top:0; flex:1; }
-.crop-actions .backup-btn{ flex:1; margin-bottom:0; }
-.crop-actions .cancel-link{ margin-top:0; flex-shrink:0; }
-
-.pdf-btn{
-  width:100%;
-  margin-top: 10px;
-  padding: 13px;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: var(--paper);
-  color: var(--ink);
-  font-weight:600;
-  font-size: 13.5px;
-  cursor:pointer;
-}
+@keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:0.3; } }
 </style>
 </head>
 <body>
 
-<div id="app">
+<div id="authOverlay" class="auth-overlay">
+  <div class="auth-logo">💰</div>
+  <h2 class="auth-title"><span class="brand-out">Out</span><span class="brand-go">go</span></h2>
+  <p class="auth-subtitle">Control de gastos inteligente</p>
+  <button class="google-btn" id="googleSignInBtn">
+    <span>🔐</span> Inicia sesión con Google
+  </button>
+  <div id="userInfoDisplay" style="display:none;">
+    <div class="user-info">
+      <img id="userAvatar" class="user-avatar" alt="">
+      <div>
+        <div id="userName" style="font-weight:600;"></div>
+        <div id="userEmail" style="font-size:11px; color:var(--muted);"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="app" style="display:none;">
 
   <!-- ============ HEADER ============ -->
   <header class="top">
@@ -926,9 +751,12 @@ nav.bottom button.active{ color: var(--brand-purple); }
         <path d="M 30 62 Q 42 76 58 58 Q 67 48 61 36" stroke="#FFFFFF" stroke-width="7" fill="none" stroke-linecap="round"/>
         <ellipse cx="65" cy="32" rx="10" ry="5.5" fill="#2ED9C3" transform="rotate(-35 65 32)"/>
       </svg>
-      <h1><span class="brand-out">Out</span><span class="brand-go">go</span></h1>
+      <div>
+        <h1><span class="brand-out">Out</span><span class="brand-go">go</span></h1>
+        <p id="todayLabel">—</p>
+      </div>
     </div>
-    <p id="todayLabel">—</p>
+    <button class="header-user-btn" id="userMenuBtn" title="Opciones de usuario">👤</button>
   </header>
 
   <!-- ============ VISTA: DASHBOARD ============ -->
@@ -949,6 +777,15 @@ nav.bottom button.active{ color: var(--brand-purple); }
       </div>
     </div>
 
+    <div class="action-row">
+      <button class="big-btn primary" id="btnPhoto">
+        <span class="icon">📷</span> Subir foto
+      </button>
+      <button class="big-btn secondary" id="btnManual">
+        <span class="icon">✏️</span> Crear ticket
+      </button>
+    </div>
+
     <div class="tabs">
       <button class="tab active" data-period="day">Diario</button>
       <button class="tab" data-period="week">Semanal</button>
@@ -964,42 +801,41 @@ nav.bottom button.active{ color: var(--brand-purple); }
       <button class="today-link" id="btnPeriodToday">Ir a hoy</button>
     </div>
 
+    <section>
+      <div class="chart-container">
+        <div class="chart-title">Gastos por categoría (este mes)</div>
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </section>
+
     <section id="periodContent"></section>
 
   </div>
 
-  <!-- ============ VISTA: PRODUCTOS (análisis) ============ -->
-  <div class="view" id="view-products">
+  <!-- ============ VISTA: ANÁLISIS ============ -->
+  <div class="view" id="view-analytics">
     <section>
-      <div class="section-title">Qué compras y cuánto te cuesta</div>
-      <input type="text" id="productSearch" class="product-search" placeholder="Buscar producto (ej. leche, refresco...)">
-      <div class="sort-toggle">
-        <button class="sort-btn active" data-sort="spent">Por gasto total</button>
-        <button class="sort-btn" data-sort="qty">Por más comprado</button>
+      <div class="section-title">Análisis mensual</div>
+      <div class="chart-container">
+        <div class="chart-title">Evolución de gastos</div>
+        <canvas id="timelineChart"></canvas>
       </div>
-      <div id="productsList"></div>
+      <div class="chart-container">
+        <div class="chart-title">Comparativa mes vs mes anterior</div>
+        <canvas id="comparisonChart"></canvas>
+      </div>
     </section>
   </div>
 
   <!-- ============ VISTA: HISTORIAL ============ -->
   <div class="view" id="view-history">
     <section>
-      <div class="backup-box">
-        <div class="section-title" style="margin-top:0;">Respaldo de tus datos</div>
-        <div class="hint" style="margin-bottom:10px;">Tus tickets se guardan solo en este navegador/dispositivo (IndexedDB). Si limpias caché o cambias de celular, se pierden — exporta un respaldo de vez en cuando.</div>
-        <div class="backup-actions">
-          <button class="backup-btn" id="btnExportJSON">⬇️ Exportar JSON</button>
-          <button class="backup-btn" id="btnExportCSV">⬇️ Exportar CSV (Excel)</button>
-          <button class="backup-btn" id="btnImportJSON">⬆️ Importar respaldo JSON</button>
-        </div>
-        <input type="file" id="importFileInput" accept="application/json" style="display:none;">
-      </div>
       <div class="section-title">Todos los tickets</div>
       <div id="historyList"></div>
     </section>
   </div>
 
-  <!-- ============ VISTA: FORMULARIO (editar/crear) ============ -->
+  <!-- ============ VISTA: FORMULARIO ============ -->
   <div class="view" id="view-form">
     <div class="form-view">
       <button class="back" id="btnBack">← Cancelar</button>
@@ -1036,33 +872,13 @@ nav.bottom button.active{ color: var(--brand-purple); }
       </div>
 
       <div class="items-section">
-        <div class="items-title">Productos (opcional) — para saber cuánto gastas por tipo (carne, bebidas, etc.)</div>
+        <div class="items-title">Productos (opcional)</div>
         <div id="itemsContainer"></div>
         <div class="items-empty" id="itemsEmptyMsg">Agrega los productos del ticket si quieres llevar el detalle.</div>
         <button type="button" class="add-item-btn" id="btnAddItem">+ Agregar producto</button>
         <div class="items-summary" id="itemsSummaryRow" style="display:none;">
           <span>Suma de productos: <span class="sum-val" id="itemsSumValue">$0.00</span></span>
           <button type="button" class="use-sum-btn" id="btnUseSumAsTotal">Usar como total</button>
-        </div>
-      </div>
-
-      <div class="tax-section" id="taxSection">
-        <button type="button" class="tax-toggle" id="btnToggleTax">+ Agregar subtotal / IVA / ISR (opcional)</button>
-        <div class="tax-fields" id="taxFields" style="display:none;">
-          <div class="tax-row">
-            <div class="field" style="margin-bottom:0;">
-              <label for="fSubtotal">Subtotal</label>
-              <input type="number" id="fSubtotal" step="0.01" min="0" placeholder="0.00">
-            </div>
-            <div class="field" style="margin-bottom:0;">
-              <label for="fIVA">IVA</label>
-              <input type="number" id="fIVA" step="0.01" min="0" placeholder="0.00">
-            </div>
-            <div class="field" style="margin-bottom:0;">
-              <label for="fISR">ISR / Otro</label>
-              <input type="number" id="fISR" step="0.01" min="0" placeholder="0.00">
-            </div>
-          </div>
         </div>
       </div>
 
@@ -1078,7 +894,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
           <span>Marcar como posible gasto deducible</span>
         </label>
         <div class="hint" id="deducibleHint"></div>
-        <div class="hint disclaimer">Esto es solo una guía general para tu control personal, no es asesoría fiscal. Para deducir ante el SAT normalmente necesitas la <strong>factura (CFDI)</strong> a tu nombre — el ticket por sí solo casi nunca es suficiente.</div>
+        <div class="hint disclaimer">Esto es solo una guía general para tu control personal, no es asesoría fiscal. Para deducir ante el SAT normalmente necesitas la <strong>factura (CFDI)</strong> a tu nombre/RFC; el ticket o nota de venta por sí solo normalmente no basta.</div>
       </div>
 
       <button class="save-btn" id="btnSave">Guardar gasto</button>
@@ -1086,1686 +902,876 @@ nav.bottom button.active{ color: var(--brand-purple); }
     </div>
   </div>
 
-  <!-- ============ VISTA: RECIBO DIGITAL ============ -->
+  <!-- ============ VISTA: RECIBO ============ -->
   <div class="view" id="view-receipt">
     <div class="receipt-page">
       <button class="back" id="btnReceiptBack">← Volver</button>
       <div id="receiptContent"></div>
       <div class="receipt-actions">
         <button class="save-btn" id="btnReceiptEdit">✏️ Editar</button>
-        <button class="danger-btn" id="btnReceiptDelete" aria-label="Eliminar ticket" title="Eliminar ticket">🗑</button>
-      </div>
-      <button class="pdf-btn" id="btnReceiptPDF">⬇️ Descargar copia en PDF</button>
-    </div>
-  </div>
-
-  <!-- ============ VISTA: CÁMARA PERSONALIZADA ============ -->
-  <div class="view" id="view-camera">
-    <div class="camera-page">
-      <div class="camera-wrap">
-        <video id="cameraVideo" autoplay playsinline muted></video>
-        <div class="camera-guide"><span>Encuadra el ticket completo aquí</span></div>
-      </div>
-      <div class="camera-controls">
-        <button class="cam-cancel" id="btnCameraCancel">Cancelar</button>
-        <button class="shutter-btn" id="btnCameraShutter" aria-label="Tomar foto"></button>
-        <span style="width:70px;"></span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ VISTA: RECORTAR FOTO ============ -->
-  <div class="view" id="view-crop">
-    <div class="crop-page">
-      <div class="section-title">Recorta para dejar solo el ticket</div>
-      <div class="crop-stage" id="cropStage">
-        <img id="cropImage" alt="Foto capturada">
-        <div class="crop-rect" id="cropRect"><div class="crop-handle" id="cropHandle"></div></div>
-      </div>
-      <div class="crop-actions">
-        <button class="cancel-link" id="btnCropCancel">Cancelar</button>
-        <button class="backup-btn" id="btnUseFullPhoto">Usar foto completa</button>
-        <button class="save-btn" id="btnCropConfirm">Recortar y continuar</button>
+        <button class="danger-btn" id="btnReceiptDelete">🗑 Eliminar ticket</button>
       </div>
     </div>
   </div>
 
 </div>
 
-<!-- Hoja de acciones para crear un nuevo ticket -->
-<div id="actionSheetOverlay" class="action-sheet-overlay">
-  <div class="action-sheet">
-    <button class="action-sheet-btn" id="actTakePhoto">📷 Tomar foto</button>
-    <button class="action-sheet-btn" id="actGallery">🖼️ Elegir de galería</button>
-    <button class="action-sheet-btn" id="actManual">✏️ Ticket manual</button>
-    <button class="action-sheet-cancel" id="actCancel">Cancelar</button>
-  </div>
+<!-- Sync status indicator -->
+<div class="sync-status" id="syncStatus">
+  <div class="sync-dot"></div>
+  <span id="syncLabel">Sincronizando...</span>
 </div>
 
-<!-- Overlay de procesamiento OCR -->
+<!-- Loading overlay -->
 <div id="loadingOverlay">
   <div class="spinner"></div>
-  <div id="loadingLabel">Leyendo el ticket…</div>
+  <div>Procesando...</div>
   <div class="pct" id="ocrPct">0%</div>
 </div>
 
-<!-- Inputs de archivo (ocultos) -->
+<!-- Hidden inputs -->
 <input type="file" accept="image/*" capture="environment" id="fileInputCamera">
 <input type="file" accept="image/*" id="fileInputGallery">
 
 <!-- ============ NAV INFERIOR ============ -->
 <nav class="bottom">
-  <button data-view="dashboard" class="active" aria-label="Inicio"><span class="ic">🏠</span></button>
-  <button data-view="products" aria-label="Productos"><span class="ic">📦</span></button>
-  <button class="fab-btn" id="navFabBtn" aria-label="Nuevo"><span class="ic">＋</span></button>
-  <button data-view="history" aria-label="Historial"><span class="ic">🧾</span></button>
+  <button data-view="dashboard" class="active"><span class="ic">🏠</span></button>
+  <button data-view="analytics"><span class="ic">📊</span></button>
+  <button data-view="history"><span class="ic">🧾</span></button>
 </nav>
 
-<!-- Tesseract.js (OCR), jsQR (lectura de códigos QR/CFDI) y jsPDF (exportar copia en PDF) vía CDN -->
+<!-- ============ LIBRERÍAS ============ -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
 
 <script>
 /* =========================================================
-   DATOS: comercios de México y categorías
+   FIREBASE CONFIG
+   ========================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyCxwN1C5mKvPG7x3murIuJxuYhUnLzkQvw",
+  authDomain: "outgo-77b3e.firebaseapp.com",
+  projectId: "outgo-77b3e",
+  storageBucket: "outgo-77b3e.firebasestorage.app",
+  messagingSenderId: "913961970596",
+  appId: "1:913961970596:web:1770c761f3ba4f40842f31"
+};
+
+// Inicializar Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* =========================================================
+   GLOBAL STATE
+   ========================================================= */
+let currentUser = null;
+let currentTicketId = null;
+let tickets = [];
+let currentPeriod = 'day';
+let currentDate = new Date();
+let categoryChartInstance = null;
+let timelineChartInstance = null;
+let comparisonChartInstance = null;
+
+/* =========================================================
+   DATOS: TIENDAS Y CATEGORÍAS
    ========================================================= */
 const STORES = [
   { name: "OXXO", category: "Conveniencia/Tiendita" },
   { name: "7-Eleven", category: "Conveniencia/Tiendita" },
-  { name: "Waldo's", category: "Conveniencia/Tiendita" },
-  { name: "Tiendita/Abarrotes local", category: "Conveniencia/Tiendita" },
   { name: "Walmart", category: "Supermercado" },
-  { name: "Walmart Express", category: "Supermercado" },
   { name: "Bodega Aurrerá", category: "Supermercado" },
   { name: "Sam's Club", category: "Club de precios" },
   { name: "Costco", category: "Club de precios" },
   { name: "Chedraui", category: "Supermercado" },
   { name: "Soriana", category: "Supermercado" },
-  { name: "La Comer / City Market", category: "Supermercado" },
-  { name: "HEB", category: "Supermercado" },
-  { name: "Casa Ley", category: "Supermercado" },
   { name: "Farmacias Guadalajara", category: "Salud/Farmacia" },
-  { name: "Farmacias del Ahorro", category: "Salud/Farmacia" },
-  { name: "Farmacias Similares", category: "Salud/Farmacia" },
   { name: "Home Depot", category: "Ferretería/Hogar" },
-  { name: "Ferretería local", category: "Ferretería/Hogar" },
   { name: "Liverpool", category: "Tienda departamental" },
-  { name: "Coppel", category: "Tienda departamental" },
-  { name: "Elektra", category: "Tienda departamental" },
   { name: "Pemex", category: "Gasolina" },
-  { name: "Shell", category: "Gasolina" },
-  { name: "BP", category: "Gasolina" },
-  { name: "Mobil", category: "Gasolina" },
-  { name: "G500", category: "Gasolina" },
-  { name: "Gas Tomza", category: "Gas LP (cocina)" },
-  { name: "Zeta Gas", category: "Gas LP (cocina)" },
-  { name: "Gas Express Nieto", category: "Gas LP (cocina)" },
-  { name: "CFE (luz)", category: "Servicios (agua, luz, internet)" },
-  { name: "Agua (organismo operador)", category: "Servicios (agua, luz, internet)" },
-  { name: "Telmex", category: "Servicios (agua, luz, internet)" },
-  { name: "Izzi", category: "Servicios (agua, luz, internet)" },
-  { name: "Totalplay", category: "Servicios (agua, luz, internet)" },
   { name: "Netflix", category: "Streaming y plataformas" },
   { name: "Spotify", category: "Streaming y plataformas" },
-  { name: "Disney+", category: "Streaming y plataformas" },
-  { name: "Amazon Prime Video", category: "Streaming y plataformas" },
-  { name: "HBO Max", category: "Streaming y plataformas" },
   { name: "Otro", category: "" }
 ];
 
 const CATEGORIES = [
   "Supermercado","Conveniencia/Tiendita","Club de precios","Salud/Farmacia",
   "Ferretería/Hogar","Tienda departamental","Comida/Restaurante","Gasolina",
-  "Gas LP (cocina)","Transporte","Servicios (agua, luz, internet)","Streaming y plataformas",
+  "Transporte","Servicios (agua, luz, internet)","Streaming y plataformas",
   "Entretenimiento","Otros"
 ];
 
-// Pistas educativas sobre deducibilidad fiscal por categoría.
-// OJO: esto NO es asesoría fiscal — solo orienta. En México, para que un
-// gasto sea deducible ante el SAT casi siempre se necesita el CFDI (factura)
-// a tu nombre/RFC; el ticket o nota de venta por sí solo normalmente no basta.
 const DEDUCIBLE_HINTS = {
-  "Gasolina": "Puede ser deducible con factura (CFDI) si pagaste con tarjeta o transferencia (el SAT no acepta efectivo para este gasto).",
-  "Gas LP (cocina)": "Deducible solo como gasto de negocio con factura a tu nombre (para uso doméstico normalmente no aplica).",
-  "Servicios (agua, luz, internet)": "Deducible solo si facturas a tu nombre y usas parte del gasto para trabajo/negocio (ej. oficina en casa).",
-  "Salud/Farmacia": "Los gastos médicos y de farmacia con factura suelen ser deducibles en la declaración anual de personas físicas.",
-  "Comida/Restaurante": "Solo deducible como gasto de negocio: con factura, pago electrónico, y hasta un porcentaje límite.",
-  "Ferretería/Hogar": "Deducible únicamente si es un gasto de negocio con factura.",
-  "default": "Generalmente no es deducible para gasto personal, salvo que sea un gasto de negocio respaldado con factura."
+  "Gasolina": "Puede ser deducible con factura (CFDI) si pagaste con tarjeta o transferencia.",
+  "Servicios (agua, luz, internet)": "Deducible solo si facturas a tu nombre y usas parte para trabajo/negocio.",
+  "Salud/Farmacia": "Los gastos médicos con factura suelen ser deducibles en declaración anual.",
+  "Comida/Restaurante": "Solo deducible como gasto de negocio: con factura y pago electrónico.",
+  "default": "Generalmente no es deducible para gasto personal, salvo sea gasto de negocio con factura."
 };
 
-// Dominios y colores para mostrar el logo/ícono del comercio en tickets y recibos.
-// No usamos imágenes de logos guardadas en el repo (evita temas de derechos de marca);
-// en su lugar se intenta cargar el favicon público del sitio del comercio, y si falla
-// se muestra una insignia con iniciales y color de marca aproximado.
-const STORE_DOMAINS = {
-  "OXXO": "oxxo.com", "7-Eleven": "7-eleven.com.mx", "Waldo's": "waldos.com.mx",
-  "Walmart": "walmart.com.mx", "Walmart Express": "walmart.com.mx",
-  "Bodega Aurrerá": "bodegaaurrera.com.mx", "Sam's Club": "sams.com.mx",
-  "Costco": "costco.com.mx", "Chedraui": "chedraui.com.mx", "Soriana": "soriana.com",
-  "La Comer / City Market": "lacomer.com.mx", "HEB": "heb.com.mx", "Casa Ley": "masley.com.mx",
-  "Farmacias Guadalajara": "farmaciasguadalajara.com", "Farmacias del Ahorro": "fahorro.com.mx",
-  "Farmacias Similares": "farmaciasimilares.com.mx", "Home Depot": "homedepot.com.mx",
-  "Liverpool": "liverpool.com.mx", "Coppel": "coppel.com", "Elektra": "elektra.com.mx",
-  "Pemex": "pemex.com", "Shell": "shell.com.mx", "BP": "bp.com", "Mobil": "mobil.com", "G500": "g500.com.mx",
-  "Gas Tomza": "tomza.com.mx", "Zeta Gas": "zetagas.com.mx", "Gas Express Nieto": "gasnieto.com.mx",
-  "CFE (luz)": "cfe.mx", "Telmex": "telmex.com", "Izzi": "izzi.mx", "Totalplay": "totalplay.com.mx",
-  "Netflix": "netflix.com", "Spotify": "spotify.com", "Disney+": "disneyplus.com",
-  "Amazon Prime Video": "primevideo.com", "HBO Max": "max.com"
-};
-const STORE_COLORS = {
-  "OXXO": "#E4032E", "7-Eleven": "#00703C", "Waldo's": "#F7941E",
-  "Walmart": "#0071CE", "Walmart Express": "#0071CE", "Bodega Aurrerá": "#FFC220",
-  "Sam's Club": "#004F9F", "Costco": "#E31837", "Chedraui": "#F58220", "Soriana": "#EE2E24",
-  "La Comer / City Market": "#6CC24A", "HEB": "#E4002B", "Casa Ley": "#004B87",
-  "Farmacias Guadalajara": "#0072BC", "Farmacias del Ahorro": "#00A651",
-  "Farmacias Similares": "#FDB913", "Home Depot": "#F96302", "Ferretería local": "#6f6a5e",
-  "Liverpool": "#5C2D91", "Coppel": "#E4032E", "Elektra": "#FFD100",
-  "Pemex": "#00693C", "Shell": "#FBCE07", "BP": "#00914A", "Mobil": "#EE2E24", "G500": "#F7941E",
-  "Gas Tomza": "#004B87", "Zeta Gas": "#E4032E", "Gas Express Nieto": "#F58220",
-  "CFE (luz)": "#00A14B", "Telmex": "#0057A6", "Izzi": "#5C2D91", "Totalplay": "#E4032E",
-  "Netflix": "#E50914", "Spotify": "#1DB954", "Disney+": "#113CCF",
-  "Amazon Prime Video": "#00A8E1", "HBO Max": "#000000", "Tiendita/Abarrotes local": "#8a6d3b",
-  "Otro": "#6f6a5e"
-};
-
-// Categorías de PRODUCTO (no de comercio) — sirven para responder
-// "¿cuánto gasté en carne / bebidas / limpieza...?" sin importar en qué tienda se compró.
 const PRODUCT_CATEGORIES = [
-  "Carnes y pescados",
-  "Lácteos y huevo",
-  "Frutas y verduras",
-  "Bebidas",
-  "Panadería y tortillería",
-  "Botanas y dulces",
-  "Abarrotes y despensa",
-  "Limpieza del hogar",
-  "Higiene personal",
-  "Mascotas",
-  "Otros"
+  "Carnes y pescados", "Lácteos y huevo", "Frutas y verduras", "Bebidas",
+  "Panadería y tortillería", "Botanas y dulces", "Abarrotes y despensa",
+  "Limpieza del hogar", "Higiene personal", "Mascotas", "Otros"
 ];
 
-// Palabras clave (en el texto del ticket, ya en mayúsculas) para sugerir
-// la categoría de cada producto detectado por OCR. Es un punto de partida:
-// el usuario siempre puede corregirla en el selector de cada producto.
-const PRODUCT_CATEGORY_KEYWORDS = [
-  { cat:"Carnes y pescados", words:["POLLO","RES","CERDO","CARNE","JAMON","CHULETA","MILANESA","CHORIZO","TOCINO","PESCADO","CAMARON","ATUN","SALCHICHA","BISTEC","MOLIDA"] },
-  { cat:"Lácteos y huevo", words:["LECHE","QUESO","YOGUR","HUEVO","CREMA","MANTEQUILLA","YOGURT"] },
-  { cat:"Frutas y verduras", words:["MANZANA","PLATANO","TOMATE","JITOMATE","CEBOLLA","LECHUGA","PAPA","AGUACATE","LIMON","NARANJA","ZANAHORIA","CHILE","FRUTA","VERDURA"] },
-  { cat:"Bebidas", words:["REFRESCO","COCA","AGUA","CERVEZA","JUGO","PEPSI","SODA","VINO","CAFE","TE ","GATORADE","BOING"] },
-  { cat:"Panadería y tortillería", words:["PAN","BOLILLO","TORTILLA","PASTEL","DONA","BIRROTE"] },
-  { cat:"Botanas y dulces", words:["PAPAS","SABRITAS","GALLETA","CHOCOLATE","DULCE","CHICLE","CACAHUATE","FRITOS","CHETOS"] },
-  { cat:"Limpieza del hogar", words:["JABON","DETERGENTE","CLORO","FABULOSO","PINOL","SUAVITEL","SERVILLETA","TRAPEADOR","ESCOBA"] },
-  { cat:"Higiene personal", words:["SHAMPOO","PASTA DENTAL","PAPEL HIGIENICO","DESODORANTE","CEPILLO","RASTRILLO","TOALLA FEMENINA","JABON DE TOCADOR"] },
-  { cat:"Mascotas", words:["CROQUETAS","PURINA","DOGCHOW","WHISKAS","PEDIGREE"] }
-];
-
-function guessProductCategory(description){
-  const text = (description||"").toUpperCase();
-  for(const entry of PRODUCT_CATEGORY_KEYWORDS){
-    if(entry.words.some(w=>text.includes(w))) return entry.cat;
-  }
-  return "Otros";
-}
+const STORE_COLORS = {
+  "OXXO": "#E4032E", "7-Eleven": "#00703C", "Walmart": "#0071CE",
+  "Bodega Aurrerá": "#FFC220", "Sam's Club": "#004F9F", "Costco": "#E31837",
+  "Chedraui": "#F58220", "Soriana": "#EE2E24", "Farmacias Guadalajara": "#0072BC",
+  "Home Depot": "#F96302", "Liverpool": "#5C2D91", "Pemex": "#00693C",
+  "Netflix": "#E50914", "Spotify": "#1DB954", "Otro": "#6f6a5e"
+};
 
 /* =========================================================
-   INSIGNIA DE COMERCIO (logo o iniciales)
-   No guardamos imágenes de logos de terceros en el repo (temas de
-   marca registrada). En su lugar intentamos cargar el favicon público
-   del sitio del comercio (Google favicon service, sin necesidad de
-   API key). Si falla o el comercio no tiene dominio conocido, se
-   muestra una insignia con iniciales y un color aproximado de marca.
+   AUTH FUNCTIONS
    ========================================================= */
-function getInitials(name){
-  const clean = (name||"?").replace(/[^a-zA-Z0-9À-ÿ\s]/g," ").trim();
-  const words = clean.split(/\s+/).filter(Boolean);
-  if(words.length===0) return "?";
-  if(words.length===1) return words[0].slice(0,2).toUpperCase();
-  return (words[0][0]+words[1][0]).toUpperCase();
-}
-function hashColor(str){
-  let hash = 0;
-  for(let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
-  const hue = Math.abs(hash)%360;
-  return `hsl(${hue},45%,42%)`;
-}
-function storeColor(name){ return STORE_COLORS[name] || hashColor(name||"?"); }
-
-function storeBadgeHTML(name){
-  const domain = STORE_DOMAINS[name];
-  const color = storeColor(name);
-  const initials = getInitials(name);
-  if(domain){
-    return `<div class="store-badge img-badge" style="background:${color}" data-initials="${escapeAttr(initials)}" data-color="${color}">
-      <img src="https://www.google.com/s2/favicons?sz=64&domain=${domain}" alt="">
-    </div>`;
-  }
-  return `<div class="store-badge mono" style="background:${color}">${initials}</div>`;
-}
-// Reemplaza el favicon por la insignia de iniciales si la imagen no carga
-// (offline, dominio caído, etc.). Se llama después de insertar el HTML en el DOM.
-function attachLogoFallbacks(container){
-  container.querySelectorAll(".img-badge img").forEach(img=>{
-    img.addEventListener("error", ()=>{
-      const badge = img.parentElement;
-      badge.classList.remove("img-badge");
-      badge.classList.add("mono");
-      badge.textContent = badge.dataset.initials || "?";
-    }, { once:true });
-  });
-}
-
-// Alias para detectar el comercio dentro del texto OCR (todo en mayúsculas, sin acentos)
-const STORE_ALIASES = [
-  { match: "OXXO", store: "OXXO" },
-  { match: "7 ELEVEN", store: "7-Eleven" },
-  { match: "7-ELEVEN", store: "7-Eleven" },
-  { match: "WALDOS", store: "Waldo's" },
-  { match: "BODEGA AURRERA", store: "Bodega Aurrerá" },
-  { match: "WALMART EXPRESS", store: "Walmart Express" },
-  { match: "WALMART", store: "Walmart" },
-  { match: "SAMS CLUB", store: "Sam's Club" },
-  { match: "SAM'S CLUB", store: "Sam's Club" },
-  { match: "COSTCO", store: "Costco" },
-  { match: "CHEDRAUI", store: "Chedraui" },
-  { match: "SORIANA", store: "Soriana" },
-  { match: "CITY MARKET", store: "La Comer / City Market" },
-  { match: "LA COMER", store: "La Comer / City Market" },
-  { match: "HEB", store: "HEB" },
-  { match: "CASA LEY", store: "Casa Ley" },
-  { match: "FARMACIAS GUADALAJARA", store: "Farmacias Guadalajara" },
-  { match: "FARMACIA GUADALAJARA", store: "Farmacias Guadalajara" },
-  { match: "FARMACIAS DEL AHORRO", store: "Farmacias del Ahorro" },
-  { match: "FARMACIAS SIMILARES", store: "Farmacias Similares" },
-  { match: "HOME DEPOT", store: "Home Depot" },
-  { match: "LIVERPOOL", store: "Liverpool" },
-  { match: "COPPEL", store: "Coppel" },
-  { match: "ELEKTRA", store: "Elektra" },
-  { match: "PEMEX", store: "Pemex" },
-  { match: "SHELL", store: "Shell" },
-  { match: "MOBIL", store: "Mobil" },
-  { match: "CFE", store: "CFE (luz)" },
-  { match: "TELMEX", store: "Telmex" },
-  { match: "IZZI", store: "Izzi" },
-  { match: "TOTALPLAY", store: "Totalplay" }
-];
-
-/* =========================================================
-   INDEXEDDB — almacenamiento local del dispositivo
-   Nota: es local al navegador/dispositivo. Si el usuario borra
-   datos del navegador o cambia de celular, se pierde el historial.
-   Para el beta está bien; a futuro conviene sincronizar con backend.
-   ========================================================= */
-let db;
-function openDB(){
-  return new Promise((resolve, reject)=>{
-    const req = indexedDB.open("gastosDB", 1);
-    req.onupgradeneeded = (e)=>{
-      const _db = e.target.result;
-      if(!_db.objectStoreNames.contains("tickets")){
-        const store = _db.createObjectStore("tickets", { keyPath:"id", autoIncrement:true });
-        store.createIndex("date", "date", { unique:false });
-      }
-    };
-    req.onsuccess = (e)=>{ db = e.target.result; resolve(db); };
-    req.onerror = (e)=> reject(e);
-  });
-}
-function addTicket(ticket){
-  return new Promise((resolve, reject)=>{
-    const tx = db.transaction("tickets","readwrite");
-    const req = tx.objectStore("tickets").add(ticket);
-    req.onsuccess = ()=> resolve(req.result);
-    req.onerror = (e)=> reject(e);
-  });
-}
-function getAllTickets(){
-  return new Promise((resolve, reject)=>{
-    const tx = db.transaction("tickets","readonly");
-    const req = tx.objectStore("tickets").getAll();
-    req.onsuccess = ()=> resolve(req.result.sort((a,b)=> b.date.localeCompare(a.date) || b.id-a.id));
-    req.onerror = (e)=> reject(e);
-  });
-}
-function updateTicket(ticket){
-  return new Promise((resolve, reject)=>{
-    const tx = db.transaction("tickets","readwrite");
-    const req = tx.objectStore("tickets").put(ticket);
-    req.onsuccess = ()=> resolve(req.result);
-    req.onerror = (e)=> reject(e);
-  });
-}
-function deleteTicket(id){
-  return new Promise((resolve, reject)=>{
-    const tx = db.transaction("tickets","readwrite");
-    const req = tx.objectStore("tickets").delete(id);
-    req.onsuccess = ()=> resolve();
-    req.onerror = (e)=> reject(e);
-  });
-}
-
-/* =========================================================
-   UTILIDADES DE FECHA
-   ========================================================= */
-function todayISO(){ return toLocalISODate(new Date()); }
-function toLocalISODate(d){
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth()+1).padStart(2,"0");
-  const dd = String(d.getDate()).padStart(2,"0");
-  return `${yyyy}-${mm}-${dd}`;
-}
-function fmtMoney(n){ return "$" + (Number(n)||0).toFixed(2); }
-function startOfWeek(d){
-  const date = new Date(d);
-  const day = (date.getDay()+6)%7; // lunes=0
-  date.setDate(date.getDate()-day);
-  return date;
-}
-function isInWeekOf(dateStr, refDate=new Date()){
-  const d = new Date(dateStr+"T00:00:00");
-  const start = startOfWeek(refDate); start.setHours(0,0,0,0);
-  const end = new Date(start); end.setDate(end.getDate()+6); end.setHours(23,59,59,999);
-  return d>=start && d<=end;
-}
-function isInMonthOf(dateStr, refDate=new Date()){
-  const d = new Date(dateStr+"T00:00:00");
-  return d.getFullYear()===refDate.getFullYear() && d.getMonth()===refDate.getMonth();
-}
-const DIAS = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
-
-/* =========================================================
-   OCR: extracción heurística de comercio / fecha / total /
-   subtotal / impuestos (IVA, ISR)
-   Esto es "mejor esfuerzo" — por eso SIEMPRE se muestra la
-   pantalla de edición para que el usuario confirme o corrija.
-   ========================================================= */
-
-// Normaliza un monto detectado por OCR a formato numérico estándar.
-// Maneja separadores de miles con coma ("1,500.00") o espacio ("1 500.00").
-function normalizeAmountStr(raw){
-  let s = (raw||"").trim().replace(/\s+/g,"");
-  if(s.includes(",")) s = s.replace(/,/g,"");
-  return s;
-}
-
-// Busca el último monto ($X.XX) dentro de una línea de texto.
-const MONEY_REGEX = /\d{1,3}(?:[,\s]\d{3})*\.\d{2}|\d+\.\d{2}/g;
-function lastAmountInLine(line){
-  const nums = line.match(MONEY_REGEX);
-  if(!nums) return "";
-  return normalizeAmountStr(nums[nums.length-1]);
-}
-
-function parseTicketText(rawText){
-  const text = (rawText||"").toUpperCase();
-  const lines = text.split("\n").map(l=>l.trim()).filter(Boolean);
-
-  // 1) Comercio
-  let detectedStore = "";
-  for(const alias of STORE_ALIASES){
-    if(text.includes(alias.match)){ detectedStore = alias.store; break; }
-  }
-
-  // 2) Fecha (formato típico MX: dd/mm/aaaa, también acepta dd-mm-aaaa y dd.mm.aaaa)
-  let detectedDate = "";
-  const dateMatch = text.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
-  if(dateMatch){
-    let [, d, m, y] = dateMatch;
-    if(y.length===2) y = "20"+y;
-    const dd = d.padStart(2,"0"), mm = m.padStart(2,"0");
-    if(Number(mm)>=1 && Number(mm)<=12 && Number(dd)>=1 && Number(dd)<=31){
-      detectedDate = `${y}-${mm}-${dd}`;
+function initAuth() {
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      document.getElementById('authOverlay').classList.add('hidden');
+      document.getElementById('app').style.display = 'block';
+      loadTicketsFromFirestore();
+      initServiceWorker();
+    } else {
+      currentUser = null;
+      document.getElementById('authOverlay').classList.remove('hidden');
+      document.getElementById('app').style.display = 'none';
     }
-  }
-
-  // 3) Total — prioriza la línea que dice "TOTAL" (y no "SUBTOTAL"). Cubre
-  // variantes como "TOTAL A PAGAR", "TOTAL M.N.", "TOTAL:".
-  let detectedTotal = "";
-  const totalLine = lines.find(l => l.includes("TOTAL") && !l.includes("SUBTOTAL"));
-  if(totalLine) detectedTotal = lastAmountInLine(totalLine);
-  if(!detectedTotal){
-    const all = text.match(MONEY_REGEX) || [];
-    const nums = all.map(n=>parseFloat(normalizeAmountStr(n))).filter(n=>!isNaN(n));
-    if(nums.length) detectedTotal = Math.max(...nums).toFixed(2);
-  }
-
-  // 4) Subtotal
-  let detectedSubtotal = "";
-  const subtotalLine = lines.find(l => l.includes("SUBTOTAL"));
-  if(subtotalLine) detectedSubtotal = lastAmountInLine(subtotalLine);
-
-  // 5) IVA (acepta "IVA", "IVA INCLUIDO", "I.V.A.")
-  let detectedIVA = "";
-  const ivaLine = lines.find(l => l.replace(/\./g,"").includes("IVA"));
-  if(ivaLine) detectedIVA = lastAmountInLine(ivaLine);
-
-  // 6) ISR (menos común en tickets de compra, más en recibos/facturas de servicios)
-  let detectedISR = "";
-  const isrLine = lines.find(l => l.includes("ISR"));
-  if(isrLine) detectedISR = lastAmountInLine(isrLine);
-
-  // 7) Descripción de servicio, para recibos de pago (ej. "PAGO TELMEX (555...)")
-  // en vez de tickets de compra con productos.
-  let detectedDescription = "";
-  const pagoLine = lines.find(l => l.includes("PAGO "));
-  if(pagoLine) detectedDescription = pagoLine.trim();
-
-  return {
-    store: detectedStore, date: detectedDate, total: detectedTotal,
-    subtotal: detectedSubtotal, iva: detectedIVA, isr: detectedISR,
-    description: detectedDescription
-  };
+  });
 }
 
+document.getElementById('googleSignInBtn').addEventListener('click', async () => {
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await auth.signInWithPopup(provider);
+  } catch (err) {
+    console.error('Error signing in:', err);
+    alert('Error al iniciar sesión');
+  }
+});
+
+document.getElementById('userMenuBtn').addEventListener('click', async () => {
+  if (confirm('¿Cerrar sesión?')) {
+    await auth.signOut();
+  }
+});
+
 /* =========================================================
-   DETECCIÓN DE PRODUCTOS (líneas del ticket)
-   IMPORTANTE — límite honesto de este enfoque:
-   Tesseract solo entrega texto plano, sin columnas. No sabemos
-   con certeza qué número es "cantidad" y cuál es "precio", así
-   que NO se intenta adivinar cantidad (para no combinar dos
-   heurísticas erróneas). Cada línea con un precio al final se
-   toma como 1 producto con cantidad=1 y costo=ese precio.
-   El usuario debe revisar/corregir cantidades y categorías.
-   Para una extracción realmente confiable línea por línea
-   (con cantidades correctas) se necesitaría un modelo con
-   visión en vez de OCR de texto plano.
+   FIRESTORE FUNCTIONS
    ========================================================= */
-const IGNORE_LINE_WORDS = [
-  "TOTAL","SUBTOTAL","IVA","EFECTIVO","TARJETA","CAMBIO","PAGO","GRACIAS",
-  "TICKET","FOLIO","CAJA","ATIENDE","RFC","FECHA","HORA","CLIENTE",
-  "DIRECCION","TEL","WWW","ARTICULOS","PIEZAS","DESCUENTO","PROPINA",
-  "AUTORIZACION","APROBADO","REFERENCIA","TERMINAL","CAJERO","SUCURSAL"
-];
-
-function parseLineItems(rawText){
-  const lines = (rawText||"").split("\n").map(l=>l.trim()).filter(Boolean);
-  const moneyAtEnd = /(\d{1,3}(?:,\d{3})*\.\d{2}|\d+\.\d{2})\s*[A-Za-z]?\s*$/;
-  const items = [];
-
-  for(const line of lines){
-    const upper = line.toUpperCase();
-    if(IGNORE_LINE_WORDS.some(w=>upper.includes(w))) continue;
-
-    const m = line.match(moneyAtEnd);
-    if(!m) continue;
-
-    const price = parseFloat(normalizeAmountStr(m[1]));
-    if(isNaN(price) || price<=0 || price>50000) continue;
-
-    let description = line.slice(0, m.index).trim();
-    description = description.replace(/^[\d\s.xX*]+/, "").trim(); // quita código/cantidad suelta al inicio
-    if(description.length < 2) continue;
-
-    items.push({
-      description: description,
-      quantity: 1,
-      cost: price,
-      category: guessProductCategory(description)
+async function loadTicketsFromFirestore() {
+  try {
+    const querySnapshot = await db.collection('users').doc(currentUser.uid)
+      .collection('tickets').orderBy('date', 'desc').get();
+    
+    tickets = [];
+    querySnapshot.forEach(doc => {
+      tickets.push({
+        id: doc.id,
+        ...doc.data(),
+        date: doc.data().date?.toDate ? doc.data().date.toDate() : new Date(doc.data().date)
+      });
     });
-
-    if(items.length>=25) break; // límite de seguridad
+    
+    updateUI();
+    showSyncStatus('Sincronizado');
+  } catch (err) {
+    console.error('Error loading tickets:', err);
   }
-  return items;
+}
+
+async function saveTicketToFirestore(ticket) {
+  if (!currentUser) return;
+  
+  try {
+    showSyncStatus('Sincronizando...');
+    const ticketData = {
+      ...ticket,
+      date: new Date(ticket.date)
+    };
+    
+    if (currentTicketId) {
+      await db.collection('users').doc(currentUser.uid)
+        .collection('tickets').doc(currentTicketId).update(ticketData);
+    } else {
+      const docRef = await db.collection('users').doc(currentUser.uid)
+        .collection('tickets').add(ticketData);
+      currentTicketId = docRef.id;
+    }
+    
+    await loadTicketsFromFirestore();
+    showSyncStatus('Sincronizado ✓');
+  } catch (err) {
+    console.error('Error saving ticket:', err);
+    alert('Error al guardar el ticket');
+  }
+}
+
+async function deleteTicketFromFirestore(ticketId) {
+  if (!currentUser) return;
+  
+  try {
+    await db.collection('users').doc(currentUser.uid)
+      .collection('tickets').doc(ticketId).delete();
+    await loadTicketsFromFirestore();
+  } catch (err) {
+    console.error('Error deleting ticket:', err);
+  }
+}
+
+function showSyncStatus(message) {
+  const syncStatus = document.getElementById('syncStatus');
+  const syncLabel = document.getElementById('syncLabel');
+  syncLabel.textContent = message;
+  syncStatus.classList.add('show');
+  if (message.includes('✓')) {
+    setTimeout(() => syncStatus.classList.remove('show'), 2000);
+  }
 }
 
 /* =========================================================
-   IMAGEN: redimensionar/comprimir antes de OCR y guardado
-   (evita imágenes gigantes de la cámara y acelera el OCR)
+   UI FUNCTIONS
    ========================================================= */
-function fileToCompressedDataURL(file, maxWidth){
-  return new Promise((resolve, reject)=>{
-    const reader = new FileReader();
-    reader.onload = (e)=>{
-      const img = new Image();
-      img.onload = ()=>{
-        const scale = Math.min(1, maxWidth/img.width);
-        const w = Math.round(img.width*scale), h = Math.round(img.height*scale);
-        const canvas = document.createElement("canvas");
-        canvas.width=w; canvas.height=h;
-        canvas.getContext("2d").drawImage(img,0,0,w,h);
-        resolve(canvas.toDataURL("image/jpeg", 0.78));
-      };
-      img.onerror = reject;
-      img.src = e.target.result;
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+function updateUI() {
+  updateSummary();
+  updatePeriodContent();
+  updateHistoryList();
+  updateCharts();
+}
+
+function updateSummary() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay());
+  
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  
+  const sumToday = tickets
+    .filter(t => new Date(t.date).toDateString() === today.toDateString())
+    .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+  
+  const sumWeek = tickets
+    .filter(t => new Date(t.date) >= startOfWeek && new Date(t.date) <= today)
+    .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+  
+  const sumMonth = tickets
+    .filter(t => {
+      const tDate = new Date(t.date);
+      return tDate.getMonth() === today.getMonth() && tDate.getFullYear() === today.getFullYear();
+    })
+    .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+  
+  document.getElementById('sumToday').textContent = `$${sumToday.toFixed(2)}`;
+  document.getElementById('sumWeek').textContent = `$${sumWeek.toFixed(2)}`;
+  document.getElementById('sumMonth').textContent = `$${sumMonth.toFixed(2)}`;
+  
+  document.getElementById('todayLabel').textContent = today.toLocaleDateString('es-MX', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
+function updatePeriodContent() {
+  const content = document.getElementById('periodContent');
+  content.innerHTML = '';
+  
+  let filteredTickets = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  if (currentPeriod === 'day') {
+    filteredTickets = tickets.filter(t =>
+      new Date(t.date).toDateString() === today.toDateString()
+    );
+    document.getElementById('periodLabel').textContent = today.toLocaleDateString('es-MX', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric'
+    });
+  } else if (currentPeriod === 'week') {
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    filteredTickets = tickets.filter(t =>
+      new Date(t.date) >= startOfWeek && new Date(t.date) <= today
+    );
+    document.getElementById('periodLabel').textContent = `Semana ${Math.ceil((today.getDate() + 6 - today.getDay()) / 7)}`;
+  } else if (currentPeriod === 'month') {
+    filteredTickets = tickets.filter(t => {
+      const tDate = new Date(t.date);
+      return tDate.getMonth() === today.getMonth() && tDate.getFullYear() === today.getFullYear();
+    });
+    document.getElementById('periodLabel').textContent = today.toLocaleDateString('es-MX', {
+      month: 'long',
+      year: 'numeric'
+    });
+  }
+  
+  if (filteredTickets.length === 0) {
+    content.innerHTML = '<div class="empty-state">No hay gastos en este período</div>';
+    return;
+  }
+  
+  const section = document.createElement('section');
+  const title = document.createElement('div');
+  title.className = 'section-title';
+  title.textContent = 'Gastos registrados';
+  section.appendChild(title);
+  
+  filteredTickets.forEach(ticket => {
+    const ticketEl = createTicketElement(ticket);
+    section.appendChild(ticketEl);
+  });
+  
+  content.appendChild(section);
+}
+
+function createTicketElement(ticket) {
+  const div = document.createElement('div');
+  div.className = 'ticket';
+  
+  const store = STORES.find(s => s.name === ticket.store)?.name || ticket.store;
+  const color = STORE_COLORS[store] || '#6f6a5e';
+  
+  div.innerHTML = `
+    <div class="store-badge" style="background:${color}">
+      ${store.substring(0, 2).toUpperCase()}
+    </div>
+    <div class="info">
+      <div class="store">${store}</div>
+      <div class="meta">${new Date(ticket.date).toLocaleDateString('es-MX')} · ${ticket.category || 'Sin categoría'}</div>
+    </div>
+    <div class="amount">$${parseFloat(ticket.amount || 0).toFixed(2)}</div>
+    <button class="del" title="Eliminar">✕</button>
+  `;
+  
+  div.addEventListener('click', e => {
+    if (e.target.classList.contains('del')) {
+      if (confirm('¿Eliminar este gasto?')) {
+        deleteTicketFromFirestore(ticket.id);
+      }
+    } else {
+      viewReceipt(ticket);
+    }
+  });
+  
+  return div;
+}
+
+function viewReceipt(ticket) {
+  currentTicketId = ticket.id;
+  const receiptContent = document.getElementById('receiptContent');
+  receiptContent.innerHTML = `
+    <div class="receipt-card">
+      <div class="receipt-head">
+        <div class="store-badge" style="background:${STORE_COLORS[ticket.store] || '#6f6a5e'}">
+          ${(ticket.store || '?').substring(0, 2).toUpperCase()}
+        </div>
+        <div class="receipt-head-text">
+          <div class="rh-store">${ticket.store}</div>
+          <div class="rh-date">${new Date(ticket.date).toLocaleDateString('es-MX')}</div>
+        </div>
+      </div>
+      
+      <div class="receipt-chips">
+        <span class="chip">${ticket.category}</span>
+        ${ticket.deducible ? '<span class="chip ded">🏛️ Deducible</span>' : ''}
+      </div>
+      
+      <div>${ticket.description || '(Sin descripción)'}</div>
+      
+      ${ticket.items && ticket.items.length > 0 ? `
+        <div class="receipt-dashes"></div>
+        ${ticket.items.map(item => `
+          <div class="receipt-item-line">
+            <div class="ri-desc">
+              ${item.description}
+              <span class="ri-cat">${item.category || 'Sin cat'}</span>
+            </div>
+            <div class="ri-amt">$${(parseFloat(item.quantity || 0) * parseFloat(item.cost || 0)).toFixed(2)}</div>
+          </div>
+        `).join('')}
+        <div class="receipt-dashes"></div>
+      ` : ''}
+      
+      <div class="receipt-total-row">
+        <span>Total:</span>
+        <span>$${parseFloat(ticket.amount || 0).toFixed(2)}</span>
+      </div>
+    </div>
+  `;
+  
+  showView('receipt');
+}
+
+function updateHistoryList() {
+  const historyList = document.getElementById('historyList');
+  historyList.innerHTML = '';
+  
+  if (tickets.length === 0) {
+    historyList.innerHTML = '<div class="empty-state">No hay tickets registrados</div>';
+    return;
+  }
+  
+  const section = document.createElement('section');
+  tickets.forEach(ticket => {
+    const ticketEl = createTicketElement(ticket);
+    section.appendChild(ticketEl);
+  });
+  
+  historyList.appendChild(section);
+}
+
+function updateCharts() {
+  // Gráfico de categorías
+  const categoryData = {};
+  tickets.forEach(t => {
+    const cat = t.category || 'Sin categoría';
+    categoryData[cat] = (categoryData[cat] || 0) + parseFloat(t.amount || 0);
+  });
+  
+  const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+  
+  if (categoryChartInstance) {
+    categoryChartInstance.destroy();
+  }
+  
+  categoryChartInstance = new Chart(categoryCtx, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(categoryData),
+      datasets: [{
+        data: Object.values(categoryData),
+        backgroundColor: [
+          '#8C7AE6', '#2ED9C3', '#E0554A', '#FFD700', '#00CED1',
+          '#FF6B6B', '#4ECDC4', '#95E1D3', '#F38181', '#AA96DA'
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 } } }
+      }
+    }
+  });
+  
+  // Gráfico de evolución
+  const dailyData = {};
+  tickets.forEach(t => {
+    const dateKey = new Date(t.date).toLocaleDateString('es-MX');
+    dailyData[dateKey] = (dailyData[dateKey] || 0) + parseFloat(t.amount || 0);
+  });
+  
+  const dates = Object.keys(dailyData).sort();
+  const amounts = dates.map(d => dailyData[d]);
+  
+  const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+  
+  if (timelineChartInstance) {
+    timelineChartInstance.destroy();
+  }
+  
+  timelineChartInstance = new Chart(timelineCtx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: 'Gastos diarios',
+        data: amounts,
+        borderColor: '#2ED9C3',
+        backgroundColor: 'rgba(46, 217, 195, 0.1)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { font: { size: 11 } } }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+  
+  // Gráfico comparativo
+  const today = new Date();
+  const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+  const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+  
+  const thisMonthTotal = tickets
+    .filter(t => new Date(t.date) >= thisMonth)
+    .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+  
+  const lastMonthTotal = tickets
+    .filter(t => {
+      const tDate = new Date(t.date);
+      return tDate >= lastMonth && tDate <= lastMonthEnd;
+    })
+    .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+  
+  const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+  
+  if (comparisonChartInstance) {
+    comparisonChartInstance.destroy();
+  }
+  
+  comparisonChartInstance = new Chart(comparisonCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Mes pasado', 'Este mes'],
+      datasets: [{
+        label: 'Total gastado',
+        data: [lastMonthTotal, thisMonthTotal],
+        backgroundColor: ['#8C7AE6', '#2ED9C3']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'x',
+      plugins: {
+        legend: { labels: { font: { size: 11 } } }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
   });
 }
 
 /* =========================================================
-   ESTADO Y NAVEGACIÓN ENTRE VISTAS
+   FORM HANDLING
    ========================================================= */
-let currentPeriod = "day";
-let viewDate = new Date(); // fecha de referencia navegable (día/semana/mes que se está viendo)
-let pendingImageData = null; // imagen (dataURL comprimido) del ticket en edición
-let pendingCfdiData = null; // datos de CFDI detectados por QR (si los hay) para el ticket en edición
-
-function showView(name){
-  if(name!=="camera") stopCameraStream();
-  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-  document.getElementById("view-"+name).classList.add("active");
-  document.querySelectorAll("nav.bottom button").forEach(b=>b.classList.remove("active"));
-  const navBtn = document.querySelector(`nav.bottom button[data-view="${name}"]`);
-  if(navBtn) navBtn.classList.add("active");
-  if(name==="dashboard") refreshDashboard();
-  if(name==="history") refreshHistory();
-  if(name==="products") refreshProductsView();
+function initForm() {
+  const storeSelect = document.getElementById('fStore');
+  STORES.forEach(store => {
+    const opt = document.createElement('option');
+    opt.value = store.name;
+    opt.textContent = store.name;
+    storeSelect.appendChild(opt);
+  });
+  
+  const categorySelect = document.getElementById('fCategory');
+  CATEGORIES.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    categorySelect.appendChild(opt);
+  });
+  
+  document.getElementById('fStore').addEventListener('change', () => {
+    const selected = document.getElementById('fStore').value;
+    document.getElementById('fStoreOtherWrap').style.display = 
+      selected === 'Otro' ? 'block' : 'none';
+  });
+  
+  document.getElementById('fCategory').addEventListener('change', () => {
+    const cat = document.getElementById('fCategory').value;
+    const hint = DEDUCIBLE_HINTS[cat] || DEDUCIBLE_HINTS.default;
+    document.getElementById('deducibleHint').textContent = hint;
+  });
+  
+  document.getElementById('btnAddItem').addEventListener('click', addItemRow);
+  document.getElementById('btnUseSumAsTotal').addEventListener('click', useSumAsTotal);
+  document.getElementById('btnSave').addEventListener('click', saveTicket);
+  document.getElementById('btnCancel2').addEventListener('click', () => showView('dashboard'));
 }
 
-/* Poblar selects del formulario */
-const fStore = document.getElementById("fStore");
-const fCategory = document.getElementById("fCategory");
-STORES.forEach(s=>{
-  const opt = document.createElement("option");
-  opt.value = s.name; opt.textContent = s.name;
-  fStore.appendChild(opt);
-});
-CATEGORIES.forEach(c=>{
-  const opt = document.createElement("option");
-  opt.value = c; opt.textContent = c;
-  fCategory.appendChild(opt);
-});
-
-fStore.addEventListener("change", ()=>{
-  const otherWrap = document.getElementById("fStoreOtherWrap");
-  otherWrap.style.display = fStore.value==="Otro" ? "block" : "none";
-  const found = STORES.find(s=>s.name===fStore.value);
-  if(found && found.category) fCategory.value = found.category;
-  updateDeducibleHint();
-});
-
-function updateDeducibleHint(){
-  const hintEl = document.getElementById("deducibleHint");
-  hintEl.textContent = DEDUCIBLE_HINTS[fCategory.value] || DEDUCIBLE_HINTS.default;
-}
-fCategory.addEventListener("change", updateDeducibleHint);
-
-/* =========================================================
-   PRODUCTOS DEL TICKET (descripción, cantidad, costo)
-   La suma de productos NO se copia automáticamente al Total:
-   muchos tickets tienen impuestos, propina o descuentos que
-   no aparecen como líneas de producto, así que forzar
-   total = suma de productos generaría reportes incorrectos.
-   El usuario decide con el botón "Usar como total".
-   ========================================================= */
-let itemRowSeq = 0;
-const itemsContainer = document.getElementById("itemsContainer");
-
-function addItemRow(data={ description:"", quantity:1, cost:"", category:"Otros" }){
-  const rowId = "item-" + (itemRowSeq++);
-  const row = document.createElement("div");
-  row.className = "item-row";
-  row.dataset.rowId = rowId;
-
-  const catOptions = PRODUCT_CATEGORIES.map(c=>
-    `<option value="${c}" ${c===data.category?"selected":""}>${c}</option>`
-  ).join("");
-
+function addItemRow() {
+  const container = document.getElementById('itemsContainer');
+  const itemIndex = container.children.length;
+  
+  const row = document.createElement('div');
+  row.className = 'item-row';
   row.innerHTML = `
     <div class="row-top">
-      <input type="text" class="desc" placeholder="Producto (ej. Leche 1L)" value="${escapeAttr(data.description)}">
-      <button type="button" class="item-del" title="Eliminar producto">✕</button>
+      <input type="text" class="desc" placeholder="Descripción (ej. Leche)">
+      <button type="button" class="item-del" title="Eliminar">✕</button>
     </div>
     <div class="row-bottom">
-      <select class="cat">${catOptions}</select>
-      <input type="number" class="qty" min="0" step="1" value="${data.quantity}" title="Cantidad">
-      <input type="number" class="cost" min="0" step="0.01" value="${data.cost}" title="Costo unitario">
+      <select class="cat">
+        <option>Otros</option>
+        ${PRODUCT_CATEGORIES.map(c => `<option>${c}</option>`).join('')}
+      </select>
+      <input type="number" class="qty" placeholder="Cant" step="0.1" min="0" value="1">
+      <input type="number" class="cost" placeholder="Precio" step="0.01" min="0" value="0">
     </div>
-    <div class="item-subtotal"></div>
+    <div class="item-subtotal">Subtotal: $0.00</div>
   `;
-  itemsContainer.appendChild(row);
-  row.querySelector(".item-del").addEventListener("click", ()=>{ row.remove(); refreshItemsUI(); });
-  row.querySelectorAll("input, select").forEach(inp=> inp.addEventListener("input", refreshItemsUI));
-  refreshItemsUI();
-}
-
-function escapeAttr(str){
-  return (str||"").replace(/"/g,"&quot;");
-}
-
-function getItemsData(){
-  return Array.from(itemsContainer.querySelectorAll(".item-row")).map(row=>{
-    const description = row.querySelector(".desc").value.trim();
-    const quantity = parseFloat(row.querySelector(".qty").value) || 0;
-    const cost = parseFloat(row.querySelector(".cost").value) || 0;
-    const category = row.querySelector(".cat").value;
-    return { description, quantity, cost, category, subtotal: quantity*cost };
+  
+  const descInput = row.querySelector('.desc');
+  const qtyInput = row.querySelector('.qty');
+  const costInput = row.querySelector('.cost');
+  const deleteBtn = row.querySelector('.item-del');
+  
+  const updateSubtotal = () => {
+    const qty = parseFloat(qtyInput.value) || 0;
+    const cost = parseFloat(costInput.value) || 0;
+    const subtotal = qty * cost;
+    row.querySelector('.item-subtotal').textContent = `Subtotal: $${subtotal.toFixed(2)}`;
+    updateItemsSum();
+  };
+  
+  descInput.addEventListener('input', updateSubtotal);
+  qtyInput.addEventListener('input', updateSubtotal);
+  costInput.addEventListener('input', updateSubtotal);
+  
+  deleteBtn.addEventListener('click', () => {
+    row.remove();
+    updateItemsSum();
   });
+  
+  container.appendChild(row);
+  updateItemsSum();
 }
 
-function refreshItemsUI(){
-  const rows = Array.from(itemsContainer.querySelectorAll(".item-row"));
-  rows.forEach(row=>{
-    const quantity = parseFloat(row.querySelector(".qty").value) || 0;
-    const cost = parseFloat(row.querySelector(".cost").value) || 0;
-    row.querySelector(".item-subtotal").textContent = "Subtotal: " + fmtMoney(quantity*cost);
+function updateItemsSum() {
+  const items = Array.from(document.getElementById('itemsContainer').querySelectorAll('.item-row'));
+  let sum = 0;
+  
+  items.forEach(item => {
+    const qty = parseFloat(item.querySelector('.qty').value) || 0;
+    const cost = parseFloat(item.querySelector('.cost').value) || 0;
+    sum += qty * cost;
   });
-  const items = getItemsData();
-  const hasItems = items.length>0;
-  document.getElementById("itemsEmptyMsg").style.display = hasItems ? "none" : "block";
-  const sum = items.reduce((a,i)=>a+i.subtotal,0);
-  document.getElementById("itemsSummaryRow").style.display = hasItems ? "flex" : "none";
-  document.getElementById("itemsSumValue").textContent = fmtMoney(sum);
-  checkTotalMismatch(sum, hasItems);
-}
-
-function checkTotalMismatch(itemsSum, hasItems){
-  const hint = document.getElementById("totalMismatchHint");
-  const totalVal = parseFloat(document.getElementById("fAmount").value) || 0;
-  if(hasItems && totalVal>0 && Math.abs(totalVal-itemsSum) > 0.01){
-    hint.style.display = "block";
-    hint.className = "hint warn";
-    hint.textContent = `El total no coincide con la suma de productos (${fmtMoney(itemsSum)}). Puede ser normal si hay impuestos, propina o descuento.`;
+  
+  document.getElementById('itemsSumValue').textContent = `$${sum.toFixed(2)}`;
+  
+  if (items.length > 0 && sum > 0) {
+    document.getElementById('itemsSummaryRow').style.display = 'flex';
   } else {
-    hint.style.display = "none";
+    document.getElementById('itemsSummaryRow').style.display = 'none';
   }
 }
 
-document.getElementById("btnAddItem").addEventListener("click", ()=> addItemRow());
-document.getElementById("btnUseSumAsTotal").addEventListener("click", ()=>{
-  const items = getItemsData();
-  const sum = items.reduce((a,i)=>a+i.subtotal,0);
-  document.getElementById("fAmount").value = sum.toFixed(2);
-  checkTotalMismatch(sum, items.length>0);
-});
-document.getElementById("fAmount").addEventListener("input", ()=>{
-  const items = getItemsData();
-  const sum = items.reduce((a,i)=>a+i.subtotal,0);
-  checkTotalMismatch(sum, items.length>0);
-});
-
-document.getElementById("btnToggleTax").addEventListener("click", ()=>{
-  const fields = document.getElementById("taxFields");
-  const isHidden = fields.style.display==="none";
-  fields.style.display = isHidden ? "block" : "none";
-});
-function showTaxFieldsIfNeeded(){
-  const hasAny = document.getElementById("fSubtotal").value || document.getElementById("fIVA").value || document.getElementById("fISR").value;
-  document.getElementById("taxFields").style.display = hasAny ? "block" : "none";
+function useSumAsTotal() {
+  const sum = document.getElementById('itemsSumValue').textContent.replace('$', '');
+  document.getElementById('fAmount').value = sum;
 }
 
-function clearItemsUI(){
-  itemsContainer.innerHTML = "";
-  refreshItemsUI();
-}
-
-/* Abrir formulario en blanco o con datos de OCR */
-let editingTicketId = null;
-
-function openForm({ image=null, store="", date="", total="", items=[], ocrMessage="", description="", category="", deducible=false, editingId=null, subtotal="", iva="", isr="", cfdi=null }={}){
-  editingTicketId = editingId;
-  pendingImageData = image;
-  pendingCfdiData = cfdi;
-  const previewWrap = document.getElementById("previewWrap");
-  const previewImg = document.getElementById("previewImg");
-  if(image){ previewImg.src = image; previewWrap.style.display="block"; }
-  else{ previewWrap.style.display="none"; }
-
-  const ocrHint = document.getElementById("ocrHint");
-  if(ocrMessage){ ocrHint.style.display="block"; ocrHint.textContent = ocrMessage; ocrHint.className = "hint warn"; }
-  else{ ocrHint.style.display="none"; }
-
-  // Comercio
-  const matchStore = STORES.find(s=>s.name===store);
-  fStore.value = matchStore ? store : "Otro";
-  document.getElementById("fStoreOtherWrap").style.display = fStore.value==="Otro" ? "block":"none";
-  document.getElementById("fStoreOther").value = matchStore ? "" : store;
-
-  // Categoría (si viene explícita, ej. al editar, se respeta; si no, se deriva del comercio)
-  fCategory.value = category || (matchStore && matchStore.category ? matchStore.category : "Otros");
-
-  document.getElementById("fDescription").value = description || "";
-  document.getElementById("fDate").value = date || todayISO();
-  document.getElementById("fAmount").value = total || "";
-  document.getElementById("fSubtotal").value = subtotal || "";
-  document.getElementById("fIVA").value = iva || "";
-  document.getElementById("fISR").value = isr || "";
-  showTaxFieldsIfNeeded();
-  document.getElementById("fDeducible").checked = !!deducible;
-  updateDeducibleHint();
-  clearItemsUI();
-  items.forEach(it=> addItemRow(it));
-
-  document.getElementById("btnSave").textContent = editingId ? "Guardar cambios" : "Guardar gasto";
-  showView("form");
-}
-
-/* Guardar ticket */
-document.getElementById("btnSave").addEventListener("click", async ()=>{
-  const storeName = fStore.value==="Otro" ? (document.getElementById("fStoreOther").value.trim() || "Otro") : fStore.value;
-  const amount = parseFloat(document.getElementById("fAmount").value);
-  const date = document.getElementById("fDate").value || todayISO();
-
-  if(!amount || amount<=0){
-    alert("Ingresa un total válido antes de guardar.");
+async function saveTicket() {
+  const store = document.getElementById('fStore').value;
+  const storeOther = document.getElementById('fStoreOther').value;
+  const category = document.getElementById('fCategory').value;
+  const description = document.getElementById('fDescription').value;
+  const date = document.getElementById('fDate').value;
+  const amount = document.getElementById('fAmount').value;
+  const deducible = document.getElementById('fDeducible').checked;
+  
+  if (!store || !category || !date || !amount) {
+    alert('Completa todos los campos obligatorios');
     return;
   }
-
-  const items = getItemsData().filter(i=> i.description || i.quantity || i.cost);
-  const numOrUndef = (v)=> v===""||v===null||v===undefined ? undefined : parseFloat(v);
-
+  
+  const items = Array.from(document.getElementById('itemsContainer').querySelectorAll('.item-row')).map(row => ({
+    description: row.querySelector('.desc').value,
+    category: row.querySelector('.cat').value,
+    quantity: parseFloat(row.querySelector('.qty').value),
+    cost: parseFloat(row.querySelector('.cost').value)
+  }));
+  
   const ticket = {
-    store: storeName,
-    category: fCategory.value,
-    description: document.getElementById("fDescription").value.trim(),
-    date,
-    amount,
-    subtotal: numOrUndef(document.getElementById("fSubtotal").value),
-    iva: numOrUndef(document.getElementById("fIVA").value),
-    isr: numOrUndef(document.getElementById("fISR").value),
-    items,
-    deducible: document.getElementById("fDeducible").checked,
-    cfdi: pendingCfdiData || (editingTicketId ? ticketsById[editingTicketId]?.cfdi : undefined),
-    image: pendingImageData,
-    createdAt: editingTicketId ? (ticketsById[editingTicketId]?.createdAt || Date.now()) : Date.now()
+    store: store === 'Otro' ? storeOther : store,
+    category,
+    description,
+    date: new Date(date),
+    amount: parseFloat(amount),
+    deducible,
+    items: items.length > 0 ? items : [],
+    createdAt: new Date(),
+    syncedAt: new Date()
   };
-
-  if(editingTicketId){
-    ticket.id = editingTicketId;
-    await updateTicket(ticket);
-  } else {
-    await addTicket(ticket);
-  }
-  pendingImageData = null;
-  pendingCfdiData = null;
-  editingTicketId = null;
-  showView("dashboard");
-});
-
-document.getElementById("btnBack").addEventListener("click", ()=> showView("dashboard"));
-document.getElementById("btnCancel2").addEventListener("click", ()=> showView("dashboard"));
-
-/* =========================================================
-   HOJA DE ACCIONES: elegir cómo crear el ticket
-   ========================================================= */
-function openActionSheet(){ document.getElementById("actionSheetOverlay").classList.add("show"); }
-function closeActionSheet(){ document.getElementById("actionSheetOverlay").classList.remove("show"); }
-
-document.getElementById("navFabBtn").addEventListener("click", openActionSheet);
-document.getElementById("actCancel").addEventListener("click", closeActionSheet);
-document.getElementById("actionSheetOverlay").addEventListener("click", (e)=>{
-  if(e.target.id==="actionSheetOverlay") closeActionSheet();
-});
-document.getElementById("actManual").addEventListener("click", ()=>{
-  closeActionSheet();
-  openForm({});
-});
-document.getElementById("actGallery").addEventListener("click", ()=>{
-  closeActionSheet();
-  document.getElementById("fileInputGallery").click();
-});
-document.getElementById("actTakePhoto").addEventListener("click", ()=>{
-  closeActionSheet();
-  openCameraView();
-});
-
-/* =========================================================
-   CÁMARA PERSONALIZADA (getUserMedia)
-   Usamos una vista propia con guía vertical para encuadrar el
-   ticket, en vez de solo abrir la cámara nativa del teléfono
-   (que no podemos controlar en proporción/orientación). Si el
-   navegador no soporta getUserMedia o el usuario niega el
-   permiso, caemos de regreso al input nativo de cámara.
-   ========================================================= */
-let cameraStream = null;
-
-async function openCameraView(){
-  try{
-    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error("getUserMedia no soportado");
-    cameraStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment", width: { ideal: 1080 }, height: { ideal: 1920 } },
-      audio: false
-    });
-    document.getElementById("cameraVideo").srcObject = cameraStream;
-    showView("camera");
-  }catch(err){
-    console.warn("No se pudo abrir la cámara personalizada, usando cámara nativa:", err);
-    document.getElementById("fileInputCamera").click();
-  }
+  
+  await saveTicketToFirestore(ticket);
+  resetForm();
+  showView('dashboard');
 }
-function stopCameraStream(){
-  if(cameraStream){
-    cameraStream.getTracks().forEach(t=>t.stop());
-    cameraStream = null;
-  }
-}
-document.getElementById("btnCameraCancel").addEventListener("click", ()=> showView("dashboard"));
-document.getElementById("btnCameraShutter").addEventListener("click", ()=>{
-  const video = document.getElementById("cameraVideo");
-  const canvas = document.createElement("canvas");
-  canvas.width = video.videoWidth || 1080;
-  canvas.height = video.videoHeight || 1920;
-  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-  const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
-  stopCameraStream();
-  handleCapturedImage(dataUrl);
-});
 
-// Cámara nativa de respaldo (si getUserMedia falla) y selección desde galería
-document.getElementById("fileInputCamera").addEventListener("change", async (e)=>{
-  const file = e.target.files[0];
-  e.target.value = "";
-  if(!file) return;
-  const dataUrl = await fileToCompressedDataURL(file, 1800);
-  handleCapturedImage(dataUrl);
-});
-document.getElementById("fileInputGallery").addEventListener("change", async (e)=>{
-  const file = e.target.files[0];
-  e.target.value = "";
-  if(!file) return;
-  const dataUrl = await fileToCompressedDataURL(file, 1800);
-  handleCapturedImage(dataUrl);
-});
+function resetForm() {
+  document.getElementById('fStore').value = '';
+  document.getElementById('fStoreOther').value = '';
+  document.getElementById('fCategory').value = '';
+  document.getElementById('fDescription').value = '';
+  document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('fAmount').value = '';
+  document.getElementById('fDeducible').checked = false;
+  document.getElementById('itemsContainer').innerHTML = '';
+  currentTicketId = null;
+}
 
 /* =========================================================
-   LECTURA DE QR (CFDI) — usa jsQR sobre la foto ORIGINAL
-   (sin recortar), porque el QR de la factura casi siempre
-   está al pie del ticket y un recorte enfocado en los
-   productos podría dejarlo fuera.
+   NAVIGATION
    ========================================================= */
-function scanQRFromDataURL(dataUrl){
-  return new Promise((resolve)=>{
-    const img = new Image();
-    img.onload = ()=>{
-      try{
-        const maxDim = 1000;
-        const scale = Math.min(1, maxDim/Math.max(img.width, img.height));
-        const w = Math.round(img.width*scale), h = Math.round(img.height*scale);
-        const canvas = document.createElement("canvas");
-        canvas.width = w; canvas.height = h;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, w, h);
-        const imageData = ctx.getImageData(0, 0, w, h);
-        const code = (typeof jsQR==="function") ? jsQR(imageData.data, imageData.width, imageData.height) : null;
-        resolve(code ? code.data : null);
-      }catch(e){ console.error(e); resolve(null); }
-    };
-    img.onerror = ()=> resolve(null);
-    img.src = dataUrl;
+function showView(viewName) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(`view-${viewName}`).classList.add('active');
+  
+  document.querySelectorAll('nav.bottom button').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === viewName);
   });
 }
 
-// El QR de un CFDI mexicano apunta a la URL de verificación del SAT con
-// parámetros re (RFC emisor), rr (RFC receptor), tt (total) e id (folio/UUID).
-function parseCFDIFromQRText(text){
-  try{
-    const url = new URL(text);
-    const p = url.searchParams;
-    const uuid = p.get("id") || p.get("uuid") || "";
-    const rfcEmisor = p.get("re") || "";
-    const rfcReceptor = p.get("rr") || "";
-    const total = p.get("tt") || "";
-    if(!uuid && !rfcEmisor) return null;
-    return { uuid, rfcEmisor, rfcReceptor, total };
-  }catch(e){ return null; }
-}
-
-let flowDetectedCfdi = null;
-let flowRawImage = null;
-
-async function handleCapturedImage(rawDataUrl){
-  flowDetectedCfdi = null;
-  flowRawImage = rawDataUrl;
-  try{
-    const qrText = await scanQRFromDataURL(rawDataUrl);
-    if(qrText){
-      const cfdi = parseCFDIFromQRText(qrText);
-      if(cfdi) flowDetectedCfdi = cfdi;
-    }
-  }catch(e){ console.error(e); }
-  openCropView(rawDataUrl);
-}
-
-/* =========================================================
-   RECORTAR FOTO ANTES DEL OCR
-   Un recorte enfocado en el cuerpo del ticket mejora mucho la
-   precisión del OCR (evita ruido de logos, publicidad, etc.)
-   ========================================================= */
-let cropImgNaturalW = 0, cropImgNaturalH = 0;
-let cropRectState = { x:8, y:4, w:84, h:92 };
-let cropDragMode = null;
-let cropDragStart = null;
-
-function applyCropRectStyle(){
-  const rect = document.getElementById("cropRect");
-  rect.style.left = cropRectState.x+"%";
-  rect.style.top = cropRectState.y+"%";
-  rect.style.width = cropRectState.w+"%";
-  rect.style.height = cropRectState.h+"%";
-}
-
-function openCropView(dataUrl){
-  const img = document.getElementById("cropImage");
-  img.onload = ()=>{
-    cropImgNaturalW = img.naturalWidth;
-    cropImgNaturalH = img.naturalHeight;
-    cropRectState = { x:8, y:4, w:84, h:92 };
-    applyCropRectStyle();
-  };
-  img.src = dataUrl;
-  showView("crop");
-}
-
-document.getElementById("cropRect").addEventListener("pointerdown", (e)=>{
-  cropDragMode = (e.target.id==="cropHandle") ? "resize" : "move";
-  cropDragStart = { x:e.clientX, y:e.clientY, rect:{...cropRectState} };
-  e.preventDefault();
-});
-document.addEventListener("pointermove", (e)=>{
-  if(!cropDragMode) return;
-  const stage = document.getElementById("cropStage");
-  const bounds = stage.getBoundingClientRect();
-  const dxPct = (e.clientX-cropDragStart.x)/bounds.width*100;
-  const dyPct = (e.clientY-cropDragStart.y)/bounds.height*100;
-  if(cropDragMode==="move"){
-    let nx = cropDragStart.rect.x+dxPct, ny = cropDragStart.rect.y+dyPct;
-    nx = Math.max(0, Math.min(100-cropRectState.w, nx));
-    ny = Math.max(0, Math.min(100-cropRectState.h, ny));
-    cropRectState.x = nx; cropRectState.y = ny;
-  } else if(cropDragMode==="resize"){
-    let nw = cropDragStart.rect.w+dxPct, nh = cropDragStart.rect.h+dyPct;
-    nw = Math.max(15, Math.min(100-cropRectState.x, nw));
-    nh = Math.max(15, Math.min(100-cropRectState.y, nh));
-    cropRectState.w = nw; cropRectState.h = nh;
-  }
-  applyCropRectStyle();
-});
-document.addEventListener("pointerup", ()=>{ cropDragMode = null; });
-
-document.getElementById("btnCropCancel").addEventListener("click", ()=> showView("dashboard"));
-document.getElementById("btnUseFullPhoto").addEventListener("click", ()=> proceedToOCR(flowRawImage));
-document.getElementById("btnCropConfirm").addEventListener("click", ()=>{
-  const img = document.getElementById("cropImage");
-  const sx = cropRectState.x/100*cropImgNaturalW;
-  const sy = cropRectState.y/100*cropImgNaturalH;
-  const sw = cropRectState.w/100*cropImgNaturalW;
-  const sh = cropRectState.h/100*cropImgNaturalH;
-  const canvas = document.createElement("canvas");
-  canvas.width = sw; canvas.height = sh;
-  canvas.getContext("2d").drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
-  proceedToOCR(canvas.toDataURL("image/jpeg", 0.85));
-});
-
-/* =========================================================
-   OCR (tras el recorte)
-   ========================================================= */
-function recompressDataURL(dataUrl, maxWidth){
-  return new Promise((resolve, reject)=>{
-    const img = new Image();
-    img.onload = ()=>{
-      const scale = Math.min(1, maxWidth/img.width);
-      const w = Math.round(img.width*scale), h = Math.round(img.height*scale);
-      const canvas = document.createElement("canvas");
-      canvas.width=w; canvas.height=h;
-      canvas.getContext("2d").drawImage(img,0,0,w,h);
-      resolve(canvas.toDataURL("image/jpeg", 0.78));
-    };
-    img.onerror = reject;
-    img.src = dataUrl;
+document.querySelectorAll('nav.bottom button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const viewName = btn.dataset.view;
+    showView(viewName);
   });
-}
+});
 
-async function proceedToOCR(imageDataUrl){
-  const overlay = document.getElementById("loadingOverlay");
-  const pctEl = document.getElementById("ocrPct");
-  document.getElementById("loadingLabel").textContent = "Leyendo el ticket…";
-  overlay.classList.add("show");
-  pctEl.textContent = "0%";
+document.getElementById('btnPhoto').addEventListener('click', () => {
+  document.getElementById('fileInputCamera').click();
+});
 
-  try{
-    const compact = await recompressDataURL(imageDataUrl, 1400);
+document.getElementById('btnManual').addEventListener('click', () => {
+  resetForm();
+  showView('form');
+});
 
-    const result = await Tesseract.recognize(compact, "spa", {
-      logger: (m)=>{
-        if(m.status==="recognizing text"){
-          pctEl.textContent = Math.round(m.progress*100) + "%";
-        }
-      }
-    });
+document.getElementById('btnBack').addEventListener('click', () => {
+  showView('dashboard');
+});
 
-    const parsed = parseTicketText(result.data.text);
-    const detectedItems = parseLineItems(result.data.text);
-    overlay.classList.remove("show");
+document.getElementById('btnReceiptBack').addEventListener('click', () => {
+  showView('dashboard');
+});
 
-    let ocrMessage = "";
-    if(flowDetectedCfdi){
-      ocrMessage = `Se detectó un código QR de CFDI (folio ${flowDetectedCfdi.uuid ? flowDetectedCfdi.uuid.slice(0,8)+"…" : "válido"}) — se marcó este ticket como deducible porque sí cuenta con factura.`;
-    } else if(!parsed.total){
-      ocrMessage = "No pudimos leer el total automáticamente. Revisa la foto y complétalo a mano.";
-    } else if(detectedItems.length){
-      ocrMessage = `Se detectaron ${detectedItems.length} producto(s) — revisa cantidades, costos y categorías antes de guardar.`;
-    } else {
-      ocrMessage = "Datos leídos automáticamente — revisa que estén correctos antes de guardar.";
-    }
+document.getElementById('btnReceiptEdit').addEventListener('click', () => {
+  showView('form');
+});
 
-    openForm({
-      image: compact,
-      store: parsed.store,
-      date: parsed.date,
-      total: flowDetectedCfdi && flowDetectedCfdi.total ? flowDetectedCfdi.total : parsed.total,
-      subtotal: parsed.subtotal,
-      iva: parsed.iva,
-      isr: parsed.isr,
-      description: parsed.description,
-      items: detectedItems,
-      deducible: !!flowDetectedCfdi,
-      cfdi: flowDetectedCfdi,
-      ocrMessage
-    });
-
-  }catch(err){
-    console.error(err);
-    overlay.classList.remove("show");
-    openForm({
-      image: imageDataUrl,
-      cfdi: flowDetectedCfdi,
-      deducible: !!flowDetectedCfdi,
-      ocrMessage: "Ocurrió un error al procesar la imagen. Completa los datos manualmente."
-    });
+document.getElementById('btnReceiptDelete').addEventListener('click', async () => {
+  if (confirm('¿Eliminar este gasto?')) {
+    await deleteTicketFromFirestore(currentTicketId);
+    showView('dashboard');
   }
-}
+});
 
-/* =========================================================
-   DASHBOARD: resumen diario / semanal / mensual
-   ========================================================= */
-document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click", ()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
     currentPeriod = tab.dataset.period;
-    renderPeriodContent();
+    updatePeriodContent();
   });
 });
 
-let allTicketsCache = [];
-let ticketsById = {}; // lookup rápido id->ticket para abrir la vista de recibo
-
-async function refreshDashboard(){
-  allTicketsCache = await getAllTickets();
-  allTicketsCache.forEach(t=> ticketsById[t.id]=t);
-  const today = todayISO();
-
-  const todayTotal = allTicketsCache.filter(t=>t.date===today).reduce((a,t)=>a+t.amount,0);
-  const weekTotal = allTicketsCache.filter(t=>isInWeekOf(t.date)).reduce((a,t)=>a+t.amount,0);
-  const monthTotal = allTicketsCache.filter(t=>isInMonthOf(t.date)).reduce((a,t)=>a+t.amount,0);
-
-  document.getElementById("sumToday").textContent = fmtMoney(todayTotal);
-  document.getElementById("sumWeek").textContent = fmtMoney(weekTotal);
-  document.getElementById("sumMonth").textContent = fmtMoney(monthTotal);
-
-  renderPeriodContent();
-}
-
-function fmtPeriodLabel(){
-  if(currentPeriod==="day"){
-    return viewDate.toLocaleDateString("es-MX", { weekday:"long", day:"numeric", month:"long" });
+document.getElementById('btnPeriodPrev').addEventListener('click', () => {
+  if (currentPeriod === 'day') {
+    currentDate.setDate(currentDate.getDate() - 1);
   }
-  if(currentPeriod==="week"){
-    const start = startOfWeek(viewDate);
-    const end = new Date(start); end.setDate(end.getDate()+6);
-    const sameMonth = start.getMonth()===end.getMonth();
-    const startStr = start.toLocaleDateString("es-MX", { day:"numeric", month: sameMonth?undefined:"short" });
-    const endStr = end.toLocaleDateString("es-MX", { day:"numeric", month:"short", year:"numeric" });
-    return `${startStr} – ${endStr}`;
-  }
-  if(currentPeriod==="month"){
-    return viewDate.toLocaleDateString("es-MX", { month:"long", year:"numeric" });
-  }
-}
-
-function shiftViewDate(direction){
-  if(currentPeriod==="day") viewDate.setDate(viewDate.getDate()+direction);
-  if(currentPeriod==="week") viewDate.setDate(viewDate.getDate()+direction*7);
-  if(currentPeriod==="month"){ viewDate.setDate(1); viewDate.setMonth(viewDate.getMonth()+direction); }
-  renderPeriodContent();
-}
-
-document.getElementById("btnPeriodPrev").addEventListener("click", ()=> shiftViewDate(-1));
-document.getElementById("btnPeriodNext").addEventListener("click", ()=> shiftViewDate(1));
-document.getElementById("btnPeriodToday").addEventListener("click", ()=>{
-  viewDate = new Date();
-  renderPeriodContent();
+  updatePeriodContent();
 });
 
-/* Desglose de gasto por categoría de PRODUCTO (carne, bebidas, etc.)
-   Los tickets sin productos detallados se agrupan aparte, para no
-   mezclar cifras exactas (por producto) con montos globales del ticket. */
-function aggregateByProductCategory(list){
-  const byCat = {};
-  let sinDetalle = 0;
-  list.forEach(t=>{
-    if(t.items && t.items.length){
-      t.items.forEach(it=>{
-        const cat = it.category || "Otros";
-        byCat[cat] = (byCat[cat]||0) + (it.subtotal!=null ? it.subtotal : it.quantity*it.cost);
+document.getElementById('btnPeriodNext').addEventListener('click', () => {
+  if (currentPeriod === 'day') {
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  updatePeriodContent();
+});
+
+document.getElementById('btnPeriodToday').addEventListener('click', () => {
+  currentDate = new Date();
+  updatePeriodContent();
+});
+
+/* =========================================================
+   SERVICE WORKER (PWA / OFFLINE)
+   ========================================================= */
+function initServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      const CACHE_NAME = 'outgo-v1';
+      const urlsToCache = [
+        '/',
+        '/index.html',
+        'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js',
+        'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js',
+        'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap'
+      ];
+      
+      self.addEventListener('install', event => {
+        event.waitUntil(
+          caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(urlsToCache).catch(() => {});
+          })
+        );
+        self.skipWaiting();
       });
-    } else {
-      sinDetalle += t.amount;
-    }
-  });
-  return { byCat, sinDetalle };
-}
-
-function renderCategoryBars(byCat, max){
-  return Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>`
-    <div class="cat-bar-row">
-      <div class="cat-top"><span>${cat}</span><span class="amt">${fmtMoney(val)}</span></div>
-      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(val/max*100)}%"></div></div>
-    </div>`).join("");
-}
-
-function renderProductCategorySection(list){
-  const { byCat, sinDetalle } = aggregateByProductCategory(list);
-  const allVals = Object.values(byCat).concat(sinDetalle>0?[sinDetalle]:[]);
-  const max = Math.max(1, ...allVals);
-  if(Object.keys(byCat).length===0 && sinDetalle===0){
-    return "";
-  }
-  let html = `<div class="section-title">Gasto por tipo de producto</div>`;
-  html += renderCategoryBars(byCat, max);
-  if(sinDetalle>0){
-    html += `
-      <div class="cat-bar-row">
-        <div class="cat-top"><span>Sin desglose (ticket sin productos)</span><span class="amt">${fmtMoney(sinDetalle)}</span></div>
-        <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(sinDetalle/max*100)}%; background: var(--muted);"></div></div>
-      </div>`;
-  }
-  return html;
-}
-
-function renderDeducibleSummary(list){
-  const marked = list.filter(t=>t.deducible);
-  if(!marked.length) return "";
-  const sum = marked.reduce((a,t)=>a+t.amount,0);
-  return `
-    <div class="cat-bar-row" style="margin-top:2px;">
-      <div class="cat-top"><span>🧷 Marcados como deducibles (${marked.length})</span><span class="amt">${fmtMoney(sum)}</span></div>
-    </div>
-    <div class="hint" style="margin-bottom:10px;">Recuerda: solo cuenta si tienes la factura (CFDI) de cada uno — esta marca es únicamente para tu control personal.</div>`;
-}
-
-function renderPeriodContent(){
-  const container = document.getElementById("periodContent");
-  document.getElementById("periodLabel").textContent = fmtPeriodLabel();
-  const viewISO = toLocalISODate(viewDate);
-
-  if(currentPeriod==="day"){
-    const list = allTicketsCache.filter(t=>t.date===viewISO);
-    let html = `<div class="section-title">Gastos del día</div>`;
-    html += renderProductCategorySection(list);
-    html += renderDeducibleSummary(list);
-    html += `<div class="section-title">Tickets</div>` + renderTicketList(list);
-    container.innerHTML = html;
-  }
-
-  if(currentPeriod==="week"){
-    const list = allTicketsCache.filter(t=>isInWeekOf(t.date, viewDate));
-    const start = startOfWeek(viewDate);
-    const byDay = {};
-    for(let i=0;i<7;i++){
-      const d = new Date(start); d.setDate(d.getDate()+i);
-      byDay[toLocalISODate(d)] = 0;
-    }
-    list.forEach(t=>{ byDay[t.date] = (byDay[t.date]||0) + t.amount; });
-    const maxDay = Math.max(1, ...Object.values(byDay));
-
-    let html = `<div class="section-title">Por día</div>`;
-    Object.keys(byDay).forEach((dateStr, idx)=>{
-      const val = byDay[dateStr];
-      html += `
-        <div class="cat-bar-row">
-          <div class="cat-top"><span>${DIAS[idx]} · ${dateStr.slice(5)}</span><span class="amt">${fmtMoney(val)}</span></div>
-          <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(val/maxDay*100)}%"></div></div>
-        </div>`;
+      
+      self.addEventListener('activate', event => {
+        event.waitUntil(
+          caches.keys().then(cacheNames => {
+            return Promise.all(
+              cacheNames.map(cacheName => {
+                if (cacheName !== CACHE_NAME) {
+                  return caches.delete(cacheName);
+                }
+              })
+            );
+          })
+        );
+        self.clients.claim();
+      });
+      
+      self.addEventListener('fetch', event => {
+        if (event.request.method !== 'GET') {
+          return;
+        }
+        
+        event.respondWith(
+          caches.match(event.request).then(response => {
+            if (response) {
+              return response;
+            }
+            return fetch(event.request).then(response => {
+              if (!response || response.status !== 200 || response.type === 'basic') {
+                return response;
+              }
+              const responseToCache = response.clone();
+              caches.open(CACHE_NAME).then(cache => {
+                cache.put(event.request, responseToCache);
+              });
+              return response;
+            }).catch(() => {
+              return caches.match('/index.html');
+            });
+          })
+        );
+      });
+    `;
+    
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    
+    navigator.serviceWorker.register(swUrl).catch(err => {
+      console.log('SW registration failed:', err);
     });
-    html += renderProductCategorySection(list);
-    html += renderDeducibleSummary(list);
-    html += `<div class="section-title">Tickets</div>` + renderTicketList(list);
-    container.innerHTML = html;
   }
-
-  if(currentPeriod==="month"){
-    const list = allTicketsCache.filter(t=>isInMonthOf(t.date, viewDate));
-    let html = "";
-    if(list.length===0){
-      html += `<div class="empty-state">Sin gastos registrados en este mes.</div>`;
-    } else {
-      html += renderProductCategorySection(list);
-      html += renderDeducibleSummary(list);
-    }
-    html += `<div class="section-title">Tickets</div>` + renderTicketList(list);
-    container.innerHTML = html;
-  }
-
-  attachLogoFallbacks(container);
-}
-
-function renderTicketList(list){
-  if(!list.length) return `<div class="empty-state">No hay tickets registrados en este período.</div>`;
-  return list.map(t=>`
-    <div class="ticket" data-id="${t.id}">
-      ${t.image ? `<div class="avatar-wrap">${storeBadgeHTML(t.store)}<span class="photo-dot">📷</span></div>` : storeBadgeHTML(t.store)}
-      <div class="info">
-        <div class="store">${escapeHtml(t.store)}</div>
-        <div class="meta">${t.category} · ${t.date}${t.description ? " · "+escapeHtml(t.description) : ""}${t.items && t.items.length ? " · "+t.items.length+" producto"+(t.items.length>1?"s":"") : ""}${t.deducible ? ' · <span style="color:var(--accent);font-weight:600;">Deducible</span>' : ""}</div>
-      </div>
-      <div class="amount">${fmtMoney(t.amount)}</div>
-      <button class="del" data-id="${t.id}" title="Eliminar">🗑</button>
-    </div>
-  `).join("");
-}
-
-function escapeHtml(str){
-  const div = document.createElement("div");
-  div.textContent = str||"";
-  return div.innerHTML;
 }
 
 /* =========================================================
-   VISTA DE RECIBO DIGITAL
-   Muestra el ticket guardado con un formato parecido a un
-   recibo real: insignia del comercio, productos, total y
-   la foto original (si existe).
+   INIT
    ========================================================= */
-function renderReceiptHTML(t){
-  const dateFmt = new Date(t.date+"T00:00:00").toLocaleDateString("es-MX", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
-
-  let itemsHtml = "";
-  if(t.items && t.items.length){
-    itemsHtml = t.items.map(it=>`
-      <div class="receipt-item-line">
-        <div class="ri-desc">${escapeHtml(it.description || "Producto")}<span class="ri-cat">${escapeHtml(it.category||"Otros")} · ${it.quantity} x ${fmtMoney(it.cost)}</span></div>
-        <div class="ri-amt">${fmtMoney(it.quantity*it.cost)}</div>
-      </div>`).join("");
-  } else {
-    itemsHtml = `<div class="receipt-note">Este ticket no tiene productos detallados.</div>`;
-  }
-
-  const chips = `
-    <span class="chip">${escapeHtml(t.category)}</span>
-    ${t.deducible ? `<span class="chip ded">Deducible</span>` : ""}
-    ${t.cfdi ? `<span class="chip cfdi">CFDI verificado</span>` : ""}`;
-
-  let taxHtml = "";
-  if(t.subtotal || t.iva || t.isr){
-    taxHtml = `<div class="receipt-dashes"></div>`;
-    if(t.subtotal) taxHtml += `<div class="receipt-item-line"><div class="ri-desc">Subtotal</div><div class="ri-amt">${fmtMoney(t.subtotal)}</div></div>`;
-    if(t.iva) taxHtml += `<div class="receipt-item-line"><div class="ri-desc">IVA</div><div class="ri-amt">${fmtMoney(t.iva)}</div></div>`;
-    if(t.isr) taxHtml += `<div class="receipt-item-line"><div class="ri-desc">ISR / Otro</div><div class="ri-amt">${fmtMoney(t.isr)}</div></div>`;
-  }
-
-  const cfdiBlock = t.cfdi ? `
-    <div class="receipt-dashes"></div>
-    <div class="cfdi-block">
-      <div class="cfdi-title">🧾 CFDI detectado por QR</div>
-      ${t.cfdi.uuid ? `<div class="cfdi-row"><span>UUID/Folio</span><span>${escapeHtml(t.cfdi.uuid)}</span></div>` : ""}
-      ${t.cfdi.rfcEmisor ? `<div class="cfdi-row"><span>RFC emisor</span><span>${escapeHtml(t.cfdi.rfcEmisor)}</span></div>` : ""}
-      ${t.cfdi.rfcReceptor ? `<div class="cfdi-row"><span>RFC receptor</span><span>${escapeHtml(t.cfdi.rfcReceptor)}</span></div>` : ""}
-    </div>` : "";
-
-  const photoBlock = t.image ? `
-    <div class="receipt-photo-block">
-      <div class="section-title" style="text-align:center;">Foto original</div>
-      <img src="${t.image}" alt="Foto del ticket">
-    </div>` : "";
-
-  return `
-    <div class="receipt-card" id="receiptCardForPDF">
-      <div class="receipt-head">
-        ${storeBadgeHTML(t.store)}
-        <div class="receipt-head-text">
-          <div class="rh-store">${escapeHtml(t.store)}</div>
-          <div class="rh-date">${dateFmt}</div>
-        </div>
-      </div>
-      <div class="receipt-chips">${chips}</div>
-      ${t.description ? `<div class="receipt-note" style="margin-bottom:10px;">${escapeHtml(t.description)}</div>` : ""}
-      <div class="receipt-dashes"></div>
-      ${itemsHtml}
-      ${taxHtml}
-      <div class="receipt-dashes"></div>
-      <div class="receipt-total-row"><span>TOTAL</span><span>${fmtMoney(t.amount)}</span></div>
-      ${t.deducible ? `<div class="receipt-note">Marcado como posible deducible — recuerda que necesitas la factura (CFDI) correspondiente para que aplique ante el SAT.</div>` : ""}
-      ${cfdiBlock}
-      ${photoBlock}
-      <div class="receipt-barcode"></div>
-      <div class="receipt-barcode-label">OUTGO · #${String(t.id).padStart(6,"0")}</div>
-    </div>
-  `;
-}
-
-let currentReceiptId = null;
-
-function openReceiptView(id){
-  const t = ticketsById[id];
-  if(!t) return;
-  currentReceiptId = id;
-  const content = document.getElementById("receiptContent");
-  content.innerHTML = renderReceiptHTML(t);
-  attachLogoFallbacks(content);
-  showView("receipt");
-}
-
-document.getElementById("btnReceiptBack").addEventListener("click", ()=> showView("dashboard"));
-
-document.getElementById("btnReceiptPDF").addEventListener("click", async ()=>{
-  const t = ticketsById[currentReceiptId];
-  if(!t) return;
-  try{
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit:"pt", format:[320, 620] });
-    let y = 36;
-    doc.setFont("courier","bold"); doc.setFontSize(14);
-    doc.text(t.store, 160, y, { align:"center" }); y+=18;
-    doc.setFont("courier","normal"); doc.setFontSize(9);
-    doc.text(t.date, 160, y, { align:"center" }); y+=10;
-    doc.text(`Categoría: ${t.category}`, 160, y, { align:"center" }); y+=18;
-    doc.setLineDashPattern([2,2],0); doc.line(20,y,300,y); y+=16;
-
-    if(t.items && t.items.length){
-      t.items.forEach(it=>{
-        const desc = `${it.description} (${it.quantity} x ${fmtMoney(it.cost)})`;
-        doc.text(desc.slice(0,42), 20, y);
-        doc.text(fmtMoney(it.quantity*it.cost), 300, y, { align:"right" });
-        y += 14;
-      });
-      doc.setLineDashPattern([2,2],0); doc.line(20,y,300,y); y+=16;
-    }
-    if(t.subtotal){ doc.text("Subtotal", 20, y); doc.text(fmtMoney(t.subtotal), 300, y, {align:"right"}); y+=14; }
-    if(t.iva){ doc.text("IVA", 20, y); doc.text(fmtMoney(t.iva), 300, y, {align:"right"}); y+=14; }
-    if(t.isr){ doc.text("ISR/Otro", 20, y); doc.text(fmtMoney(t.isr), 300, y, {align:"right"}); y+=14; }
-
-    doc.setFont("courier","bold"); doc.setFontSize(12);
-    doc.text("TOTAL", 20, y); doc.text(fmtMoney(t.amount), 300, y, {align:"right"}); y+=20;
-
-    if(t.cfdi){
-      doc.setFont("courier","normal"); doc.setFontSize(8);
-      doc.text("CFDI detectado por QR:", 20, y); y+=12;
-      if(t.cfdi.uuid){ doc.text(`UUID: ${t.cfdi.uuid}`, 20, y); y+=11; }
-      if(t.cfdi.rfcEmisor){ doc.text(`RFC emisor: ${t.cfdi.rfcEmisor}`, 20, y); y+=11; }
-      y+=8;
-    }
-    if(t.description){
-      doc.setFont("courier","normal"); doc.setFontSize(9);
-      doc.text(doc.splitTextToSize(t.description, 280), 20, y); y+=20;
-    }
-
-    if(t.image){
-      try{
-        const imgProps = doc.getImageProperties(t.image);
-        const imgW = 280;
-        const imgH = imgW * imgProps.height/imgProps.width;
-        doc.addImage(t.image, "JPEG", 20, y, imgW, Math.min(imgH, 400));
-      }catch(e){ console.warn("No se pudo incluir la foto en el PDF:", e); }
-    }
-
-    doc.save(`outgo-ticket-${String(t.id).padStart(6,"0")}.pdf`);
-  }catch(e){
-    console.error(e);
-    alert("No se pudo generar el PDF. Intenta de nuevo.");
-  }
-});
-
-document.getElementById("btnReceiptEdit").addEventListener("click", ()=>{
-  const t = ticketsById[currentReceiptId];
-  if(!t) return;
-  openForm({
-    image: t.image || null,
-    store: t.store,
-    date: t.date,
-    total: t.amount,
-    items: t.items || [],
-    description: t.description || "",
-    category: t.category,
-    deducible: !!t.deducible,
-    subtotal: t.subtotal ?? "",
-    iva: t.iva ?? "",
-    isr: t.isr ?? "",
-    cfdi: t.cfdi || null,
-    editingId: t.id
-  });
-});
-
-document.getElementById("btnReceiptDelete").addEventListener("click", async ()=>{
-  if(!currentReceiptId) return;
-  if(confirm("¿Eliminar este ticket? Esta acción no se puede deshacer.")){
-    await deleteTicket(currentReceiptId);
-    currentReceiptId = null;
-    await refreshDashboard();
-    await refreshHistory();
-    showView("dashboard");
-  }
-});
-
-/* Delegación de eventos para el botón eliminar */
-document.addEventListener("click", async (e)=>{
-  if(e.target.classList.contains("del")){
-    const id = Number(e.target.dataset.id);
-    if(confirm("¿Eliminar este ticket?")){
-      await deleteTicket(id);
-      await refreshDashboard();
-      await refreshHistory();
-    }
-    return;
-  }
-  const ticketEl = e.target.closest(".ticket");
-  if(ticketEl){
-    openReceiptView(Number(ticketEl.dataset.id));
-  }
-});
-
-/* =========================================================
-   ANÁLISIS DE PRODUCTOS
-   Junta todos los productos de todos los tickets (aunque sean
-   de comercios distintos) para responder: ¿qué compro más?
-   ¿ya subió de precio? Se agrupa por nombre de producto
-   (normalizado) usando SIEMPRE todo el historial, sin importar
-   el periodo que se esté viendo en el dashboard.
-   ========================================================= */
-let productSortMode = "spent"; // "spent" | "qty"
-let productSearchTerm = "";
-
-function buildProductIndex(allTickets){
-  const map = {};
-  allTickets.forEach(t=>{
-    (t.items||[]).forEach(it=>{
-      if(!it.description) return;
-      const key = it.description.trim().toUpperCase();
-      if(!key) return;
-      if(!map[key]){
-        map[key] = { displayName: it.description.trim(), category: it.category||"Otros", purchases: [], totalSpent:0, totalQty:0 };
-      }
-      const subtotal = it.quantity*it.cost;
-      map[key].purchases.push({ date: t.date, store: t.store, quantity: it.quantity, cost: it.cost, subtotal });
-      map[key].totalSpent += subtotal;
-      map[key].totalQty += it.quantity;
-    });
-  });
-  Object.values(map).forEach(p=> p.purchases.sort((a,b)=> a.date.localeCompare(b.date)));
-  return map;
-}
-
-function renderProductsListing(){
-  const idx = buildProductIndex(allTicketsCache);
-  let list = Object.values(idx);
-
-  if(productSearchTerm){
-    const s = productSearchTerm.trim().toUpperCase();
-    list = list.filter(p=> p.displayName.toUpperCase().includes(s));
-  }
-  if(productSortMode==="spent") list.sort((a,b)=> b.totalSpent-a.totalSpent);
-  else list.sort((a,b)=> b.totalQty-a.totalQty);
-
-  const container = document.getElementById("productsList");
-  if(!list.length){
-    container.innerHTML = `<div class="empty-state">${allTicketsCache.length ? "No se encontraron productos con ese nombre." : "Agrega productos al crear tickets para ver aquí qué compras más seguido y si sus precios cambian."}</div>`;
-    return;
-  }
-
-  container.innerHTML = list.map(p=>{
-    const last = p.purchases[p.purchases.length-1];
-    const prev = p.purchases.length>1 ? p.purchases[p.purchases.length-2] : null;
-    let change = "";
-    if(prev && prev.cost>0 && Math.abs(last.cost-prev.cost)>0.001){
-      const diff = last.cost - prev.cost;
-      const pct = Math.abs(diff/prev.cost*100).toFixed(0);
-      change = `<span class="price-change ${diff>0?'up':'down'}">${diff>0?'↑':'↓'} ${pct}%</span>`;
-    }
-    const historyRows = p.purchases.slice().reverse().map(pu=>`
-      <div class="pc-hist-row"><span>${pu.date} · ${escapeHtml(pu.store)}</span><span>${pu.quantity} x ${fmtMoney(pu.cost)} = ${fmtMoney(pu.subtotal)}</span></div>
-    `).join("");
-
-    return `
-      <div class="product-card" data-key="${escapeAttr(p.displayName.toUpperCase())}">
-        <div class="pc-top">
-          <div>
-            <div class="pc-name">${escapeHtml(p.displayName)}</div>
-            <div class="pc-meta">${escapeHtml(p.category)} · ${p.purchases.length} compra${p.purchases.length>1?"s":""} · ${p.totalQty} unidad${p.totalQty!==1?"es":""}</div>
-          </div>
-          <div class="pc-amt">${fmtMoney(p.totalSpent)}</div>
-        </div>
-        <div class="pc-last">Último precio: ${fmtMoney(last.cost)} c/u (${last.store}, ${last.date}) ${change}</div>
-        <div class="pc-history" style="display:none;">${historyRows}</div>
-      </div>`;
-  }).join("");
-}
-
-async function refreshProductsView(){
-  allTicketsCache = await getAllTickets();
-  allTicketsCache.forEach(t=> ticketsById[t.id]=t);
-  renderProductsListing();
-}
-
-document.getElementById("productSearch").addEventListener("input", (e)=>{
-  productSearchTerm = e.target.value;
-  renderProductsListing();
-});
-document.querySelectorAll(".sort-btn").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    document.querySelectorAll(".sort-btn").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    productSortMode = btn.dataset.sort;
-    renderProductsListing();
-  });
-});
-// Expandir/contraer el historial de precios de un producto al tocarlo
-document.addEventListener("click", (e)=>{
-  const card = e.target.closest(".product-card");
-  if(card){
-    const hist = card.querySelector(".pc-history");
-    hist.style.display = hist.style.display==="none" ? "block" : "none";
-  }
-});
-
-/* =========================================================
-   RESPALDO: exportar/importar
-   Como todo se guarda solo en este navegador (IndexedDB), estas
-   funciones permiten sacar una copia de seguridad real (JSON,
-   para restaurar en cualquier navegador) o un CSV para abrir
-   en Excel/Sheets y analizar a fondo.
-   ========================================================= */
-function downloadBlob(content, filename, mime){
-  const blob = new Blob([content], { type: mime });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=> URL.revokeObjectURL(url), 2000);
-}
-
-document.getElementById("btnExportJSON").addEventListener("click", async ()=>{
-  const list = await getAllTickets();
-  const json = JSON.stringify(list, null, 2);
-  downloadBlob(json, `outgo-respaldo-${todayISO()}.json`, "application/json");
-});
-
-document.getElementById("btnExportCSV").addEventListener("click", async ()=>{
-  const list = await getAllTickets();
-  const rows = [[
-    "ticket_id","fecha","comercio","categoria_ticket","descripcion_ticket",
-    "producto","categoria_producto","cantidad","costo_unitario","subtotal_producto",
-    "total_ticket","subtotal_ticket","iva","isr","deducible","cfdi_uuid"
-  ]];
-  const csvEscape = (v)=> `"${String(v??"").replace(/"/g,'""')}"`;
-
-  list.forEach(t=>{
-    const base = [
-      t.id, t.date, t.store, t.category, t.description||"",
-    ];
-    const tail = [
-      t.amount, t.subtotal??"", t.iva??"", t.isr??"", t.deducible?"Sí":"No", t.cfdi?.uuid||""
-    ];
-    if(t.items && t.items.length){
-      t.items.forEach(it=>{
-        rows.push([...base, it.description, it.category, it.quantity, it.cost, (it.quantity*it.cost).toFixed(2), ...tail].map(csvEscape));
-      });
-    } else {
-      rows.push([...base, "", "", "", "", "", ...tail].map(csvEscape));
-    }
-  });
-
-  const csv = rows.map(r=>r.join(",")).join("\n");
-  downloadBlob("\uFEFF"+csv, `outgo-gastos-${todayISO()}.csv`, "text/csv;charset=utf-8;");
-});
-
-document.getElementById("btnImportJSON").addEventListener("click", ()=>{
-  document.getElementById("importFileInput").click();
-});
-document.getElementById("importFileInput").addEventListener("change", async (e)=>{
-  const file = e.target.files[0];
-  e.target.value = "";
-  if(!file) return;
-  try{
-    const text = await file.text();
-    const data = JSON.parse(text);
-    if(!Array.isArray(data)) throw new Error("Formato inválido");
-    const ok = confirm(`Se encontraron ${data.length} ticket(s) en el archivo. Se agregarán a tu historial actual (no se borra nada, pero si ya importaste este mismo archivo antes podrías duplicar tickets). ¿Continuar?`);
-    if(!ok) return;
-    for(const t of data){
-      const clean = { ...t };
-      delete clean.id; // deja que IndexedDB asigne un id nuevo, evita choques
-      await addTicket(clean);
-    }
-    await refreshDashboard();
-    await refreshHistory();
-    alert("Importación completada.");
-  }catch(err){
-    console.error(err);
-    alert("No se pudo leer el archivo. Asegúrate de que sea un respaldo JSON exportado desde Outgo.");
-  }
-});
-
-/* =========================================================
-   HISTORIAL COMPLETO
-   ========================================================= */
-async function refreshHistory(){
-  const list = await getAllTickets();
-  list.forEach(t=> ticketsById[t.id]=t);
-  const historyEl = document.getElementById("historyList");
-  historyEl.innerHTML = renderTicketList(list);
-  attachLogoFallbacks(historyEl);
-}
-
-/* =========================================================
-   NAV INFERIOR
-   ========================================================= */
-document.querySelectorAll("nav.bottom button[data-view]").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    showView(btn.dataset.view);
-  });
-});
-
-/* =========================================================
-   INICIO
-   ========================================================= */
-(async function init(){
-  document.getElementById("todayLabel").textContent =
-    new Date().toLocaleDateString("es-MX", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
-  await openDB();
-  await refreshDashboard();
-})();
+document.getElementById('fDate').valueAsDate = new Date();
+initForm();
+initAuth();
 </script>
+
 </body>
 </html>
