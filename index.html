@@ -2257,7 +2257,12 @@ async function openCameraView(){
   try{
     if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error("getUserMedia no soportado");
     cameraStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment", width: { ideal: 1080 }, height: { ideal: 1920 } },
+      video: {
+        facingMode: "environment",
+        width: { ideal: 1080 },
+        height: { ideal: 1920 },
+        aspectRatio: { ideal: 9/16 }
+      },
       audio: false
     });
     document.getElementById("cameraVideo").srcObject = cameraStream;
@@ -2276,10 +2281,26 @@ function stopCameraStream(){
 document.getElementById("btnCameraCancel").addEventListener("click", ()=> showView("dashboard"));
 document.getElementById("btnCameraShutter").addEventListener("click", ()=>{
   const video = document.getElementById("cameraVideo");
+  const vw = video.videoWidth, vh = video.videoHeight;
+
+  // El video en pantalla se ve vertical porque el CSS (object-fit:cover)
+  // recorta un fotograma que muchas cámaras traseras entregan "crudo" en
+  // horizontal. drawImage() copia el fotograma crudo completo, así que si
+  // no replicamos aquí el mismo recorte, la foto sale horizontal aunque en
+  // pantalla se viera vertical. Recortamos al mismo marco 9:16 centrado.
+  const targetRatio = 9/16;
+  const videoRatio = vw/vh;
+  let sx, sy, sw, sh;
+  if(videoRatio > targetRatio){
+    sh = vh; sw = vh*targetRatio; sx = (vw-sw)/2; sy = 0;
+  } else {
+    sw = vw; sh = vw/targetRatio; sx = 0; sy = (vh-sh)/2;
+  }
+
+  const outW = 1080, outH = Math.round(outW/targetRatio);
   const canvas = document.createElement("canvas");
-  canvas.width = video.videoWidth || 1080;
-  canvas.height = video.videoHeight || 1920;
-  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+  canvas.width = outW; canvas.height = outH;
+  canvas.getContext("2d").drawImage(video, sx, sy, sw, sh, 0, 0, outW, outH);
   const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
   stopCameraStream();
   handleCapturedImage(dataUrl);
