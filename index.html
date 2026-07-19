@@ -84,6 +84,10 @@ header.top{
   position: sticky;
   top: 0;
   z-index: 40;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 10px;
 }
 .brand-row{
   display:flex;
@@ -109,6 +113,98 @@ header.top p{
   text-transform: capitalize;
   letter-spacing: 0.02em;
 }
+.header-user-btn{
+  flex-shrink:0;
+  width: 38px; height:38px;
+  border-radius:50%;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--brand-purple);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  margin-top: 2px;
+}
+.user-avatar-img{
+  width:100%; height:100%;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+/* ---------- Pantalla de inicio de sesión ---------- */
+.auth-overlay{
+  position:fixed; inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding: 30px;
+  text-align:center;
+  z-index: 1000;
+}
+.auth-overlay.hidden{ display:none; }
+.auth-title{
+  font-family: var(--font-display);
+  font-size: 34px;
+  margin: 4px 0 0;
+}
+.auth-subtitle{
+  color: var(--muted);
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+.google-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 13px 26px;
+  background: var(--glass-bg-2);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius);
+  font-weight:600;
+  font-size:14px;
+  color: var(--ink);
+  cursor:pointer;
+}
+.google-btn:active{ transform: scale(0.97); }
+.auth-error{
+  color: var(--accent-2);
+  font-size:12.5px;
+  display:none;
+  max-width: 280px;
+}
+
+/* ---------- Indicador de sincronización ---------- */
+.sync-status{
+  position:fixed;
+  bottom: 96px;
+  left:50%;
+  transform: translateX(-50%);
+  background: var(--glass-bg-2);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 11.5px;
+  display:none;
+  align-items:center;
+  gap:7px;
+  z-index: 60;
+}
+.sync-status.show{ display:flex; }
+.sync-dot{
+  width:6px; height:6px;
+  border-radius:50%;
+  background: var(--accent);
+  animation: syncPulse 1.4s infinite;
+}
+@keyframes syncPulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.25; } }
 
 /* ---------- Cards resumen ---------- */
 .summary-row{
@@ -967,19 +1063,41 @@ nav.bottom button.active{ color: var(--brand-purple); }
 </head>
 <body>
 
-<div id="app">
+<!-- ============ PANTALLA DE INICIO DE SESIÓN (Google) ============ -->
+<div id="authOverlay" class="auth-overlay">
+  <svg class="brand-icon" viewBox="0 0 100 100" width="72" height="72" aria-hidden="true">
+    <circle cx="50" cy="50" r="29.5" fill="none" stroke="#8C7AE6" stroke-width="10"/>
+    <path d="M 32,67 Q 50,80 78,42" fill="none" stroke="#2ED9C3" stroke-width="7.5" stroke-linecap="round"/>
+    <polygon points="83.9,34.4 81.3,47.1 72.2,40.0" fill="#2ED9C3"/>
+  </svg>
+  <h1 class="auth-title"><span class="brand-out">OUT</span><span class="brand-dash">-</span><span class="brand-go">GO</span></h1>
+  <p class="auth-subtitle">Control de gastos con respaldo en la nube</p>
+  <button class="google-btn" id="googleSignInBtn">
+    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.3 1 7.3 2.8l5.7-5.7C33.7 6.9 29.1 5 24 5 13.5 5 5 13.5 5 24s8.5 19 19 19 19-8.5 19-19c0-1.3-.1-2.5-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.6 15.9 18.9 13 24 13c2.8 0 5.3 1 7.3 2.8l5.7-5.7C33.7 6.9 29.1 5 24 5c-7.7 0-14.3 4.3-17.7 10.7z"/><path fill="#4CAF50" d="M24 43c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 34.1 26.7 35 24 35c-5.2 0-9.6-3.3-11.2-8l-6.5 5C9.6 38.6 16.2 43 24 43z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.6l6.2 5.2C39.9 37 44 31.5 44 24c0-1.3-.1-2.5-.4-3.5z"/></svg>
+    Iniciar sesión con Google
+  </button>
+  <p id="authError" class="auth-error"></p>
+</div>
+
+<div id="app" style="display:none;">
 
   <!-- ============ HEADER ============ -->
   <header class="top">
-    <div class="brand-row">
-      <svg class="brand-icon" viewBox="0 0 100 100" width="36" height="36" aria-hidden="true">
-        <circle cx="50" cy="50" r="29.5" fill="none" stroke="#8C7AE6" stroke-width="10"/>
-        <path d="M 32,67 Q 50,80 78,42" fill="none" stroke="#2ED9C3" stroke-width="7.5" stroke-linecap="round"/>
-        <polygon points="83.9,34.4 81.3,47.1 72.2,40.0" fill="#2ED9C3"/>
-      </svg>
-      <h1><span class="brand-out">OUT</span><span class="brand-dash">-</span><span class="brand-go">GO</span></h1>
+    <div class="header-left">
+      <div class="brand-row">
+        <svg class="brand-icon" viewBox="0 0 100 100" width="36" height="36" aria-hidden="true">
+          <circle cx="50" cy="50" r="29.5" fill="none" stroke="#8C7AE6" stroke-width="10"/>
+          <path d="M 32,67 Q 50,80 78,42" fill="none" stroke="#2ED9C3" stroke-width="7.5" stroke-linecap="round"/>
+          <polygon points="83.9,34.4 81.3,47.1 72.2,40.0" fill="#2ED9C3"/>
+        </svg>
+        <h1><span class="brand-out">OUT</span><span class="brand-dash">-</span><span class="brand-go">GO</span></h1>
+      </div>
+      <p id="todayLabel">—</p>
     </div>
-    <p id="todayLabel">—</p>
+    <button class="header-user-btn" id="userMenuBtn" title="Cuenta">
+      <img id="userAvatarHeader" class="user-avatar-img" alt="" style="display:none;">
+      <svg id="userIconDefault" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6.5 8-6.5s8 2.5 8 6.5"/></svg>
+    </button>
   </header>
 
   <!-- ============ VISTA: DASHBOARD ============ -->
@@ -1033,12 +1151,13 @@ nav.bottom button.active{ color: var(--brand-purple); }
   <div class="view" id="view-history">
     <section>
       <div class="backup-box">
-        <div class="section-title" style="margin-top:0;">Respaldo de tus datos</div>
-        <div class="hint" style="margin-bottom:10px;">Tus tickets se guardan solo en este navegador/dispositivo (IndexedDB). Si limpias caché o cambias de celular, se pierden — exporta un respaldo de vez en cuando.</div>
+        <div class="section-title" style="margin-top:0;">Cuenta y respaldo</div>
+        <div class="hint" style="margin-bottom:10px;">Tus tickets ahora se guardan en tu cuenta de Google (Firestore), no solo en este navegador — puedes entrar desde otro celular y verlos igual. Aun así, exportar un respaldo de vez en cuando nunca está de más.</div>
         <div class="backup-actions">
           <button class="backup-btn" id="btnExportJSON">⬇️ Exportar JSON</button>
           <button class="backup-btn" id="btnExportCSV">⬇️ Exportar CSV (Excel)</button>
           <button class="backup-btn" id="btnImportJSON">⬆️ Importar respaldo JSON</button>
+          <button class="backup-btn" id="btnMigrateLocal">☁️ Copiar tickets guardados en este navegador (antes de la cuenta)</button>
         </div>
         <input type="file" id="importFileInput" accept="application/json" style="display:none;">
       </div>
@@ -1178,8 +1297,6 @@ nav.bottom button.active{ color: var(--brand-purple); }
     </div>
   </div>
 
-</div>
-
 <!-- Hoja de acciones para crear un nuevo ticket -->
 <div id="actionSheetOverlay" class="action-sheet-overlay">
   <div class="action-sheet">
@@ -1188,6 +1305,12 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <button class="action-sheet-btn" id="actManual">✏️ Ticket manual</button>
     <button class="action-sheet-cancel" id="actCancel">Cancelar</button>
   </div>
+</div>
+
+<!-- Indicador de sincronización con la nube -->
+<div class="sync-status" id="syncStatus">
+  <div class="sync-dot"></div>
+  <span id="syncLabel">Sincronizando…</span>
 </div>
 
 <!-- Overlay de procesamiento OCR -->
@@ -1213,6 +1336,14 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v17l-2.5-1.6L13 20l-2.5-1.6L8 20l-2-1.6V3Z"/><path d="M8.5 8h7M8.5 11.5h7M8.5 15h4"/></svg>
   </button>
 </nav>
+
+</div>
+
+<!-- Firebase (login con Google + base de datos en la nube + fotos) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
 
 <!-- Tesseract.js (OCR), jsQR (lectura de códigos QR/CFDI) y jsPDF (exportar copia en PDF) vía CDN -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -1445,13 +1576,13 @@ const STORE_ALIASES = [
 ];
 
 /* =========================================================
-   INDEXEDDB — almacenamiento local del dispositivo
-   Nota: es local al navegador/dispositivo. Si el usuario borra
-   datos del navegador o cambia de celular, se pierde el historial.
-   Para el beta está bien; a futuro conviene sincronizar con backend.
+   INDEXEDDB LOCAL — se conserva solo como origen para migrar
+   datos existentes (de antes de tener cuenta) hacia la nube.
+   El almacenamiento "oficial" de la app ahora es Firestore
+   (ver sección FIREBASE más abajo).
    ========================================================= */
-let db;
-function openDB(){
+let localDb;
+function openLocalDB(){
   return new Promise((resolve, reject)=>{
     const req = indexedDB.open("gastosDB", 1);
     req.onupgradeneeded = (e)=>{
@@ -1461,42 +1592,201 @@ function openDB(){
         store.createIndex("date", "date", { unique:false });
       }
     };
-    req.onsuccess = (e)=>{ db = e.target.result; resolve(db); };
+    req.onsuccess = (e)=>{ localDb = e.target.result; resolve(localDb); };
     req.onerror = (e)=> reject(e);
   });
 }
-function addTicket(ticket){
+function getAllTicketsLocal(){
   return new Promise((resolve, reject)=>{
-    const tx = db.transaction("tickets","readwrite");
-    const req = tx.objectStore("tickets").add(ticket);
-    req.onsuccess = ()=> resolve(req.result);
-    req.onerror = (e)=> reject(e);
-  });
-}
-function getAllTickets(){
-  return new Promise((resolve, reject)=>{
-    const tx = db.transaction("tickets","readonly");
+    if(!localDb){ resolve([]); return; }
+    const tx = localDb.transaction("tickets","readonly");
     const req = tx.objectStore("tickets").getAll();
-    req.onsuccess = ()=> resolve(req.result.sort((a,b)=> b.date.localeCompare(a.date) || b.id-a.id));
+    req.onsuccess = ()=> resolve(req.result || []);
     req.onerror = (e)=> reject(e);
   });
 }
+
+/* =========================================================
+   FIREBASE — inicio de sesión con Google + base de datos en
+   la nube (Firestore) + fotos en Firebase Storage.
+   Cada usuario solo ve/edita sus propios tickets, guardados en
+   users/{uid}/tickets/{ticketId}.
+   ========================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyCxwN1C5mKvPG7x3murIuJxuYhUnLzkQvw",
+  authDomain: "outgo-77b3e.firebaseapp.com",
+  projectId: "outgo-77b3e",
+  storageBucket: "outgo-77b3e.firebasestorage.app",
+  messagingSenderId: "913961970596",
+  appId: "1:913961970596:web:1770c761f3ba4f40842f31"
+};
+let auth, db, storage, firebaseReady = false;
+try{
+  if(typeof firebase === "undefined") throw new Error("El SDK de Firebase no cargó (revisa tu conexión o si algo está bloqueando gstatic.com).");
+  firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+  storage = firebase.storage();
+  firebaseReady = true;
+}catch(err){
+  console.error("Error inicializando Firebase:", err);
+  document.addEventListener("DOMContentLoaded", ()=>{
+    const errEl = document.getElementById("authError");
+    if(errEl){
+      errEl.textContent = "No se pudo cargar el servicio de cuenta/base de datos: " + err.message + " — intenta recargar la página.";
+      errEl.style.display = "block";
+    }
+  });
+}
+
+let currentUser = null;
+
+function ticketsCollection(){
+  return db.collection("users").doc(currentUser.uid).collection("tickets");
+}
+
+// Sube la foto a Firebase Storage y devuelve su URL pública (con token).
+// Si algo falla, avisa y regresa null en vez de arriesgar guardar un
+// documento de Firestore demasiado pesado con la imagen en base64.
+async function uploadTicketImageIfNeeded(dataUrlOrUrl, ticketId){
+  if(!dataUrlOrUrl) return null;
+  if(!dataUrlOrUrl.startsWith("data:")) return dataUrlOrUrl; // ya es una URL subida antes
+  try{
+    showSyncStatus("Subiendo foto…");
+    const path = `users/${currentUser.uid}/tickets/${ticketId}.jpg`;
+    const ref = storage.ref(path);
+    await ref.putString(dataUrlOrUrl, "data_url");
+    return await ref.getDownloadURL();
+  }catch(err){
+    console.error("Error subiendo la foto:", err);
+    alert("No se pudo subir la foto (se guardará el gasto sin imagen). Revisa tu conexión.");
+    return null;
+  }
+}
+
+function addTicket(ticket){
+  return (async ()=>{
+    showSyncStatus("Guardando…");
+    const ref = await ticketsCollection().add({});
+    const image = await uploadTicketImageIfNeeded(ticket.image, ref.id);
+    const clean = { ...ticket, image: image || null };
+    delete clean.id;
+    await ref.set(clean);
+    showSyncStatus("Sincronizado ✓");
+    return ref.id;
+  })();
+}
+
+function getAllTickets(){
+  return (async ()=>{
+    const snap = await ticketsCollection().orderBy("date","desc").get();
+    const list = [];
+    snap.forEach(doc=> list.push({ id: doc.id, ...doc.data() }));
+    return list;
+  })();
+}
+
 function updateTicket(ticket){
-  return new Promise((resolve, reject)=>{
-    const tx = db.transaction("tickets","readwrite");
-    const req = tx.objectStore("tickets").put(ticket);
-    req.onsuccess = ()=> resolve(req.result);
-    req.onerror = (e)=> reject(e);
-  });
+  return (async ()=>{
+    showSyncStatus("Guardando…");
+    const id = ticket.id;
+    const image = await uploadTicketImageIfNeeded(ticket.image, id);
+    const clean = { ...ticket, image: image || null };
+    delete clean.id;
+    await ticketsCollection().doc(String(id)).set(clean);
+    showSyncStatus("Sincronizado ✓");
+    return id;
+  })();
 }
+
 function deleteTicket(id){
-  return new Promise((resolve, reject)=>{
-    const tx = db.transaction("tickets","readwrite");
-    const req = tx.objectStore("tickets").delete(id);
-    req.onsuccess = ()=> resolve();
-    req.onerror = (e)=> reject(e);
+  return (async ()=>{
+    await ticketsCollection().doc(String(id)).delete();
+  })();
+}
+
+// Copia los tickets guardados localmente (de antes de iniciar sesión, o de
+// pruebas previas en este navegador) hacia la cuenta de Firestore. No borra
+// el respaldo local; solo agrega. Pensado para correrse una vez.
+async function migrateLocalDataToCloud(){
+  try{
+    await openLocalDB();
+    const localTickets = await getAllTicketsLocal();
+    if(!localTickets.length){
+      alert("No se encontraron tickets guardados localmente en este navegador.");
+      return;
+    }
+    const ok = confirm(`Se encontraron ${localTickets.length} ticket(s) guardados en este navegador (de antes de tener cuenta). ¿Copiarlos a tu cuenta de ${currentUser.email}?`);
+    if(!ok) return;
+    for(const t of localTickets){
+      const clean = { ...t };
+      delete clean.id;
+      await addTicket(clean);
+    }
+    await refreshDashboard();
+    await refreshHistory();
+    alert("Migración completada.");
+  }catch(err){
+    console.error(err);
+    alert("No se pudo migrar la información local: " + err.message);
+  }
+}
+
+/* =========================================================
+   AUTENTICACIÓN (Google) — la app queda oculta detrás de un
+   overlay de inicio de sesión hasta que haya un usuario.
+   ========================================================= */
+function showSyncStatus(message){
+  const el = document.getElementById("syncStatus");
+  const label = document.getElementById("syncLabel");
+  if(!el || !label) return;
+  label.textContent = message;
+  el.classList.add("show");
+  if(message.includes("✓")) setTimeout(()=> el.classList.remove("show"), 2000);
+}
+
+function initAuth(){
+  if(!firebaseReady) return; // ya se mostró el error en authError
+  auth.onAuthStateChanged(async (user)=>{
+    if(user){
+      currentUser = user;
+      document.getElementById("authOverlay").classList.add("hidden");
+      document.getElementById("app").style.display = "block";
+      document.getElementById("userAvatarHeader").src = user.photoURL || "";
+      document.getElementById("userAvatarHeader").style.display = user.photoURL ? "block" : "none";
+      await refreshDashboard();
+      await refreshHistory();
+    } else {
+      currentUser = null;
+      document.getElementById("authOverlay").classList.remove("hidden");
+      document.getElementById("app").style.display = "none";
+    }
   });
 }
+
+document.getElementById("googleSignInBtn").addEventListener("click", async ()=>{
+  const errEl = document.getElementById("authError");
+  errEl.style.display = "none";
+  if(!firebaseReady){
+    errEl.textContent = "El servicio de cuenta no está disponible ahora mismo. Recarga la página o intenta de nuevo más tarde.";
+    errEl.style.display = "block";
+    return;
+  }
+  try{
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await auth.signInWithPopup(provider);
+  }catch(err){
+    console.error("Error al iniciar sesión:", err);
+    errEl.textContent = "No se pudo iniciar sesión: " + err.message;
+    errEl.style.display = "block";
+  }
+});
+
+document.getElementById("userMenuBtn").addEventListener("click", async ()=>{
+  if(confirm(`Sesión iniciada como ${currentUser?.email || ""}.\n¿Cerrar sesión?`)){
+    await auth.signOut();
+  }
+});
 
 /* =========================================================
    UTILIDADES DE FECHA
@@ -2484,7 +2774,7 @@ function renderReceiptHTML(t){
       ${cfdiBlock}
       ${photoBlock}
       <div class="receipt-barcode"></div>
-      <div class="receipt-barcode-label">OUTGO · #${String(t.id).padStart(6,"0")}</div>
+      <div class="receipt-barcode-label">OUTGO · #${String(t.id).slice(-8).toUpperCase()}</div>
     </div>
   `;
 }
@@ -2554,7 +2844,7 @@ document.getElementById("btnReceiptPDF").addEventListener("click", async ()=>{
       }catch(e){ console.warn("No se pudo incluir la foto en el PDF:", e); }
     }
 
-    doc.save(`outgo-ticket-${String(t.id).padStart(6,"0")}.pdf`);
+    doc.save(`outgo-ticket-${String(t.id).slice(-8)}.pdf`);
   }catch(e){
     console.error(e);
     alert("No se pudo generar el PDF. Intenta de nuevo.");
@@ -2595,7 +2885,7 @@ document.getElementById("btnReceiptDelete").addEventListener("click", async ()=>
 /* Delegación de eventos para el botón eliminar */
 document.addEventListener("click", async (e)=>{
   if(e.target.classList.contains("del")){
-    const id = Number(e.target.dataset.id);
+    const id = e.target.dataset.id;
     if(confirm("¿Eliminar este ticket?")){
       await deleteTicket(id);
       await refreshDashboard();
@@ -2605,7 +2895,7 @@ document.addEventListener("click", async (e)=>{
   }
   const ticketEl = e.target.closest(".ticket");
   if(ticketEl){
-    openReceiptView(Number(ticketEl.dataset.id));
+    openReceiptView(ticketEl.dataset.id);
   }
 });
 
@@ -2757,6 +3047,8 @@ document.getElementById("btnExportCSV").addEventListener("click", async ()=>{
   downloadBlob("\uFEFF"+csv, `outgo-gastos-${todayISO()}.csv`, "text/csv;charset=utf-8;");
 });
 
+document.getElementById("btnMigrateLocal").addEventListener("click", migrateLocalDataToCloud);
+
 document.getElementById("btnImportJSON").addEventListener("click", ()=>{
   document.getElementById("importFileInput").click();
 });
@@ -2810,8 +3102,7 @@ document.querySelectorAll("nav.bottom button[data-view]").forEach(btn=>{
 (async function init(){
   document.getElementById("todayLabel").textContent =
     new Date().toLocaleDateString("es-MX", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
-  await openDB();
-  await refreshDashboard();
+  initAuth();
 })();
 </script>
 </body>
