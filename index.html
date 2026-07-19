@@ -1349,7 +1349,6 @@ nav.bottom button.active{ color: var(--brand-purple); }
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
 
 <!-- Tesseract.js (OCR), jsQR (lectura de códigos QR/CFDI) y jsPDF (exportar copia en PDF) vía CDN -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -1614,7 +1613,9 @@ function getAllTicketsLocal(){
 
 /* =========================================================
    FIREBASE — inicio de sesión con Google + base de datos en
-   la nube (Firestore) + fotos en Firebase Storage.
+   la nube (Firestore). Las fotos se guardan comprimidas dentro
+   del propio documento (no en Firebase Storage, que desde 2026
+   exige el plan de pago Blaze).
    Cada usuario solo ve/edita sus propios tickets, guardados en
    users/{uid}/tickets/{ticketId}.
    ========================================================= */
@@ -1626,13 +1627,12 @@ const firebaseConfig = {
   messagingSenderId: "913961970596",
   appId: "1:913961970596:web:1770c761f3ba4f40842f31"
 };
-let auth, db, storage, firebaseReady = false;
+let auth, db, firebaseReady = false;
 try{
   if(typeof firebase === "undefined") throw new Error("El SDK de Firebase no cargó (revisa tu conexión o si algo está bloqueando gstatic.com).");
   firebase.initializeApp(firebaseConfig);
   auth = firebase.auth();
   db = firebase.firestore();
-  storage = firebase.storage();
   firebaseReady = true;
 }catch(err){
   console.error("Error inicializando Firebase:", err);
@@ -1652,20 +1652,29 @@ function ticketsCollection(){
 }
 
 // Sube la foto a Firebase Storage y devuelve su URL pública (con token).
-// Si algo falla, avisa y regresa null en vez de arriesgar guardar un
-// documento de Firestore demasiado pesado con la imagen en base64.
-async function uploadTicketImageIfNeeded(dataUrlOrUrl, ticketId){
+// Firebase Storage ahora exige el plan de pago "Blaze" (desde feb-2026 ya no
+// existe en el plan gratuito Spark, requiere tarjeta registrada) — por eso
+// la subida se quedaba pensando sin terminar nunca. Para que la app funcione
+// sin necesidad de dar de alta una tarjeta, guardamos la foto comprimida
+// directo dentro del documento de Firestore (como en la versión original),
+// comprimiendo fuerte para que quepa bien bajo el límite de 1MB por documento.
+async function prepareTicketImageForSave(dataUrlOrUrl){
   if(!dataUrlOrUrl) return null;
-  if(!dataUrlOrUrl.startsWith("data:")) return dataUrlOrUrl; // ya es una URL subida antes
+  if(!dataUrlOrUrl.startsWith("data:")) return dataUrlOrUrl; // ya es una imagen guardada antes
   try{
-    showSyncStatus("Subiendo foto…");
-    const path = `users/${currentUser.uid}/tickets/${ticketId}.jpg`;
-    const ref = storage.ref(path);
-    await ref.putString(dataUrlOrUrl, "data_url");
-    return await ref.getDownloadURL();
+    showSyncStatus("Guardando foto…");
+    let compressed = await recompressDataURL(dataUrlOrUrl, 1000, 0.7);
+    if(compressed.length > 700000){
+      compressed = await recompressDataURL(dataUrlOrUrl, 700, 0.55); // recompresión más agresiva
+    }
+    if(compressed.length > 950000){
+      alert("La foto quedó muy pesada incluso comprimida — se guardará el gasto sin imagen.");
+      return null;
+    }
+    return compressed;
   }catch(err){
-    console.error("Error subiendo la foto:", err);
-    alert("No se pudo subir la foto (se guardará el gasto sin imagen). Revisa tu conexión.");
+    console.error("Error preparando la foto:", err);
+    alert("No se pudo procesar la foto (se guardará el gasto sin imagen).");
     return null;
   }
 }
@@ -1673,11 +1682,10 @@ async function uploadTicketImageIfNeeded(dataUrlOrUrl, ticketId){
 function addTicket(ticket){
   return (async ()=>{
     showSyncStatus("Guardando…");
-    const ref = await ticketsCollection().add({});
-    const image = await uploadTicketImageIfNeeded(ticket.image, ref.id);
+    const image = await prepareTicketImageForSave(ticket.image);
     const clean = { ...ticket, image: image || null };
     delete clean.id;
-    await ref.set(clean);
+    const ref = await ticketsCollection().add(clean);
     showSyncStatus("Sincronizado ✓");
     return ref.id;
   })();
@@ -1696,7 +1704,7 @@ function updateTicket(ticket){
   return (async ()=>{
     showSyncStatus("Guardando…");
     const id = ticket.id;
-    const image = await uploadTicketImageIfNeeded(ticket.image, id);
+    const image = await prepareTicketImageForSave(ticket.image);
     const clean = { ...ticket, image: image || null };
     delete clean.id;
     await ticketsCollection().doc(String(id)).set(clean);
@@ -2463,7 +2471,7 @@ document.getElementById("btnCropConfirm").addEventListener("click", ()=>{
 /* =========================================================
    OCR (tras el recorte)
    ========================================================= */
-function recompressDataURL(dataUrl, maxWidth){
+function recompressDataURL(dataUrl, maxWidth, quality=0.78){
   return new Promise((resolve, reject)=>{
     const img = new Image();
     img.onload = ()=>{
@@ -2472,7 +2480,76 @@ function recompressDataURL(dataUrl, maxWidth){
       const canvas = document.createElement("canvas");
       canvas.width=w; canvas.height=h;
       canvas.getContext("2d").drawImage(img,0,0,w,h);
-      resolve(canvas.toDataURL("image/jpeg", 0.78));
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
+
+/* =========================================================
+   PREPROCESAMIENTO DE IMAGEN PARA OCR
+   Esta versión NUNCA se guarda ni se muestra al usuario — es
+   solo lo que le damos a Tesseract, para leer mejor. Se genera
+   aparte de la foto normal (que sí se guarda a color).
+
+   Usamos umbralización ADAPTATIVA (método tipo Bradley/Wellner,
+   el mismo principio que usan apps de escaneo de documentos):
+   en vez de un solo umbral blanco/negro para toda la imagen
+   (que falla si hay sombras o una mano tapando parte del
+   ticket, como vimos en una foto real), cada pixel se compara
+   contra el promedio de su vecindario local. Esto separa el
+   texto del fondo mucho mejor con luz pareja o desigual.
+   ========================================================= */
+function prepareImageForOCR(dataUrl, maxWidth){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      try{
+        const scale = Math.min(1, maxWidth/img.width);
+        const w = Math.round(img.width*scale), h = Math.round(img.height*scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const d = imgData.data;
+        const gray = new Float64Array(w*h);
+        for(let i=0;i<w*h;i++){
+          gray[i] = 0.299*d[i*4] + 0.587*d[i*4+1] + 0.114*d[i*4+2];
+        }
+
+        // Imagen integral (suma acumulada) para sacar el promedio de
+        // cualquier ventana local en tiempo constante por pixel.
+        const integral = new Float64Array((w+1)*(h+1));
+        for(let y=0;y<h;y++){
+          let rowSum = 0;
+          for(let x=0;x<w;x++){
+            rowSum += gray[y*w+x];
+            integral[(y+1)*(w+1)+(x+1)] = integral[y*(w+1)+(x+1)] + rowSum;
+          }
+        }
+
+        const windowSize = Math.max(15, Math.floor(w/8));
+        const half = Math.floor(windowSize/2);
+        const sensitivity = 0.15; // qué tanto más oscuro que su entorno debe ser un pixel para ser "tinta"
+
+        for(let y=0;y<h;y++){
+          for(let x=0;x<w;x++){
+            const x1 = Math.max(0, x-half), x2 = Math.min(w-1, x+half);
+            const y1 = Math.max(0, y-half), y2 = Math.min(h-1, y+half);
+            const count = (x2-x1+1)*(y2-y1+1);
+            const sum = integral[(y2+1)*(w+1)+(x2+1)] - integral[y1*(w+1)+(x2+1)] - integral[(y2+1)*(w+1)+x1] + integral[y1*(w+1)+x1];
+            const mean = sum/count;
+            const idx = y*w+x;
+            const v = gray[idx] < mean*(1-sensitivity) ? 0 : 255;
+            d[idx*4] = v; d[idx*4+1] = v; d[idx*4+2] = v;
+          }
+        }
+        ctx.putImageData(imgData, 0, 0);
+        resolve(canvas.toDataURL("image/jpeg", 0.92));
+      }catch(e){ reject(e); }
     };
     img.onerror = reject;
     img.src = dataUrl;
