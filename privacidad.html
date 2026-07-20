@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aviso de Privacidad · Outgo</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='29.5' fill='none' stroke='%238C7AE6' stroke-width='10'/%3E%3Cpath d='M 32,67 Q 50,80 78,42' fill='none' stroke='%232ED9C3' stroke-width='7.5' stroke-linecap='round'/%3E%3Cpolygon points='83.9,34.4 81.3,47.1 72.2,40.0' fill='%232ED9C3'/%3E%3C/svg%3E">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --bg:#F6F4FC; --paper:#FFFFFF; --ink:#2B2640; --muted:#8B87A0; --line:#E4E0F2;
+  --accent:#2ED9C3; --brand-purple:#8C7AE6; --radius:18px;
+  --font-display:'Poppins',sans-serif; --font-body:'Inter',-apple-system,sans-serif;
+  --glass-bg: rgba(255,255,255,0.55); --glass-border: rgba(255,255,255,0.65);
+  --glass-blur: blur(22px) saturate(180%); --glass-shadow: 0 8px 32px rgba(60,40,110,0.14);
+}
+*{box-sizing:border-box;} html,body{margin:0;padding:0;}
+body{
+  font-family: var(--font-body); color:var(--ink); background-color:var(--bg);
+  background-image:
+    radial-gradient(circle at 10% 5%, rgba(140,122,230,0.30), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(46,217,195,0.25), transparent 38%);
+  background-attachment:fixed; background-repeat:no-repeat;
+}
+.wrap{ max-width:760px; margin:0 auto; padding:0 24px 80px; }
+a{ color:var(--brand-purple); }
+header{
+  background: rgba(255,255,255,0.68); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom:1px solid var(--glass-border); padding:16px 0; margin-bottom:40px;
+}
+header .wrap{ display:flex; align-items:center; justify-content:space-between; padding-bottom:0; }
+.brand{ font-family:var(--font-display); font-weight:600; font-size:20px; text-decoration:none; color:var(--ink); }
+.brand .out{ color:var(--brand-purple); } .brand .go{ color:var(--accent); font-weight:700; }
+.back-link{ font-size:13px; text-decoration:none; color:var(--muted); }
+h1{ font-family:var(--font-display); font-size:32px; margin-bottom:6px; }
+.updated{ color:var(--muted); font-size:13px; margin-bottom:30px; }
+.card{
+  background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border); border-radius:var(--radius); box-shadow:var(--glass-shadow);
+  padding:26px 28px; margin-bottom:18px;
+}
+.card h2{ font-family:var(--font-display); font-size:18px; margin:0 0 12px; }
+.card p, .card li{ font-size:14.5px; line-height:1.65; color:var(--ink); }
+.card ul{ padding-left:20px; margin:8px 0; }
+.notice{
+  background: rgba(224,85,74,0.1); border:1px solid rgba(224,85,74,0.3); border-radius:12px;
+  padding:14px 16px; font-size:13px; color:#8a3830; margin-bottom:26px;
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./landing.html"><span class="out">OUT</span>-<span class="go">GO</span></a>
+    <a class="back-link" href="./landing.html">← Volver al inicio</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Aviso de Privacidad</h1>
+  <p class="updated">Última actualización: 19 de julio de 2026</p>
+
+  <div class="notice">
+    Este aviso fue redactado como borrador de partida (con ayuda de IA) y describe honestamente cómo funciona la app hoy. Antes de un lanzamiento formal o de tratar datos de terceros a escala, se recomienda que un abogado especializado en protección de datos lo revise y lo adapte a tu caso concreto.
+  </div>
+
+  <div class="card">
+    <h2>1. Responsable del tratamiento</h2>
+    <p>Outgo ("nosotros") es responsable del tratamiento de los datos personales que recabamos a través de la aplicación, de acuerdo con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) de México.</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Qué datos recabamos</h2>
+    <ul>
+      <li><b>De tu cuenta de Google:</b> nombre, correo electrónico y foto de perfil, únicamente para identificarte al iniciar sesión.</li>
+      <li><b>De tus tickets:</b> comercio, fecha, montos, productos, categorías, y la fotografía del ticket que subes.</li>
+      <li><b>De facturas (CFDI):</b> si el ticket incluye un código QR de factura, leemos el folio (UUID) y los RFC emisor/receptor contenidos en ese QR.</li>
+      <li><b>De tu estado de cuenta:</b> si usas la función de cotejo bancario, los movimientos del archivo CSV que subas se procesan únicamente en tu dispositivo/sesión para compararlos con tus tickets.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>3. Para qué usamos tus datos</h2>
+    <ul>
+      <li>Mostrarte tu propio historial de gastos y análisis (por día, semana, mes, producto, categoría).</li>
+      <li>Detectar automáticamente comercio, montos y productos en tus tickets (reconocimiento de texto).</li>
+      <li>Permitirte exportar tu información (JSON/CSV) y generar copias en PDF de tus tickets.</li>
+    </ul>
+    <p>No usamos tus datos para mostrarte anuncios, ni los vendemos, ni los compartimos con terceros para fines comerciales.</p>
+  </div>
+
+  <div class="card">
+    <h2>4. Dónde se guardan tus datos</h2>
+    <p>Tu información se almacena en Firebase/Firestore (Google Cloud), bajo una cuenta asociada a tu usuario. Solo tú puedes acceder a tus propios tickets — cada cuenta está aislada de las demás mediante reglas de acceso.</p>
+  </div>
+
+  <div class="card">
+    <h2>5. Tus derechos (ARCO)</h2>
+    <p>Puedes Acceder, Rectificar, Cancelar tus datos u Oponerte a su tratamiento en cualquier momento. Dentro de la app puedes exportar o eliminar tus tickets tú mismo; para eliminar tu cuenta por completo, escríbenos a <a href="mailto:soporte@outgo.app">soporte@outgo.app</a>.</p>
+  </div>
+
+  <div class="card">
+    <h2>6. Un aviso importante sobre temas fiscales</h2>
+    <p>La función que lee el código QR de un CFDI, y cualquier indicación sobre si un gasto "podría ser deducible", es solo una guía informativa para tu control personal. Outgo no verifica tus facturas ante el SAT ni sustituye asesoría contable o fiscal profesional.</p>
+  </div>
+
+  <div class="card">
+    <h2>7. Cambios a este aviso</h2>
+    <p>Podemos actualizar este aviso conforme la app evolucione. Los cambios importantes se notificarán dentro de la aplicación.</p>
+  </div>
+
+  <div class="card">
+    <h2>8. Contacto</h2>
+    <p>Dudas sobre este aviso o tus datos: <a href="mailto:soporte@outgo.app">soporte@outgo.app</a></p>
+  </div>
+</div>
+</body>
+</html>

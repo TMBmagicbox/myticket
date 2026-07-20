@@ -442,6 +442,33 @@ section{ padding: 6px 20px 10px; }
 }
 .backup-btn:active{ background: var(--line); }
 
+.bank-row{
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background: rgba(255,255,255,0.5);
+}
+.bank-row.matched{ border-color: rgba(46,217,195,0.5); }
+.bank-row.unmatched{ border-color: rgba(224,85,74,0.4); }
+.bank-row-top{ display:flex; justify-content:space-between; gap:8px; font-size:13px; }
+.bank-row-desc{ font-weight:600; }
+.bank-row-amt{ font-family: var(--font-mono); font-weight:700; white-space:nowrap; }
+.bank-row-meta{ font-size:11px; color:var(--muted); margin-top:3px; }
+.bank-row-match{ font-size:11.5px; color: var(--accent); margin-top:5px; font-weight:600; }
+.bank-row-nomatch{ font-size:11.5px; color: var(--accent-2); margin-top:5px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.bank-quick-btn{
+  background: var(--brand-purple);
+  color:#fff;
+  border:none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
 /* ---------- Vista de análisis de productos ---------- */
 .product-search{
   width:100%;
@@ -1167,6 +1194,42 @@ nav.bottom button.active{ color: var(--brand-purple); }
         </div>
         <input type="file" id="importFileInput" accept="application/json" style="display:none;">
       </div>
+
+      <div class="backup-box">
+        <div class="section-title" style="margin-top:0;">🏦 Cotejar con tu banco</div>
+        <div class="hint" style="margin-bottom:10px;">Sube el estado de cuenta de tu tarjeta (CSV, exportado desde la app/web de tu banco) y te digo qué movimientos ya tienen ticket registrado y cuáles no. Esto NO conecta tu banco en automático — es un cotejo manual, tú decides cuándo subirlo.</div>
+        <div class="backup-actions">
+          <button class="backup-btn" id="btnImportBankCSV">📄 Importar estado de cuenta (CSV)</button>
+        </div>
+        <input type="file" id="bankCsvInput" accept=".csv,text/csv" style="display:none;">
+
+        <div id="bankMappingBox" style="display:none; margin-top:12px;">
+          <div class="hint" style="margin-bottom:8px;">No reconocí las columnas automáticamente — indícame cuál es cuál:</div>
+          <div class="tax-row">
+            <div class="field" style="margin-bottom:0;">
+              <label>Fecha</label>
+              <select id="mapDateCol"></select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label>Descripción</label>
+              <select id="mapDescCol"></select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label>Monto</label>
+              <select id="mapAmountCol"></select>
+            </div>
+          </div>
+          <button class="backup-btn" id="btnConfirmMapping" style="margin-top:8px;">Cotejar con estas columnas</button>
+        </div>
+
+        <div id="bankResultsBox" style="display:none; margin-top:14px;">
+          <div class="cat-bar-row">
+            <div class="cat-top"><span>Coincidencias encontradas</span><span class="amt" id="bankMatchSummary">0 / 0</span></div>
+          </div>
+          <div id="bankResultsList"></div>
+        </div>
+      </div>
+
       <div class="section-title">Todos los tickets</div>
       <div id="historyList"></div>
     </section>
@@ -1354,6 +1417,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
 <script>
 /* =========================================================
@@ -1679,13 +1743,38 @@ async function prepareTicketImageForSave(dataUrlOrUrl){
   }
 }
 
+// Firestore rechaza CUALQUIER campo con valor "undefined" (falla la escritura
+// entera, sin aviso claro). Esta función lo recorre todo (incluyendo arrays
+// como "items") y convierte cualquier undefined en null, como red de
+// seguridad permanente para que este bug no pueda repetirse con un campo
+// nuevo que se nos olvide inicializar bien.
+function stripUndefinedDeep(value){
+  if(Array.isArray(value)) return value.map(stripUndefinedDeep);
+  if(value && typeof value==="object"){
+    const out = {};
+    for(const k in value) out[k] = value[k]===undefined ? null : stripUndefinedDeep(value[k]);
+    return out;
+  }
+  return value===undefined ? null : value;
+}
+
+// Red de seguridad general: si Firestore no responde en 20s (sin internet,
+// reglas mal configuradas, etc.), se rechaza con un mensaje claro en vez de
+// dejar la app pensando para siempre.
+function withTimeout(promise, ms=20000, label="La operación"){
+  return Promise.race([
+    promise,
+    new Promise((_, reject)=> setTimeout(()=> reject(new Error(`${label} tardó demasiado. Revisa tu conexión a internet e intenta de nuevo.`)), ms))
+  ]);
+}
+
 function addTicket(ticket){
   return (async ()=>{
     showSyncStatus("Guardando…");
     const image = await prepareTicketImageForSave(ticket.image);
-    const clean = { ...ticket, image: image || null };
+    const clean = stripUndefinedDeep({ ...ticket, image: image || null });
     delete clean.id;
-    const ref = await ticketsCollection().add(clean);
+    const ref = await withTimeout(ticketsCollection().add(clean), 20000, "Guardar el gasto");
     showSyncStatus("Sincronizado ✓");
     return ref.id;
   })();
@@ -1693,7 +1782,7 @@ function addTicket(ticket){
 
 function getAllTickets(){
   return (async ()=>{
-    const snap = await ticketsCollection().orderBy("date","desc").get();
+    const snap = await withTimeout(ticketsCollection().orderBy("date","desc").get(), 20000, "Cargar tus gastos");
     const list = [];
     snap.forEach(doc=> list.push({ id: doc.id, ...doc.data() }));
     return list;
@@ -1705,9 +1794,9 @@ function updateTicket(ticket){
     showSyncStatus("Guardando…");
     const id = ticket.id;
     const image = await prepareTicketImageForSave(ticket.image);
-    const clean = { ...ticket, image: image || null };
+    const clean = stripUndefinedDeep({ ...ticket, image: image || null });
     delete clean.id;
-    await ticketsCollection().doc(String(id)).set(clean);
+    await withTimeout(ticketsCollection().doc(String(id)).set(clean), 20000, "Guardar el gasto");
     showSyncStatus("Sincronizado ✓");
     return id;
   })();
@@ -1854,15 +1943,48 @@ function lastAmountInLine(line){
   return normalizeAmountStr(nums[nums.length-1]);
 }
 
+// Distancia de edición (cuántas letras hay que cambiar para pasar de una
+// palabra a otra). Sirve para reconocer un comercio aunque el OCR se haya
+// equivocado en 1-2 letras (ej. "0XX0" o "WALHART" en vez de "WALMART").
+function levenshtein(a,b){
+  const m=a.length, n=b.length;
+  const dp = Array.from({length:m+1}, ()=> new Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) dp[i][0]=i;
+  for(let j=0;j<=n;j++) dp[0][j]=j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+    }
+  }
+  return dp[m][n];
+}
+function fuzzyFindStore(text){
+  const words = text.split(/[^A-ZÀ-Ú0-9]+/).filter(w=>w.length>=3);
+  for(const alias of STORE_ALIASES){
+    for(const aliasWord of alias.match.split(/\s+/)){
+      if(aliasWord.length<3) continue;
+      const tolerance = aliasWord.length<=4 ? 1 : 2;
+      for(const w of words){
+        if(Math.abs(w.length-aliasWord.length)<=tolerance && levenshtein(w,aliasWord)<=tolerance){
+          return alias.store;
+        }
+      }
+    }
+  }
+  return "";
+}
+
 function parseTicketText(rawText){
   const text = (rawText||"").toUpperCase();
   const lines = text.split("\n").map(l=>l.trim()).filter(Boolean);
 
-  // 1) Comercio
+  // 1) Comercio — primero coincidencia exacta, si no hay, coincidencia
+  // difusa (tolera errores de OCR de 1-2 letras).
   let detectedStore = "";
   for(const alias of STORE_ALIASES){
     if(text.includes(alias.match)){ detectedStore = alias.store; break; }
   }
+  if(!detectedStore) detectedStore = fuzzyFindStore(text);
 
   // 2) Fecha (formato típico MX: dd/mm/aaaa, también acepta dd-mm-aaaa y dd.mm.aaaa)
   let detectedDate = "";
@@ -2200,7 +2322,7 @@ document.getElementById("btnSave").addEventListener("click", async ()=>{
   }
 
   const items = getItemsData().filter(i=> i.description || i.quantity || i.cost);
-  const numOrUndef = (v)=> v===""||v===null||v===undefined ? undefined : parseFloat(v);
+  const numOrNull = (v)=> v===""||v===null||v===undefined ? null : parseFloat(v);
 
   const ticket = {
     store: storeName,
@@ -2208,21 +2330,28 @@ document.getElementById("btnSave").addEventListener("click", async ()=>{
     description: document.getElementById("fDescription").value.trim(),
     date,
     amount,
-    subtotal: numOrUndef(document.getElementById("fSubtotal").value),
-    iva: numOrUndef(document.getElementById("fIVA").value),
-    isr: numOrUndef(document.getElementById("fISR").value),
+    subtotal: numOrNull(document.getElementById("fSubtotal").value),
+    iva: numOrNull(document.getElementById("fIVA").value),
+    isr: numOrNull(document.getElementById("fISR").value),
     items,
     deducible: document.getElementById("fDeducible").checked,
-    cfdi: pendingCfdiData || (editingTicketId ? ticketsById[editingTicketId]?.cfdi : undefined),
+    cfdi: pendingCfdiData || (editingTicketId ? (ticketsById[editingTicketId]?.cfdi || null) : null),
     image: pendingImageData,
     createdAt: editingTicketId ? (ticketsById[editingTicketId]?.createdAt || Date.now()) : Date.now()
   };
 
-  if(editingTicketId){
-    ticket.id = editingTicketId;
-    await updateTicket(ticket);
-  } else {
-    await addTicket(ticket);
+  try{
+    if(editingTicketId){
+      ticket.id = editingTicketId;
+      await updateTicket(ticket);
+    } else {
+      await addTicket(ticket);
+    }
+  }catch(err){
+    console.error("Error guardando el ticket:", err);
+    document.getElementById("syncStatus").classList.remove("show");
+    alert("No se pudo guardar el gasto: " + err.message + "\n\nRevisa tu conexión e intenta de nuevo — tus datos no se perdieron, siguen en el formulario.");
+    return;
   }
   pendingImageData = null;
   pendingCfdiData = null;
@@ -2564,15 +2693,26 @@ async function proceedToOCR(imageDataUrl){
   pctEl.textContent = "0%";
 
   try{
+    // "compact" es la foto normal a color (se guarda y se muestra).
+    // "ocrReady" es una versión preprocesada (blanco/negro adaptativo) que
+    // NUNCA se guarda ni se muestra — solo se la damos a Tesseract, que lee
+    // mucho mejor texto binarizado que una foto a color con sombras.
     const compact = await recompressDataURL(imageDataUrl, 1400);
+    const ocrReady = await prepareImageForOCR(imageDataUrl, 1600);
 
-    const result = await Tesseract.recognize(compact, "spa", {
+    const worker = await Tesseract.createWorker("spa", 1, {
       logger: (m)=>{
         if(m.status==="recognizing text"){
           pctEl.textContent = Math.round(m.progress*100) + "%";
         }
       }
     });
+    // PSM 6 = "un solo bloque uniforme de texto", el modo que mejor le
+    // acierta a tickets (una sola columna angosta), en vez del modo
+    // genérico de página completa que usa por default.
+    await worker.setParameters({ tessedit_pageseg_mode: "6" });
+    const result = await worker.recognize(ocrReady);
+    await worker.terminate();
 
     const parsed = parseTicketText(result.data.text);
     const detectedItems = parseLineItems(result.data.text);
@@ -3181,6 +3321,172 @@ document.getElementById("importFileInput").addEventListener("change", async (e)=
     console.error(err);
     alert("No se pudo leer el archivo. Asegúrate de que sea un respaldo JSON exportado desde Outgo.");
   }
+});
+
+/* =========================================================
+   COTEJO BANCARIO
+   Importante ser honestos sobre el alcance real: esto NO conecta
+   el banco en automático (eso requeriría un agregador de open
+   banking de paga tipo Belvo/Finerio/Fintoc + backend propio,
+   por temas de seguridad no se puede hacer desde una página
+   estática). Lo que SÍ hacemos: el usuario exporta su estado de
+   cuenta en CSV desde su banco, lo sube aquí, y cotejamos cada
+   movimiento contra los tickets ya guardados (por monto y
+   cercanía de fecha) para ver qué falta registrar.
+   ========================================================= */
+function parseFlexibleDate(str){
+  const s = (str||"").trim();
+  let m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+  if(m) return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
+  m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+  if(m){
+    let y = m[3]; if(y.length===2) y = "20"+y;
+    return `${y}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;
+  }
+  return "";
+}
+function parseFlexibleAmount(val){
+  if(typeof val === "number") return Math.abs(val);
+  let s = (val||"").replace(/[^\d.,\-]/g,"").replace(/,/g,"");
+  const n = parseFloat(s);
+  return isNaN(n) ? null : Math.abs(n);
+}
+function daysBetween(isoA, isoB){
+  if(!isoA || !isoB) return 999;
+  const a = new Date(isoA+"T00:00:00"), b = new Date(isoB+"T00:00:00");
+  return Math.round((a-b)/86400000);
+}
+function detectBankColumns(headers){
+  const norm = h => (h||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const find = (candidates)=> headers.findIndex(h=> candidates.some(c=> norm(h).includes(c)));
+  return {
+    dateIdx: find(["fecha","date"]),
+    descIdx: find(["concepto","descripcion","description","detalle","referencia","comercio"]),
+    amountIdx: find(["cargo","monto","importe","amount","debito","debit","valor"])
+  };
+}
+
+let bankParsedRows = null; // filas crudas del CSV (arrays), para usar tras mapeo manual
+let bankHeaders = null;
+
+document.getElementById("btnImportBankCSV").addEventListener("click", ()=>{
+  document.getElementById("bankCsvInput").click();
+});
+
+document.getElementById("bankCsvInput").addEventListener("change", (e)=>{
+  const file = e.target.files[0];
+  e.target.value = "";
+  if(!file) return;
+  Papa.parse(file, {
+    complete: (results)=>{
+      const rows = results.data.filter(r=> r.some(cell=> (cell||"").trim()!==""));
+      if(!rows.length){ alert("El archivo parece estar vacío."); return; }
+      bankHeaders = rows[0];
+      bankParsedRows = rows.slice(1);
+      const cols = detectBankColumns(bankHeaders);
+      if(cols.dateIdx>=0 && cols.descIdx>=0 && cols.amountIdx>=0){
+        runBankMatching(cols);
+      } else {
+        showBankMappingUI();
+      }
+    },
+    error: (err)=>{
+      console.error(err);
+      alert("No se pudo leer el CSV. Verifica que sea el archivo exportado por tu banco.");
+    }
+  });
+});
+
+function showBankMappingUI(){
+  const box = document.getElementById("bankMappingBox");
+  const opts = bankHeaders.map((h,i)=> `<option value="${i}">${escapeHtml(h||"(columna "+(i+1)+")")}</option>`).join("");
+  document.getElementById("mapDateCol").innerHTML = opts;
+  document.getElementById("mapDescCol").innerHTML = opts;
+  document.getElementById("mapAmountCol").innerHTML = opts;
+  box.style.display = "block";
+  document.getElementById("bankResultsBox").style.display = "none";
+}
+
+document.getElementById("btnConfirmMapping").addEventListener("click", ()=>{
+  const cols = {
+    dateIdx: parseInt(document.getElementById("mapDateCol").value),
+    descIdx: parseInt(document.getElementById("mapDescCol").value),
+    amountIdx: parseInt(document.getElementById("mapAmountCol").value)
+  };
+  document.getElementById("bankMappingBox").style.display = "none";
+  runBankMatching(cols);
+});
+
+function runBankMatching(cols){
+  const transactions = bankParsedRows.map(r=>({
+    date: parseFlexibleDate(r[cols.dateIdx]),
+    description: (r[cols.descIdx]||"").trim(),
+    amount: parseFlexibleAmount(r[cols.amountIdx])
+  })).filter(t=> t.date && t.amount!==null && t.amount>0);
+
+  if(!transactions.length){
+    alert("No se pudieron leer movimientos válidos con esas columnas. Revisa el mapeo.");
+    return;
+  }
+
+  const results = transactions.map(tr=>{
+    const candidates = allTicketsCache.filter(t=>{
+      const amtDiff = Math.abs(t.amount - tr.amount);
+      const dd = Math.abs(daysBetween(t.date, tr.date));
+      return amtDiff <= 1 && dd <= 3;
+    }).sort((a,b)=>{
+      const da = Math.abs(daysBetween(a.date,tr.date)), db = Math.abs(daysBetween(b.date,tr.date));
+      if(da!==db) return da-db;
+      return Math.abs(a.amount-tr.amount) - Math.abs(b.amount-tr.amount);
+    });
+    return { ...tr, match: candidates[0] || null };
+  });
+
+  renderBankResults(results);
+}
+
+function renderBankResults(results){
+  const matchedCount = results.filter(r=>r.match).length;
+  document.getElementById("bankMatchSummary").textContent = `${matchedCount} / ${results.length}`;
+  const listEl = document.getElementById("bankResultsList");
+
+  listEl.innerHTML = results.map((r, idx)=>{
+    if(r.match){
+      return `
+        <div class="bank-row matched">
+          <div class="bank-row-top"><span class="bank-row-desc">${escapeHtml(r.description || "Movimiento")}</span><span class="bank-row-amt">${fmtMoney(r.amount)}</span></div>
+          <div class="bank-row-meta">${r.date}</div>
+          <div class="bank-row-match">✅ Coincide con tu ticket de ${escapeHtml(r.match.store)} (${r.match.date})</div>
+        </div>`;
+    }
+    return `
+      <div class="bank-row unmatched">
+        <div class="bank-row-top"><span class="bank-row-desc">${escapeHtml(r.description || "Movimiento")}</span><span class="bank-row-amt">${fmtMoney(r.amount)}</span></div>
+        <div class="bank-row-meta">${r.date}</div>
+        <div class="bank-row-nomatch">
+          <span>⚠️ Sin ticket registrado</span>
+          <button class="bank-quick-btn" data-bank-idx="${idx}">+ Crear ticket</button>
+        </div>
+      </div>`;
+  }).join("");
+
+  listEl.dataset.results = JSON.stringify(results.map(r=>({date:r.date, description:r.description, amount:r.amount})));
+  document.getElementById("bankResultsBox").style.display = "block";
+}
+
+document.addEventListener("click", (e)=>{
+  const btn = e.target.closest(".bank-quick-btn");
+  if(!btn) return;
+  const idx = Number(btn.dataset.bankIdx);
+  const results = JSON.parse(document.getElementById("bankResultsList").dataset.results || "[]");
+  const r = results[idx];
+  if(!r) return;
+  openForm({
+    date: r.date,
+    total: r.amount,
+    description: r.description,
+    ocrMessage: "Precargado desde tu estado de cuenta — revisa el comercio y la categoría."
+  });
 });
 
 /* =========================================================

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Términos de Uso · Outgo</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='29.5' fill='none' stroke='%238C7AE6' stroke-width='10'/%3E%3Cpath d='M 32,67 Q 50,80 78,42' fill='none' stroke='%232ED9C3' stroke-width='7.5' stroke-linecap='round'/%3E%3Cpolygon points='83.9,34.4 81.3,47.1 72.2,40.0' fill='%232ED9C3'/%3E%3C/svg%3E">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --bg:#F6F4FC; --paper:#FFFFFF; --ink:#2B2640; --muted:#8B87A0; --line:#E4E0F2;
+  --accent:#2ED9C3; --brand-purple:#8C7AE6; --radius:18px;
+  --font-display:'Poppins',sans-serif; --font-body:'Inter',-apple-system,sans-serif;
+  --glass-bg: rgba(255,255,255,0.55); --glass-border: rgba(255,255,255,0.65);
+  --glass-blur: blur(22px) saturate(180%); --glass-shadow: 0 8px 32px rgba(60,40,110,0.14);
+}
+*{box-sizing:border-box;} html,body{margin:0;padding:0;}
+body{
+  font-family: var(--font-body); color:var(--ink); background-color:var(--bg);
+  background-image:
+    radial-gradient(circle at 10% 5%, rgba(140,122,230,0.30), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(46,217,195,0.25), transparent 38%);
+  background-attachment:fixed; background-repeat:no-repeat;
+}
+.wrap{ max-width:760px; margin:0 auto; padding:0 24px 80px; }
+a{ color:var(--brand-purple); }
+header{
+  background: rgba(255,255,255,0.68); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom:1px solid var(--glass-border); padding:16px 0; margin-bottom:40px;
+}
+header .wrap{ display:flex; align-items:center; justify-content:space-between; padding-bottom:0; }
+.brand{ font-family:var(--font-display); font-weight:600; font-size:20px; text-decoration:none; color:var(--ink); }
+.brand .out{ color:var(--brand-purple); } .brand .go{ color:var(--accent); font-weight:700; }
+.back-link{ font-size:13px; text-decoration:none; color:var(--muted); }
+h1{ font-family:var(--font-display); font-size:32px; margin-bottom:6px; }
+.updated{ color:var(--muted); font-size:13px; margin-bottom:30px; }
+.card{
+  background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border); border-radius:var(--radius); box-shadow:var(--glass-shadow);
+  padding:26px 28px; margin-bottom:18px;
+}
+.card h2{ font-family:var(--font-display); font-size:18px; margin:0 0 12px; }
+.card p, .card li{ font-size:14.5px; line-height:1.65; color:var(--ink); }
+.card ul{ padding-left:20px; margin:8px 0; }
+.notice{
+  background: rgba(224,85,74,0.1); border:1px solid rgba(224,85,74,0.3); border-radius:12px;
+  padding:14px 16px; font-size:13px; color:#8a3830; margin-bottom:26px;
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./landing.html"><span class="out">OUT</span>-<span class="go">GO</span></a>
+    <a class="back-link" href="./landing.html">← Volver al inicio</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Términos de Uso</h1>
+  <p class="updated">Última actualización: 19 de julio de 2026</p>
+
+  <div class="notice">
+    Borrador de partida (redactado con ayuda de IA). No sustituye asesoría legal profesional — revísalo con un abogado antes de un lanzamiento formal o de ofrecer la app a terceros bajo un modelo comercial.
+  </div>
+
+  <div class="card">
+    <h2>1. Aceptación</h2>
+    <p>Al usar Outgo aceptas estos Términos de Uso y nuestro <a href="./privacidad.html">Aviso de Privacidad</a>. Si no estás de acuerdo, no uses la aplicación.</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Qué es Outgo</h2>
+    <p>Outgo es una herramienta personal de control de gastos: te permite fotografiar tickets, extraer datos automáticamente (comercio, montos, productos, y en su caso el QR de un CFDI), y visualizar tu historial de gastos. Es una herramienta de apoyo personal, no un servicio contable, fiscal o financiero regulado.</p>
+  </div>
+
+  <div class="card">
+    <h2>3. Cuenta de usuario</h2>
+    <p>Para usar Outgo inicias sesión con tu cuenta de Google. Eres responsable de mantener el acceso a esa cuenta seguro; nosotros no almacenamos tu contraseña de Google.</p>
+  </div>
+
+  <div class="card">
+    <h2>4. Precisión de los datos extraídos</h2>
+    <p>El reconocimiento automático de texto (OCR) es una tecnología de apoyo y puede cometer errores — por eso siempre puedes revisar y corregir la información antes de guardarla. No garantizamos precisión del 100% en montos, fechas, productos o datos de CFDI detectados.</p>
+  </div>
+
+  <div class="card">
+    <h2>5. Esto no es asesoría fiscal ni financiera</h2>
+    <p>Cualquier indicación sobre posible deducibilidad de un gasto, lectura de CFDI, o cotejo con movimientos bancarios es puramente informativa, para tu organización personal. No constituye asesoría fiscal, contable, legal ni financiera. Para decisiones fiscales reales consulta a un contador o profesional certificado.</p>
+  </div>
+
+  <div class="card">
+    <h2>6. Uso aceptable</h2>
+    <ul>
+      <li>Usa Outgo solo para tu propio control de gastos personal (o el de tu negocio, si aplica).</li>
+      <li>No intentes vulnerar la seguridad de la aplicación ni acceder a datos de otros usuarios.</li>
+      <li>No subas contenido ilegal, dañino o que no te pertenezca.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>7. Disponibilidad del servicio</h2>
+    <p>Outgo se ofrece "tal cual" y "según disponibilidad". Puede haber interrupciones, cambios de funciones, o suspensión del servicio sin previo aviso, especialmente durante esta etapa temprana del producto.</p>
+  </div>
+
+  <div class="card">
+    <h2>8. Limitación de responsabilidad</h2>
+    <p>En la máxima medida permitida por la ley, Outgo no se hace responsable por pérdidas, daños o decisiones (incluyendo fiscales o financieras) derivadas del uso de la información generada por la app.</p>
+  </div>
+
+  <div class="card">
+    <h2>9. Cambios a estos términos</h2>
+    <p>Podemos actualizar estos términos conforme la app evolucione. El uso continuado de Outgo después de un cambio implica tu aceptación de los nuevos términos.</p>
+  </div>
+
+  <div class="card">
+    <h2>10. Ley aplicable</h2>
+    <p>Estos términos se rigen por las leyes de los Estados Unidos Mexicanos.</p>
+  </div>
+
+  <div class="card">
+    <h2>11. Contacto</h2>
+    <p><a href="mailto:soporte@outgo.app">soporte@outgo.app</a></p>
+  </div>
+</div>
+</body>
+</html>
