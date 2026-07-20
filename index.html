@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outgo · Controla tus gastos sin esfuerzo</title>
+<meta name="description" content="Escanea tus tickets, lee el QR de tu factura (CFDI) y descubre en qué se te va el dinero cada mes — gratis.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='29.5' fill='none' stroke='%238C7AE6' stroke-width='10'/%3E%3Cpath d='M 32,67 Q 50,80 78,42' fill='none' stroke='%232ED9C3' stroke-width='7.5' stroke-linecap='round'/%3E%3Cpolygon points='83.9,34.4 81.3,47.1 72.2,40.0' fill='%232ED9C3'/%3E%3C/svg%3E">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg: #F6F4FC;
+  --paper: #FFFFFF;
+  --ink: #2B2640;
+  --muted: #8B87A0;
+  --line: #E4E0F2;
+  --accent: #2ED9C3;
+  --accent-2: #E0554A;
+  --brand-purple: #8C7AE6;
+  --radius: 18px;
+  --font-display: 'Poppins', sans-serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --glass-bg: rgba(255,255,255,0.5);
+  --glass-bg-2: rgba(255,255,255,0.68);
+  --glass-border: rgba(255,255,255,0.65);
+  --glass-blur: blur(22px) saturate(180%);
+  --glass-shadow: 0 8px 32px rgba(60,40,110,0.14);
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(140,122,230,0.35), transparent 40%),
+    radial-gradient(circle at 88% 15%, rgba(46,217,195,0.30), transparent 38%),
+    radial-gradient(circle at 20% 90%, rgba(46,217,195,0.20), transparent 42%),
+    radial-gradient(circle at 92% 85%, rgba(140,122,230,0.25), transparent 40%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+.wrap{ max-width: 1080px; margin:0 auto; padding: 0 24px; }
+a{ color: inherit; }
+
+/* Header */
+header{
+  position: sticky; top:0; z-index: 50;
+  background: var(--glass-bg-2);
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+}
+header .wrap{ display:flex; align-items:center; justify-content:space-between; padding-top:14px; padding-bottom:14px; }
+.brand{ display:flex; align-items:center; gap:9px; font-family: var(--font-display); font-size:22px; font-weight:600; }
+.brand .out{ color: var(--brand-purple); }
+.brand .go{ color: var(--accent); font-weight:700; }
+.brand .dash{ color: var(--muted); }
+.nav-cta{
+  background: var(--brand-purple); color:#fff; text-decoration:none;
+  padding: 10px 20px; border-radius: 30px; font-weight:600; font-size:14px;
+}
+
+/* Hero */
+.hero{ padding: 80px 0 60px; text-align:center; }
+.hero h1{
+  font-family: var(--font-display);
+  font-size: 44px; line-height:1.15; font-weight:600; margin:0 0 18px;
+}
+.hero h1 .hl{ color: var(--brand-purple); }
+.hero p{ font-size:18px; color: var(--muted); max-width:560px; margin:0 auto 32px; line-height:1.5; }
+.hero-ctas{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.btn-primary{
+  background: linear-gradient(135deg, var(--brand-purple), var(--accent));
+  color:#fff; text-decoration:none; font-weight:700; font-size:15.5px;
+  padding: 16px 30px; border-radius: 30px; box-shadow: var(--glass-shadow);
+}
+.btn-secondary{
+  background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border); color: var(--ink); text-decoration:none;
+  font-weight:600; font-size:15.5px; padding:16px 26px; border-radius:30px;
+}
+
+/* Mockup / visual */
+.hero-visual{
+  margin: 50px auto 0; max-width: 320px;
+  background: var(--glass-bg-2); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border); border-radius: 28px; box-shadow: var(--glass-shadow);
+  padding: 22px; text-align:left;
+}
+.hero-visual .row{ display:flex; justify-content:space-between; font-size:13px; padding:8px 0; border-bottom:1px dashed var(--line); }
+.hero-visual .row:last-child{ border-bottom:none; }
+.hero-visual .row b{ font-family:'Space Mono', monospace; }
+.hero-visual .total{ font-family: var(--font-display); font-size:26px; font-weight:600; margin-top:10px; }
+
+/* Features */
+.section-title{ text-align:center; font-family: var(--font-display); font-size:30px; font-weight:600; margin: 0 0 10px; }
+.section-sub{ text-align:center; color:var(--muted); max-width:520px; margin:0 auto 46px; }
+.features{ display:grid; grid-template-columns: repeat(2,1fr); gap:20px; padding-bottom:70px; }
+.feature-card{
+  background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border:1px solid var(--glass-border); border-radius: var(--radius); padding: 26px;
+  box-shadow: var(--glass-shadow);
+}
+.feature-card .ic{
+  width:46px; height:46px; border-radius:14px; margin-bottom:16px;
+  display:flex; align-items:center; justify-content:center; font-size:22px;
+  background: linear-gradient(135deg, var(--brand-purple), var(--accent)); color:#fff;
+}
+.feature-card h3{ font-family: var(--font-display); font-size:18px; margin:0 0 8px; }
+.feature-card p{ color:var(--muted); font-size:14px; line-height:1.55; margin:0; }
+
+/* Steps */
+.steps{ padding-bottom:80px; }
+.steps-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:20px; }
+.step{ text-align:center; padding: 10px; }
+.step .num{
+  width:40px; height:40px; border-radius:50%; margin:0 auto 14px;
+  background: var(--glass-bg-2); border:1px solid var(--glass-border);
+  display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--brand-purple);
+  font-family: var(--font-display);
+}
+.step h4{ font-family: var(--font-display); font-size:16px; margin:0 0 6px; }
+.step p{ color:var(--muted); font-size:13.5px; margin:0; }
+
+/* CTA band */
+.cta-band{
+  margin: 0 24px 80px; padding: 50px 30px; text-align:center; border-radius: 28px;
+  background: linear-gradient(135deg, var(--brand-purple), var(--accent)); color:#fff;
+}
+.cta-band h2{ font-family: var(--font-display); font-size:28px; margin:0 0 10px; }
+.cta-band p{ opacity:0.9; margin:0 0 26px; }
+.cta-band .btn-primary{ background:#fff; color: var(--brand-purple); box-shadow:none; }
+
+/* Footer */
+footer{ border-top:1px solid var(--glass-border); padding: 46px 0 30px; }
+.footer-grid{ display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap:24px; margin-bottom:32px; }
+.footer-grid h5{ font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin:0 0 12px; }
+.footer-grid a{ display:block; text-decoration:none; color:var(--ink); font-size:14px; margin-bottom:10px; }
+.footer-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; color:var(--muted); font-size:12.5px; border-top:1px solid var(--line); padding-top:20px; }
+
+@media (max-width: 760px){
+  .hero h1{ font-size:32px; }
+  .features{ grid-template-columns: 1fr; }
+  .steps-grid{ grid-template-columns: 1fr; }
+  .footer-grid{ grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand"><span class="out">OUT</span><span class="dash">-</span><span class="go">GO</span></div>
+    <a class="nav-cta" href="./app/">Iniciar sesión</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>Controla tus gastos<br>sin <span class="hl">esfuerzo</span></h1>
+    <p>Toma foto a tus tickets, deja que Outgo lea el comercio, el total y hasta el QR de tu factura (CFDI) — y descubre en qué se te va el dinero cada mes.</p>
+    <div class="hero-ctas">
+      <a class="btn-primary" href="./app/">Empezar gratis</a>
+      <a class="btn-secondary" href="#como-funciona">Ver cómo funciona</a>
+    </div>
+
+    <div class="hero-visual">
+      <div class="row"><span>OXXO · hoy</span><b>$21.50</b></div>
+      <div class="row"><span>Chedraui · ayer</span><b>$1,203.50</b></div>
+      <div class="row"><span>Pemex · lunes</span><b>$650.00</b></div>
+      <div class="total">Total del mes: <span style="color:var(--brand-purple)">$4,890</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="funciones">
+  <h2 class="section-title">Todo lo que necesitas, en un solo lugar</h2>
+  <p class="section-sub">Pensado para cómo se gasta el dinero en México — desde el Oxxo de la esquina hasta la factura del negocio.</p>
+  <div class="features">
+    <div class="feature-card">
+      <div class="ic">📷</div>
+      <h3>Escanea con la cámara</h3>
+      <p>Toma la foto, recorta lo que necesites, y Outgo lee el comercio, la fecha y el total automáticamente.</p>
+    </div>
+    <div class="feature-card">
+      <div class="ic">🧾</div>
+      <h3>Lee el QR de tu CFDI</h3>
+      <p>Si el ticket trae factura electrónica, Outgo detecta el folio y los RFC directo del código QR — sin escribir nada.</p>
+    </div>
+    <div class="feature-card">
+      <div class="ic">📦</div>
+      <h3>Rastrea tus productos</h3>
+      <p>Descubre qué compras más seguido y si el precio de algo ya subió, comparando entre todas tus compras.</p>
+    </div>
+    <div class="feature-card">
+      <div class="ic">🏦</div>
+      <h3>Coteja tu estado de cuenta</h3>
+      <p>Sube el CSV de tu tarjeta y Outgo te dice qué movimientos ya tienen ticket registrado y cuáles te faltan.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap steps" id="como-funciona">
+  <h2 class="section-title">Cómo funciona</h2>
+  <p class="section-sub">Tres pasos, menos de un minuto por ticket.</p>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="num">1</div>
+      <h4>Toma la foto</h4>
+      <p>Con la cámara de Outgo o desde tu galería.</p>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <h4>Revisa los datos</h4>
+      <p>Outgo precarga todo — tú solo confirmas o corriges.</p>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <h4>Analiza tus gastos</h4>
+      <p>Por día, semana, mes, categoría o producto.</p>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <h2>Tu dinero, más claro</h2>
+  <p>Gratis, con tu cuenta de Google, listo en 30 segundos.</p>
+  <a class="btn-primary" href="./app/">Empezar gratis →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand" style="font-size:19px; margin-bottom:10px;"><span class="out">OUT</span><span class="dash">-</span><span class="go">GO</span></div>
+        <p style="color:var(--muted); font-size:13.5px; line-height:1.5; max-width:220px;">Control de gastos personal, hecho pensando en México.</p>
+      </div>
+      <div>
+        <h5>Producto</h5>
+        <a href="#funciones">Funciones</a>
+        <a href="./app/">Iniciar sesión</a>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <a href="./privacidad.html">Aviso de privacidad</a>
+        <a href="./terminos.html">Términos de uso</a>
+      </div>
+      <div>
+        <h5>Ayuda</h5>
+        <a href="mailto:soporte@outgo.app">Contacto</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Outgo. Todos los derechos reservados.</span>
+      <span>Hecho en México 🇲🇽</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
