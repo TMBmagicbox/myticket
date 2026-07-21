@@ -622,6 +622,15 @@ section{ padding: 6px 20px 10px; }
   grid-template-columns: 1.3fr 50px 70px;
   gap: 6px;
 }
+.item-row .row-discount{
+  display:flex; align-items:center; justify-content:space-between; gap:6px;
+  margin-top:6px;
+}
+.item-row .row-discount span{ font-size:10.5px; color:var(--muted); white-space:nowrap; }
+.item-row .row-discount input{
+  width:90px; font-family:var(--font-mono); text-align:right;
+  padding:5px 7px; font-size:12px;
+}
 .item-row input, .item-row select{
   width: 100%;
   padding: 8px 8px;
@@ -1009,15 +1018,34 @@ nav.bottom button.active{ color: var(--brand-purple); }
   border: 2px dashed rgba(255,255,255,0.85);
   border-radius: 10px;
   pointer-events:none;
-  display:flex; align-items:flex-start; justify-content:center;
 }
-.camera-guide span{
+.camera-zone-header{
+  position:absolute; top:0; left:0; right:0; height:22%;
+  background: rgba(140,122,230,0.18);
+  border-bottom: 2px dashed rgba(255,255,255,0.9);
+  border-radius: 8px 8px 0 0;
+  display:flex; align-items:center; justify-content:center;
+  text-align:center; padding: 0 10px;
+}
+.camera-zone-header span{
   background: rgba(0,0,0,0.55);
   color:#fff;
-  font-size: 11.5px;
+  font-size: 10.5px;
+  padding: 4px 9px;
+  border-radius: 20px;
+}
+.camera-zone-hint{
+  position:absolute; top:22%; left:0; right:0;
+  display:flex; justify-content:center;
+  margin-top: 6px;
+}
+.camera-zone-hint span{
+  background: rgba(46,217,195,0.92);
+  color:#0b3d38;
+  font-weight:700;
+  font-size: 10.5px;
   padding: 4px 10px;
   border-radius: 20px;
-  margin-top: 10px;
 }
 .camera-controls{
   display:flex;
@@ -1340,7 +1368,10 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <div class="camera-page">
       <div class="camera-wrap">
         <video id="cameraVideo" autoplay playsinline muted></video>
-        <div class="camera-guide"><span>Encuadra el ticket completo aquí</span></div>
+        <div class="camera-guide">
+          <div class="camera-zone-header"><span>Logo / nombre del comercio</span></div>
+          <div class="camera-zone-hint"><span>↓ productos empiezan aquí</span></div>
+        </div>
       </div>
       <div class="camera-controls">
         <button class="cam-cancel" id="btnCameraCancel">Cancelar</button>
@@ -1464,6 +1495,17 @@ const STORES = [
   { name: "Disney+", category: "Streaming y plataformas" },
   { name: "Amazon Prime Video", category: "Streaming y plataformas" },
   { name: "HBO Max", category: "Streaming y plataformas" },
+  { name: "Mercado Libre", category: "Compras en línea" },
+  { name: "Lagas", category: "Conveniencia/Tiendita" },
+  { name: "BBVA", category: "Banca y transferencias" },
+  { name: "Santander", category: "Banca y transferencias" },
+  { name: "Banorte", category: "Banca y transferencias" },
+  { name: "HSBC", category: "Banca y transferencias" },
+  { name: "Citibanamex", category: "Banca y transferencias" },
+  { name: "Scotiabank", category: "Banca y transferencias" },
+  { name: "Banco Azteca", category: "Banca y transferencias" },
+  { name: "Banregio", category: "Banca y transferencias" },
+  { name: "Inbursa", category: "Banca y transferencias" },
   { name: "Otro", category: "" }
 ];
 
@@ -1471,7 +1513,7 @@ const CATEGORIES = [
   "Supermercado","Conveniencia/Tiendita","Club de precios","Salud/Farmacia",
   "Ferretería/Hogar","Tienda departamental","Comida/Restaurante","Gasolina",
   "Gas LP (cocina)","Transporte","Servicios (agua, luz, internet)","Streaming y plataformas",
-  "Entretenimiento","Otros"
+  "Compras en línea","Banca y transferencias","Entretenimiento","Otros"
 ];
 
 // Pistas educativas sobre deducibilidad fiscal por categoría.
@@ -1485,6 +1527,8 @@ const DEDUCIBLE_HINTS = {
   "Salud/Farmacia": "Los gastos médicos y de farmacia con factura suelen ser deducibles en la declaración anual de personas físicas.",
   "Comida/Restaurante": "Solo deducible como gasto de negocio: con factura, pago electrónico, y hasta un porcentaje límite.",
   "Ferretería/Hogar": "Deducible únicamente si es un gasto de negocio con factura.",
+  "Compras en línea": "Deducible solo si es gasto de negocio, con factura (CFDI) a tu nombre — muchas compras en línea son de uso personal.",
+  "Banca y transferencias": "Las comisiones bancarias suelen ser deducibles solo como gasto de negocio, con el CFDI que emite el banco.",
   "default": "Generalmente no es deducible para gasto personal, salvo que sea un gasto de negocio respaldado con factura."
 };
 
@@ -1505,7 +1549,11 @@ const STORE_DOMAINS = {
   "Gas Tomza": "tomza.com.mx", "Zeta Gas": "zetagas.com.mx", "Gas Express Nieto": "gasnieto.com.mx",
   "CFE (luz)": "cfe.mx", "Telmex": "telmex.com", "Izzi": "izzi.mx", "Totalplay": "totalplay.com.mx",
   "Netflix": "netflix.com", "Spotify": "spotify.com", "Disney+": "disneyplus.com",
-  "Amazon Prime Video": "primevideo.com", "HBO Max": "max.com"
+  "Amazon Prime Video": "primevideo.com", "HBO Max": "max.com",
+  "Mercado Libre": "mercadolibre.com.mx",
+  "BBVA": "bbva.mx", "Santander": "santander.com.mx", "Banorte": "banorte.com",
+  "HSBC": "hsbc.com.mx", "Citibanamex": "banamex.com", "Scotiabank": "scotiabank.com.mx",
+  "Banco Azteca": "bancoazteca.com.mx", "Banregio": "banregio.com", "Inbursa": "inbursa.com"
 };
 const STORE_COLORS = {
   "OXXO": "#E4032E", "7-Eleven": "#00703C", "Waldo's": "#F7941E",
@@ -1520,6 +1568,10 @@ const STORE_COLORS = {
   "CFE (luz)": "#00A14B", "Telmex": "#0057A6", "Izzi": "#5C2D91", "Totalplay": "#E4032E",
   "Netflix": "#E50914", "Spotify": "#1DB954", "Disney+": "#113CCF",
   "Amazon Prime Video": "#00A8E1", "HBO Max": "#000000", "Tiendita/Abarrotes local": "#8a6d3b",
+  "Mercado Libre": "#FFE600", "Lagas": "#8a6d3b",
+  "BBVA": "#004481", "Santander": "#EC0000", "Banorte": "#EE1C25", "HSBC": "#DB0011",
+  "Citibanamex": "#00285E", "Scotiabank": "#EC111A", "Banco Azteca": "#00A551",
+  "Banregio": "#F58220", "Inbursa": "#004C97",
   "Otro": "#6f6a5e"
 };
 
@@ -1529,6 +1581,7 @@ const PRODUCT_CATEGORIES = [
   "Carnes y pescados",
   "Lácteos y huevo",
   "Frutas y verduras",
+  "Semillas y granos",
   "Bebidas",
   "Panadería y tortillería",
   "Botanas y dulces",
@@ -1546,6 +1599,7 @@ const PRODUCT_CATEGORY_KEYWORDS = [
   { cat:"Carnes y pescados", words:["POLLO","RES","CERDO","CARNE","JAMON","CHULETA","MILANESA","CHORIZO","TOCINO","PESCADO","CAMARON","ATUN","SALCHICHA","BISTEC","MOLIDA"] },
   { cat:"Lácteos y huevo", words:["LECHE","QUESO","YOGUR","HUEVO","CREMA","MANTEQUILLA","YOGURT"] },
   { cat:"Frutas y verduras", words:["MANZANA","PLATANO","TOMATE","JITOMATE","CEBOLLA","LECHUGA","PAPA","AGUACATE","LIMON","NARANJA","ZANAHORIA","CHILE","FRUTA","VERDURA"] },
+  { cat:"Semillas y granos", words:["FRIJOL","LENTEJA","ARROZ","AVENA","GARBANZO","SEMILLA","NUEZ","CACAHUATE CRUDO","AMARANTO","CHIA","LINAZA","GRANOLA","HARINA","MASECA"] },
   { cat:"Bebidas", words:["REFRESCO","COCA","AGUA","CERVEZA","JUGO","PEPSI","SODA","VINO","CAFE","TE ","GATORADE","BOING"] },
   { cat:"Panadería y tortillería", words:["PAN","BOLILLO","TORTILLA","PASTEL","DONA","BIRROTE"] },
   { cat:"Botanas y dulces", words:["PAPAS","SABRITAS","GALLETA","CHOCOLATE","DULCE","CHICLE","CACAHUATE","FRITOS","CHETOS"] },
@@ -1641,7 +1695,19 @@ const STORE_ALIASES = [
   { match: "CFE", store: "CFE (luz)" },
   { match: "TELMEX", store: "Telmex" },
   { match: "IZZI", store: "Izzi" },
-  { match: "TOTALPLAY", store: "Totalplay" }
+  { match: "TOTALPLAY", store: "Totalplay" },
+  { match: "MERCADOLIBRE", store: "Mercado Libre" },
+  { match: "MERCADO LIBRE", store: "Mercado Libre" },
+  { match: "BBVA", store: "BBVA" },
+  { match: "SANTANDER", store: "Santander" },
+  { match: "BANORTE", store: "Banorte" },
+  { match: "HSBC", store: "HSBC" },
+  { match: "BANAMEX", store: "Citibanamex" },
+  { match: "CITIBANAMEX", store: "Citibanamex" },
+  { match: "SCOTIABANK", store: "Scotiabank" },
+  { match: "BANCO AZTECA", store: "Banco Azteca" },
+  { match: "BANREGIO", store: "Banregio" },
+  { match: "INBURSA", store: "Inbursa" }
 ];
 
 /* =========================================================
@@ -1902,6 +1968,13 @@ function toLocalISODate(d){
   return `${yyyy}-${mm}-${dd}`;
 }
 function fmtMoney(n){ return "$" + (Number(n)||0).toFixed(2); }
+// Subtotal real de un producto, restando su descuento si tiene. Se usa en
+// todos lados donde se muestra/exporta un producto, para que el descuento
+// se refleje siempre igual (recibo, PDF, análisis de productos, CSV).
+function itemSubtotal(it){
+  if(it.subtotal!=null) return it.subtotal;
+  return Math.max(0, (it.quantity*it.cost) - (it.discount||0));
+}
 function startOfWeek(d){
   const date = new Date(d);
   const day = (date.getDay()+6)%7; // lunes=0
@@ -1974,9 +2047,32 @@ function fuzzyFindStore(text){
   return "";
 }
 
+// Detecta la estructura típica de un ticket mexicano: primero el nombre y
+// dirección/razón social del comercio, luego una línea separadora (guiones,
+// iguales o asteriscos repetidos), después la fecha (a veces con una clave
+// de cajero antes), y ya de ahí para abajo la lista de productos. Usamos
+// esto para no confundir el encabezado con productos.
+function findDividerIndex(lines, fromIdx=0){
+  for(let i=fromIdx;i<lines.length;i++){
+    const compact = lines[i].replace(/\s/g,"");
+    if(compact.length>=5 && /^[-=_*]+$/.test(compact)) return i;
+  }
+  return -1;
+}
+function findContentStartIndex(lines){
+  const dividerIdx = findDividerIndex(lines, 0);
+  const searchFrom = dividerIdx>=0 ? dividerIdx+1 : 0;
+  const dateRegex = /(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/;
+  for(let i=searchFrom; i<Math.min(lines.length, searchFrom+8); i++){
+    if(dateRegex.test(lines[i])) return i+1; // los productos empiezan justo después de la fecha
+  }
+  return searchFrom; // sin fecha cercana, al menos ya saltamos el encabezado
+}
+
 function parseTicketText(rawText){
   const text = (rawText||"").toUpperCase();
   const lines = text.split("\n").map(l=>l.trim()).filter(Boolean);
+  const dividerIdx = findDividerIndex(lines, 0);
 
   // 1) Comercio — primero coincidencia exacta, si no hay, coincidencia
   // difusa (tolera errores de OCR de 1-2 letras).
@@ -1986,9 +2082,11 @@ function parseTicketText(rawText){
   }
   if(!detectedStore) detectedStore = fuzzyFindStore(text);
 
-  // 2) Fecha (formato típico MX: dd/mm/aaaa, también acepta dd-mm-aaaa y dd.mm.aaaa)
+  // 2) Fecha — se busca a partir del separador (evita agarrar un número
+  // parecido a fecha que esté en la dirección/encabezado del comercio).
   let detectedDate = "";
-  const dateMatch = text.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
+  const dateSearchLines = dividerIdx>=0 ? lines.slice(dividerIdx+1) : lines;
+  const dateMatch = dateSearchLines.join("\n").match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
   if(dateMatch){
     let [, d, m, y] = dateMatch;
     if(y.length===2) y = "20"+y;
@@ -2054,15 +2152,23 @@ const IGNORE_LINE_WORDS = [
   "TOTAL","SUBTOTAL","IVA","EFECTIVO","TARJETA","CAMBIO","PAGO","GRACIAS",
   "TICKET","FOLIO","CAJA","ATIENDE","RFC","FECHA","HORA","CLIENTE",
   "DIRECCION","TEL","WWW","ARTICULOS","PIEZAS","DESCUENTO","PROPINA",
-  "AUTORIZACION","APROBADO","REFERENCIA","TERMINAL","CAJERO","SUCURSAL"
+  "AUTORIZACION","APROBADO","REFERENCIA","TERMINAL","CAJERO","SUCURSAL","CLAVE"
 ];
 
 function parseLineItems(rawText){
   const lines = (rawText||"").split("\n").map(l=>l.trim()).filter(Boolean);
+  const startIdx = findContentStartIndex(lines);
+  let endIdx = lines.length;
+  for(let i=startIdx;i<lines.length;i++){
+    const up = lines[i].toUpperCase();
+    if(up.includes("TOTAL") && !up.includes("SUBTOTAL")){ endIdx = i; break; }
+  }
+
   const moneyAtEnd = /(\d{1,3}(?:,\d{3})*\.\d{2}|\d+\.\d{2})\s*[A-Za-z]?\s*$/;
   const items = [];
 
-  for(const line of lines){
+  for(let i=startIdx;i<endIdx;i++){
+    const line = lines[i];
     const upper = line.toUpperCase();
     if(IGNORE_LINE_WORDS.some(w=>upper.includes(w))) continue;
 
@@ -2171,7 +2277,7 @@ fCategory.addEventListener("change", updateDeducibleHint);
 let itemRowSeq = 0;
 const itemsContainer = document.getElementById("itemsContainer");
 
-function addItemRow(data={ description:"", quantity:1, cost:"", category:"Otros" }){
+function addItemRow(data={ description:"", quantity:1, cost:"", category:"Otros", discount:"" }){
   const rowId = "item-" + (itemRowSeq++);
   const row = document.createElement("div");
   row.className = "item-row";
@@ -2191,6 +2297,10 @@ function addItemRow(data={ description:"", quantity:1, cost:"", category:"Otros"
       <input type="number" class="qty" min="0" step="1" value="${data.quantity}" title="Cantidad">
       <input type="number" class="cost" min="0" step="0.01" value="${data.cost}" title="Costo unitario">
     </div>
+    <div class="row-discount">
+      <span>− Descuento (opcional)</span>
+      <input type="number" class="discount" min="0" step="0.01" placeholder="0.00" value="${data.discount||""}">
+    </div>
     <div class="item-subtotal"></div>
   `;
   itemsContainer.appendChild(row);
@@ -2209,7 +2319,9 @@ function getItemsData(){
     const quantity = parseFloat(row.querySelector(".qty").value) || 0;
     const cost = parseFloat(row.querySelector(".cost").value) || 0;
     const category = row.querySelector(".cat").value;
-    return { description, quantity, cost, category, subtotal: quantity*cost };
+    const discount = parseFloat(row.querySelector(".discount").value) || 0;
+    const subtotal = Math.max(0, quantity*cost - discount);
+    return { description, quantity, cost, category, discount, subtotal };
   });
 }
 
@@ -2218,7 +2330,11 @@ function refreshItemsUI(){
   rows.forEach(row=>{
     const quantity = parseFloat(row.querySelector(".qty").value) || 0;
     const cost = parseFloat(row.querySelector(".cost").value) || 0;
-    row.querySelector(".item-subtotal").textContent = "Subtotal: " + fmtMoney(quantity*cost);
+    const discount = parseFloat(row.querySelector(".discount").value) || 0;
+    const subtotal = Math.max(0, quantity*cost - discount);
+    row.querySelector(".item-subtotal").textContent = discount>0
+      ? `Subtotal: ${fmtMoney(subtotal)} (con descuento de ${fmtMoney(discount)})`
+      : `Subtotal: ${fmtMoney(subtotal)}`;
   });
   const items = getItemsData();
   const hasItems = items.length>0;
@@ -2829,7 +2945,7 @@ function aggregateByProductCategory(list){
     if(t.items && t.items.length){
       t.items.forEach(it=>{
         const cat = it.category || "Otros";
-        byCat[cat] = (byCat[cat]||0) + (it.subtotal!=null ? it.subtotal : it.quantity*it.cost);
+        byCat[cat] = (byCat[cat]||0) + itemSubtotal(it);
       });
     } else {
       sinDetalle += t.amount;
@@ -2967,7 +3083,7 @@ function renderReceiptHTML(t){
     itemsHtml = t.items.map(it=>`
       <div class="receipt-item-line">
         <div class="ri-desc">${escapeHtml(it.description || "Producto")}<span class="ri-cat">${escapeHtml(it.category||"Otros")} · ${it.quantity} x ${fmtMoney(it.cost)}</span></div>
-        <div class="ri-amt">${fmtMoney(it.quantity*it.cost)}</div>
+        <div class="ri-amt">${fmtMoney(itemSubtotal(it))}</div>
       </div>`).join("");
   } else {
     itemsHtml = `<div class="receipt-note">Este ticket no tiene productos detallados.</div>`;
@@ -3058,7 +3174,7 @@ document.getElementById("btnReceiptPDF").addEventListener("click", async ()=>{
       t.items.forEach(it=>{
         const desc = `${it.description} (${it.quantity} x ${fmtMoney(it.cost)})`;
         doc.text(desc.slice(0,42), 20, y);
-        doc.text(fmtMoney(it.quantity*it.cost), 300, y, { align:"right" });
+        doc.text(fmtMoney(itemSubtotal(it)), 300, y, { align:"right" });
         y += 14;
       });
       doc.setLineDashPattern([2,2],0); doc.line(20,y,300,y); y+=16;
@@ -3167,7 +3283,7 @@ function buildProductIndex(allTickets){
       if(!map[key]){
         map[key] = { displayName: it.description.trim(), category: it.category||"Otros", purchases: [], totalSpent:0, totalQty:0 };
       }
-      const subtotal = it.quantity*it.cost;
+      const subtotal = itemSubtotal(it);
       map[key].purchases.push({ date: t.date, store: t.store, quantity: it.quantity, cost: it.cost, subtotal });
       map[key].totalSpent += subtotal;
       map[key].totalQty += it.quantity;
@@ -3269,7 +3385,7 @@ document.getElementById("btnExportCSV").addEventListener("click", async ()=>{
   const list = await getAllTickets();
   const rows = [[
     "ticket_id","fecha","comercio","categoria_ticket","descripcion_ticket",
-    "producto","categoria_producto","cantidad","costo_unitario","subtotal_producto",
+    "producto","categoria_producto","cantidad","costo_unitario","descuento_producto","subtotal_producto",
     "total_ticket","subtotal_ticket","iva","isr","deducible","cfdi_uuid"
   ]];
   const csvEscape = (v)=> `"${String(v??"").replace(/"/g,'""')}"`;
@@ -3283,10 +3399,10 @@ document.getElementById("btnExportCSV").addEventListener("click", async ()=>{
     ];
     if(t.items && t.items.length){
       t.items.forEach(it=>{
-        rows.push([...base, it.description, it.category, it.quantity, it.cost, (it.quantity*it.cost).toFixed(2), ...tail].map(csvEscape));
+        rows.push([...base, it.description, it.category, it.quantity, it.cost, it.discount||0, itemSubtotal(it).toFixed(2), ...tail].map(csvEscape));
       });
     } else {
-      rows.push([...base, "", "", "", "", "", ...tail].map(csvEscape));
+      rows.push([...base, "", "", "", "", "", "", ...tail].map(csvEscape));
     }
   });
 
