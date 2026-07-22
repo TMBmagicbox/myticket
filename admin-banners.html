@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrar Banners · Outgo</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='29.5' fill='none' stroke='%238C7AE6' stroke-width='10'/%3E%3Cpath d='M 32,67 Q 50,80 78,42' fill='none' stroke='%232ED9C3' stroke-width='7.5' stroke-linecap='round'/%3E%3Cpolygon points='83.9,34.4 81.3,47.1 72.2,40.0' fill='%232ED9C3'/%3E%3C/svg%3E">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+:root{
+  --bg:#F6F4FC; --paper:#FFFFFF; --ink:#2B2640; --muted:#8B87A0; --line:#E4E0F2;
+  --accent:#2ED9C3; --accent-2:#E0554A; --brand-purple:#8C7AE6; --radius:16px;
+  --font-display:'Poppins',sans-serif; --font-body:'Inter',-apple-system,sans-serif;
+  --glass-bg: rgba(255,255,255,0.55); --glass-border: rgba(255,255,255,0.65);
+  --glass-blur: blur(20px) saturate(180%); --glass-shadow: 0 8px 28px rgba(60,40,110,0.14);
+}
+*{box-sizing:border-box;} html,body{margin:0;padding:0;}
+body{
+  font-family: var(--font-body); color:var(--ink); background-color:var(--bg); min-height:100vh;
+  background-image:
+    radial-gradient(circle at 10% 5%, rgba(140,122,230,0.30), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(46,217,195,0.25), transparent 38%);
+  background-attachment:fixed; background-repeat:no-repeat;
+}
+.wrap{ max-width:640px; margin:0 auto; padding:0 20px 80px; }
+header{
+  background: rgba(255,255,255,0.68); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom:1px solid var(--glass-border); padding:16px 0; margin-bottom:28px;
+}
+header .wrap{ display:flex; align-items:center; justify-content:space-between; padding-bottom:0; }
+.brand{ font-family:var(--font-display); font-weight:600; font-size:19px; }
+.brand .out{ color:var(--brand-purple); } .brand .go{ color:var(--accent); font-weight:700; }
+h1{ font-family:var(--font-display); font-size:24px; margin:0 0 4px; }
+.sub{ color:var(--muted); font-size:13px; margin-bottom:24px; }
+
+.auth-gate{ text-align:center; padding: 80px 20px; }
+.google-btn{
+  display:inline-flex; align-items:center; gap:10px; padding:13px 24px;
+  background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border:1px solid var(--glass-border); border-radius: var(--radius); font-weight:600; cursor:pointer;
+}
+.denied{ color:var(--accent-2); font-size:13.5px; margin-top:14px; display:none; }
+
+.slot-card{
+  background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border); border-radius:var(--radius); box-shadow:var(--glass-shadow);
+  padding:20px; margin-bottom:18px;
+}
+.slot-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.slot-head h3{ font-family:var(--font-display); font-size:16px; margin:0; }
+.toggle{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--muted); }
+.field{ margin-bottom:12px; }
+.field label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted); margin-bottom:5px; }
+.field input[type=text], .field input[type=url], .field textarea{
+  width:100%; padding:10px 11px; border-radius:9px; border:1px solid var(--line);
+  background:#fff; font-family:var(--font-body); font-size:14px;
+}
+.field textarea{ resize:vertical; min-height:54px; }
+.upload-row{ display:flex; gap:10px; align-items:center; }
+.upload-btn{
+  padding:9px 14px; border-radius:9px; border:1px dashed var(--line); background:#fff;
+  font-size:12.5px; cursor:pointer; white-space:nowrap;
+}
+.thumb-preview{ width:52px; height:52px; border-radius:8px; object-fit:cover; border:1px solid var(--line); background:#fff; }
+.save-btn{
+  width:100%; margin-top:6px; padding:12px; border:none; border-radius:var(--radius);
+  background: linear-gradient(135deg, var(--brand-purple), var(--accent)); color:#fff; font-weight:700; cursor:pointer;
+}
+.slot-status{ font-size:11.5px; color:var(--muted); margin-top:8px; min-height:14px; }
+.mini-preview{
+  position:relative; aspect-ratio:16/8; border-radius:12px; overflow:hidden; margin-bottom:14px;
+  background:#ddd; display:flex; align-items:flex-end;
+}
+.mini-preview img.bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.mini-preview .overlay{
+  position:relative; z-index:1; width:100%; padding:10px 12px;
+  background: linear-gradient(to top, rgba(20,15,40,0.72), rgba(20,15,40,0.05) 65%); color:#fff;
+}
+.mini-preview .overlay img.logo{ width:22px;height:22px;border-radius:5px;background:#fff;padding:2px;margin-bottom:5px; }
+.mini-preview .overlay .t{ font-family:var(--font-display); font-weight:600; font-size:13px; }
+.mini-preview .overlay .d{ font-size:10.5px; opacity:0.9; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand"><span class="out">OUT</span>-<span class="go">GO</span> · Admin</div>
+    <span id="userLabel" style="font-size:12.5px; color:var(--muted);"></span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="authGate" class="auth-gate">
+    <h1>Administrar banners</h1>
+    <p class="sub">Inicia sesión con la cuenta autorizada para editar el carrusel promocional de la app.</p>
+    <button class="google-btn" id="googleSignInBtn">Iniciar sesión con Google</button>
+    <p class="denied" id="deniedMsg">Tu cuenta inició sesión correctamente, pero no tiene permisos de administrador para editar los banners (revisa las reglas de Firestore).</p>
+  </div>
+
+  <div id="slotsWrap" style="display:none;">
+    <h1>Banners del carrusel</h1>
+    <p class="sub">6 espacios disponibles. Los que actives aparecerán en la app, en este orden. Cambios se ven reflejados la próxima vez que un usuario abra o refresque su Inicio.</p>
+    <div id="slotsContainer"></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCxwN1C5mKvPG7x3murIuJxuYhUnLzkQvw",
+  authDomain: "outgo-77b3e.firebaseapp.com",
+  projectId: "outgo-77b3e",
+  storageBucket: "outgo-77b3e.firebasestorage.app",
+  messagingSenderId: "913961970596",
+  appId: "1:913961970596:web:1770c761f3ba4f40842f31"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const SLOT_IDS = ["1","2","3","4","5","6"];
+
+function escapeHtml(str){ const d=document.createElement("div"); d.textContent=str||""; return d.innerHTML; }
+
+function compressImage(file, maxWidth, quality){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const scale = Math.min(1, maxWidth/img.width);
+        const w = Math.round(img.width*scale), h = Math.round(img.height*scale);
+        const canvas = document.createElement("canvas");
+        canvas.width=w; canvas.height=h;
+        canvas.getContext("2d").drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function slotCardHTML(id, data){
+  data = data || { enabled:false, title:"", description:"", link:"", bgImage:"", logoImage:"" };
+  return `
+    <div class="slot-card" data-slot="${id}">
+      <div class="slot-head">
+        <h3>Espacio ${id}</h3>
+        <label class="toggle"><input type="checkbox" class="f-enabled" ${data.enabled?"checked":""}> Activo</label>
+      </div>
+
+      <div class="mini-preview" id="preview-${id}">
+        <img class="bg" src="${data.bgImage||""}" style="${data.bgImage?"":"display:none;"}">
+        <div class="overlay">
+          ${data.logoImage?`<img class="logo" src="${data.logoImage}">`:""}
+          <div class="t">${escapeHtml(data.title||"Título del banner")}</div>
+          <div class="d">${escapeHtml(data.description||"Descripción breve")}</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Imagen de fondo</label>
+        <div class="upload-row">
+          <button type="button" class="upload-btn" data-pick="bg-${id}">Elegir imagen</button>
+          <input type="file" accept="image/*" id="bg-${id}" style="display:none;">
+          <img class="thumb-preview" id="bgThumb-${id}" src="${data.bgImage||""}" style="${data.bgImage?"":"display:none;"}">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Logo (opcional)</label>
+        <div class="upload-row">
+          <button type="button" class="upload-btn" data-pick="logo-${id}">Elegir logo</button>
+          <input type="file" accept="image/*" id="logo-${id}" style="display:none;">
+          <img class="thumb-preview" id="logoThumb-${id}" src="${data.logoImage||""}" style="${data.logoImage?"":"display:none;"}">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Título</label>
+        <input type="text" class="f-title" maxlength="40" value="${escapeHtml(data.title)}">
+      </div>
+      <div class="field">
+        <label>Descripción breve</label>
+        <textarea class="f-desc" maxlength="90">${escapeHtml(data.description)}</textarea>
+      </div>
+      <div class="field">
+        <label>Enlace (sitio web o red social)</label>
+        <input type="url" class="f-link" placeholder="https://..." value="${escapeHtml(data.link)}">
+      </div>
+
+      <button type="button" class="save-btn" data-save="${id}">Guardar espacio ${id}</button>
+      <div class="slot-status" id="status-${id}"></div>
+    </div>
+  `;
+}
+
+async function loadSlots(){
+  const container = document.getElementById("slotsContainer");
+  container.innerHTML = "<p style='color:var(--muted); font-size:13px;'>Cargando...</p>";
+  const results = await Promise.all(SLOT_IDS.map(id=> db.collection("banners").doc(id).get()));
+  container.innerHTML = SLOT_IDS.map((id,i)=> slotCardHTML(id, results[i].exists ? results[i].data() : null)).join("");
+  wireSlotEvents();
+}
+
+function wireSlotEvents(){
+  document.querySelectorAll("[data-pick]").forEach(btn=>{
+    btn.addEventListener("click", ()=> document.getElementById(btn.dataset.pick).click());
+  });
+
+  SLOT_IDS.forEach(id=>{
+    document.getElementById(`bg-${id}`).addEventListener("change", async (e)=>{
+      const file = e.target.files[0]; if(!file) return;
+      const dataUrl = await compressImage(file, 1200, 0.72);
+      document.getElementById(`bgThumb-${id}`).src = dataUrl;
+      document.getElementById(`bgThumb-${id}`).style.display = "block";
+      const card = document.querySelector(`.slot-card[data-slot="${id}"]`);
+      const previewImg = card.querySelector(`#preview-${id} img.bg`);
+      previewImg.src = dataUrl; previewImg.style.display = "block";
+      card.dataset.bgImage = dataUrl;
+    });
+    document.getElementById(`logo-${id}`).addEventListener("change", async (e)=>{
+      const file = e.target.files[0]; if(!file) return;
+      const dataUrl = await compressImage(file, 200, 0.82);
+      document.getElementById(`logoThumb-${id}`).src = dataUrl;
+      document.getElementById(`logoThumb-${id}`).style.display = "block";
+      const card = document.querySelector(`.slot-card[data-slot="${id}"]`);
+      card.dataset.logoImage = dataUrl;
+      let logoEl = card.querySelector(`#preview-${id} .overlay img.logo`);
+      if(!logoEl){
+        logoEl = document.createElement("img");
+        logoEl.className = "logo";
+        card.querySelector(`#preview-${id} .overlay`).prepend(logoEl);
+      }
+      logoEl.src = dataUrl;
+    });
+    card_liveTitleDesc(id);
+  });
+
+  document.querySelectorAll("[data-save]").forEach(btn=>{
+    btn.addEventListener("click", ()=> saveSlot(btn.dataset.save));
+  });
+}
+
+function card_liveTitleDesc(id){
+  const card = document.querySelector(`.slot-card[data-slot="${id}"]`);
+  card.querySelector(".f-title").addEventListener("input", (e)=>{
+    card.querySelector(`#preview-${id} .overlay .t`).textContent = e.target.value || "Título del banner";
+  });
+  card.querySelector(".f-desc").addEventListener("input", (e)=>{
+    card.querySelector(`#preview-${id} .overlay .d`).textContent = e.target.value || "Descripción breve";
+  });
+}
+
+async function saveSlot(id){
+  const card = document.querySelector(`.slot-card[data-slot="${id}"]`);
+  const statusEl = document.getElementById(`status-${id}`);
+  const bgThumb = document.getElementById(`bgThumb-${id}`);
+  const logoThumb = document.getElementById(`logoThumb-${id}`);
+
+  const payload = {
+    enabled: card.querySelector(".f-enabled").checked,
+    title: card.querySelector(".f-title").value.trim(),
+    description: card.querySelector(".f-desc").value.trim(),
+    link: card.querySelector(".f-link").value.trim(),
+    bgImage: card.dataset.bgImage || (bgThumb.style.display!=="none" ? bgThumb.src : "") || "",
+    logoImage: card.dataset.logoImage || (logoThumb.style.display!=="none" ? logoThumb.src : "") || ""
+  };
+
+  if(payload.enabled && !payload.bgImage){
+    statusEl.textContent = "Falta la imagen de fondo para poder activarlo.";
+    statusEl.style.color = "var(--accent-2)";
+    return;
+  }
+
+  statusEl.textContent = "Guardando...";
+  statusEl.style.color = "var(--muted)";
+  try{
+    await db.collection("banners").doc(id).set(payload);
+    statusEl.textContent = "Guardado ✓";
+    statusEl.style.color = "var(--accent)";
+  }catch(err){
+    console.error(err);
+    statusEl.textContent = "No se pudo guardar: " + err.message + " (¿tu cuenta tiene permiso de administrador en las reglas de Firestore?)";
+    statusEl.style.color = "var(--accent-2)";
+  }
+}
+
+document.getElementById("googleSignInBtn").addEventListener("click", async ()=>{
+  try{
+    await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  }catch(err){
+    alert("No se pudo iniciar sesión: " + err.message);
+  }
+});
+
+auth.onAuthStateChanged(async (user)=>{
+  if(!user){
+    document.getElementById("authGate").style.display = "block";
+    document.getElementById("slotsWrap").style.display = "none";
+    document.getElementById("userLabel").textContent = "";
+    return;
+  }
+  document.getElementById("userLabel").textContent = user.email || "";
+  // Probar acceso de escritura: si las reglas no lo permiten, se mostrará el aviso de "sin permiso".
+  try{
+    await db.collection("banners").doc("1").get();
+    document.getElementById("authGate").style.display = "none";
+    document.getElementById("slotsWrap").style.display = "block";
+    loadSlots();
+  }catch(err){
+    console.error(err);
+    document.getElementById("authGate").style.display = "block";
+    document.getElementById("slotsWrap").style.display = "none";
+    document.getElementById("deniedMsg").style.display = "block";
+  }
+});
+</script>
+</body>
+</html>
