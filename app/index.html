@@ -213,6 +213,55 @@ header.top p{
 @keyframes syncPulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.25; } }
 
 /* ---------- Cards resumen ---------- */
+/* ---------- Carrusel de banners (parallax) ---------- */
+.banner-carousel-wrap{ padding: 16px 20px 4px; }
+.banner-carousel{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type: x mandatory;
+  gap: 12px;
+  border-radius: 20px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.banner-carousel::-webkit-scrollbar{ display:none; }
+.banner-slide{
+  position:relative;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  aspect-ratio: 16/8;
+  border-radius: 20px;
+  overflow:hidden;
+  text-decoration:none;
+  display:block;
+  box-shadow: var(--glass-shadow);
+  background: var(--glass-bg);
+}
+.banner-slide-bg{
+  position:absolute; inset: -12% -15%;
+  background-size: cover;
+  background-position: center;
+  background-repeat:no-repeat;
+  will-change: transform;
+}
+.banner-slide-content{
+  position:relative; z-index:2;
+  height:100%;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding: 16px 18px;
+  background: linear-gradient(to top, rgba(20,15,40,0.72), rgba(20,15,40,0.05) 65%);
+  color:#fff;
+}
+.banner-logo{
+  width:34px; height:34px; object-fit:contain; border-radius:8px;
+  margin-bottom:8px; background:#fff; padding:4px;
+}
+.banner-title{ font-family: var(--font-display); font-weight:600; font-size:17px; line-height:1.2; }
+.banner-desc{ font-size:12px; opacity:0.92; margin-top:3px; line-height:1.35; }
+.banner-dots{ display:flex; justify-content:center; gap:6px; margin-top:9px; }
+.banner-dot{ width:6px; height:6px; border-radius:50%; background: var(--glass-border); transition: all 0.2s; }
+.banner-dot.active{ background: var(--brand-purple); width:16px; border-radius:4px; }
+
 .summary-row{
   display:flex;
   gap:10px;
@@ -1177,6 +1226,11 @@ nav.bottom button.active{ color: var(--brand-purple); }
   <!-- ============ VISTA: DASHBOARD ============ -->
   <div class="view active" id="view-dashboard">
 
+    <div class="banner-carousel-wrap" id="bannerCarouselWrap" style="display:none;">
+      <div class="banner-carousel" id="bannerCarousel"></div>
+      <div class="banner-dots" id="bannerDots"></div>
+    </div>
+
     <div class="summary-row">
       <div class="summary-card">
         <div class="label">Hoy</div>
@@ -1477,6 +1531,7 @@ const STORES = [
   { name: "Bodega Aurrerá", category: "Supermercado" },
   { name: "Sam's Club", category: "Club de precios" },
   { name: "Costco", category: "Club de precios" },
+  { name: "City Club", category: "Club de precios" },
   { name: "Chedraui", category: "Supermercado" },
   { name: "Soriana", category: "Supermercado" },
   { name: "La Comer / City Market", category: "Supermercado" },
@@ -1555,7 +1610,7 @@ const STORE_DOMAINS = {
   "OXXO": "oxxo.com", "7-Eleven": "7-eleven.com.mx", "Waldo's": "waldos.com.mx",
   "Walmart": "walmart.com.mx", "Walmart Express": "walmart.com.mx",
   "Bodega Aurrerá": "bodegaaurrera.com.mx", "Sam's Club": "sams.com.mx",
-  "Costco": "costco.com.mx", "Chedraui": "chedraui.com.mx", "Soriana": "soriana.com",
+  "Costco": "costco.com.mx", "City Club": "cityclub.com.mx", "Chedraui": "chedraui.com.mx", "Soriana": "soriana.com",
   "La Comer / City Market": "lacomer.com.mx", "HEB": "heb.com.mx", "Casa Ley": "masley.com.mx",
   "Farmacias Guadalajara": "farmaciasguadalajara.com", "Farmacias del Ahorro": "fahorro.com.mx",
   "Farmacias Similares": "farmaciasimilares.com.mx", "Home Depot": "homedepot.com.mx",
@@ -1573,7 +1628,7 @@ const STORE_DOMAINS = {
 const STORE_COLORS = {
   "OXXO": "#E4032E", "7-Eleven": "#00703C", "Waldo's": "#F7941E",
   "Walmart": "#0071CE", "Walmart Express": "#0071CE", "Bodega Aurrerá": "#FFC220",
-  "Sam's Club": "#004F9F", "Costco": "#E31837", "Chedraui": "#F58220", "Soriana": "#EE2E24",
+  "Sam's Club": "#004F9F", "Costco": "#E31837", "City Club": "#00A651", "Chedraui": "#F58220", "Soriana": "#EE2E24",
   "La Comer / City Market": "#6CC24A", "HEB": "#E4002B", "Casa Ley": "#004B87",
   "Farmacias Guadalajara": "#0072BC", "Farmacias del Ahorro": "#00A651",
   "Farmacias Similares": "#FDB913", "Home Depot": "#F96302", "Ferretería local": "#6f6a5e",
@@ -1691,6 +1746,7 @@ const STORE_ALIASES = [
   { match: "SAMS CLUB", store: "Sam's Club" },
   { match: "SAM'S CLUB", store: "Sam's Club" },
   { match: "COSTCO", store: "Costco" },
+  { match: "CITY CLUB", store: "City Club" },
   { match: "CHEDRAUI", store: "Chedraui" },
   { match: "SORIANA", store: "Soriana" },
   { match: "CITY MARKET", store: "La Comer / City Market" },
@@ -2263,11 +2319,32 @@ function showView(name){
 /* Poblar selects del formulario */
 const fStore = document.getElementById("fStore");
 const fCategory = document.getElementById("fCategory");
+
+// El menú de comercios ya es largo — lo agrupamos por categoría (optgroup)
+// para que sea fácil de recorrer en vez de una sola lista plana. "Otro"
+// siempre queda al final, fuera de cualquier grupo.
+const storesByCategory = {};
 STORES.forEach(s=>{
+  const cat = s.category || "Otro";
+  if(!storesByCategory[cat]) storesByCategory[cat] = [];
+  storesByCategory[cat].push(s);
+});
+Object.keys(storesByCategory).filter(c=>c!=="Otro").forEach(cat=>{
+  const group = document.createElement("optgroup");
+  group.label = cat;
+  storesByCategory[cat].forEach(s=>{
+    const opt = document.createElement("option");
+    opt.value = s.name; opt.textContent = s.name;
+    group.appendChild(opt);
+  });
+  fStore.appendChild(group);
+});
+(storesByCategory["Otro"]||[]).forEach(s=>{
   const opt = document.createElement("option");
   opt.value = s.name; opt.textContent = s.name;
   fStore.appendChild(opt);
 });
+
 CATEGORIES.forEach(c=>{
   const opt = document.createElement("option");
   opt.value = c; opt.textContent = c;
@@ -2909,6 +2986,8 @@ document.querySelectorAll(".tab").forEach(tab=>{
 let allTicketsCache = [];
 let ticketsById = {}; // lookup rápido id->ticket para abrir la vista de recibo
 
+let bannersLoadedOnce = false;
+
 async function refreshDashboard(){
   allTicketsCache = await getAllTickets();
   allTicketsCache.forEach(t=> ticketsById[t.id]=t);
@@ -2924,6 +3003,101 @@ async function refreshDashboard(){
 
   renderPeriodContent();
   renderProductsListing();
+
+  if(!bannersLoadedOnce){
+    bannersLoadedOnce = true;
+    loadBanners();
+  }
+}
+
+/* =========================================================
+   CARRUSEL DE BANNERS (promocional, administrable)
+   Los banners se configuran aparte, en admin-banners.html, y
+   viven en Firestore bajo banners/1 .. banners/6 — la app solo
+   los lee. Si no hay ninguno activo, la sección se oculta sola.
+   ========================================================= */
+let bannerData = [];
+let bannerAutoTimer = null;
+let bannerUserInteracting = false;
+
+async function loadBanners(){
+  try{
+    const ids = ["1","2","3","4","5","6"];
+    const snaps = await Promise.all(ids.map(id=> db.collection("banners").doc(id).get()));
+    bannerData = snaps.filter(s=> s.exists && s.data().enabled && s.data().bgImage).map(s=> s.data());
+  }catch(err){
+    console.warn("No se pudieron cargar los banners (¿existen las reglas de Firestore para 'banners'?):", err);
+    bannerData = [];
+  }
+  renderBannerCarousel();
+}
+
+function renderBannerCarousel(){
+  const wrap = document.getElementById("bannerCarouselWrap");
+  const track = document.getElementById("bannerCarousel");
+  const dotsEl = document.getElementById("bannerDots");
+  if(!bannerData.length){ wrap.style.display = "none"; return; }
+  wrap.style.display = "block";
+
+  track.innerHTML = bannerData.map((b)=>`
+    <a class="banner-slide" href="${escapeAttr(b.link||'#')}" target="_blank" rel="noopener">
+      <div class="banner-slide-bg" style="background-image:url('${b.bgImage}')"></div>
+      <div class="banner-slide-content">
+        ${b.logoImage ? `<img class="banner-logo" src="${b.logoImage}" alt="">` : ""}
+        <div class="banner-title">${escapeHtml(b.title||"")}</div>
+        ${b.description ? `<div class="banner-desc">${escapeHtml(b.description)}</div>` : ""}
+      </div>
+    </a>
+  `).join("");
+
+  dotsEl.innerHTML = bannerData.length>1
+    ? bannerData.map((_,i)=> `<div class="banner-dot ${i===0?"active":""}" data-dot="${i}"></div>`).join("")
+    : "";
+
+  attachBannerScrollHandler();
+  startBannerAutoAdvance();
+}
+
+function attachBannerScrollHandler(){
+  const track = document.getElementById("bannerCarousel");
+  if(track.dataset.bound) return; // evita enlazar el listener más de una vez
+  track.dataset.bound = "1";
+
+  track.addEventListener("scroll", ()=>{
+    const slides = track.querySelectorAll(".banner-slide");
+    const trackRect = track.getBoundingClientRect();
+    const centerX = trackRect.left + trackRect.width/2;
+    let closestIdx = 0, closestDist = Infinity;
+    slides.forEach((slide,i)=>{
+      const r = slide.getBoundingClientRect();
+      const dist = (r.left + r.width/2) - centerX;
+      if(Math.abs(dist) < closestDist){ closestDist = Math.abs(dist); closestIdx = i; }
+      const bg = slide.querySelector(".banner-slide-bg");
+      if(bg){
+        const offset = Math.max(-1, Math.min(1, dist/trackRect.width)) * 26; // efecto parallax
+        bg.style.transform = `translateX(${offset}px)`;
+      }
+    });
+    document.querySelectorAll(".banner-dot").forEach((d,i)=> d.classList.toggle("active", i===closestIdx));
+  }, { passive:true });
+
+  track.addEventListener("touchstart", ()=>{ bannerUserInteracting = true; clearTimeout(bannerAutoTimer); }, { passive:true });
+  track.addEventListener("touchend", ()=>{ bannerUserInteracting = false; startBannerAutoAdvance(); }, { passive:true });
+}
+
+function startBannerAutoAdvance(){
+  clearTimeout(bannerAutoTimer);
+  if(bannerData.length<2) return;
+  bannerAutoTimer = setTimeout(()=>{
+    if(bannerUserInteracting) return;
+    const track = document.getElementById("bannerCarousel");
+    const slides = track.querySelectorAll(".banner-slide");
+    const activeDot = document.querySelector(".banner-dot.active");
+    let idx = activeDot ? Number(activeDot.dataset.dot) : 0;
+    idx = (idx+1) % slides.length;
+    slides[idx].scrollIntoView({ behavior:"smooth", inline:"start", block:"nearest" });
+    startBannerAutoAdvance();
+  }, 5000);
 }
 
 function fmtPeriodLabel(){
