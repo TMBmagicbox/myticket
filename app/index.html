@@ -494,6 +494,19 @@ section{ padding: 6px 20px 10px; }
   cursor:pointer;
 }
 .sort-btn.active{ background: var(--brand-purple); color:#fff; border-color: var(--brand-purple); }
+.show-more-btn{
+  width:100%;
+  margin-top: 6px;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px dashed var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--brand-purple);
+  font-weight:600;
+  font-size: 13px;
+  cursor:pointer;
+}
 
 .product-card{
   background: var(--glass-bg);
@@ -1474,6 +1487,8 @@ const STORES = [
   { name: "Farmacias Similares", category: "Salud/Farmacia" },
   { name: "Home Depot", category: "Ferretería/Hogar" },
   { name: "Ferretería local", category: "Ferretería/Hogar" },
+  { name: "Agua Cristal", category: "Servicios (agua, luz, internet)" },
+  { name: "Panadería/Pastelería local", category: "Comida/Restaurante" },
   { name: "Liverpool", category: "Tienda departamental" },
   { name: "Coppel", category: "Tienda departamental" },
   { name: "Elektra", category: "Tienda departamental" },
@@ -1562,6 +1577,7 @@ const STORE_COLORS = {
   "La Comer / City Market": "#6CC24A", "HEB": "#E4002B", "Casa Ley": "#004B87",
   "Farmacias Guadalajara": "#0072BC", "Farmacias del Ahorro": "#00A651",
   "Farmacias Similares": "#FDB913", "Home Depot": "#F96302", "Ferretería local": "#6f6a5e",
+  "Agua Cristal": "#0072BC", "Panadería/Pastelería local": "#C97B3D",
   "Liverpool": "#5C2D91", "Coppel": "#E4032E", "Elektra": "#FFD100",
   "Pemex": "#00693C", "Shell": "#FBCE07", "BP": "#00914A", "Mobil": "#EE2E24", "G500": "#F7941E",
   "Gas Tomza": "#004B87", "Zeta Gas": "#E4032E", "Gas Express Nieto": "#F58220",
@@ -1707,7 +1723,8 @@ const STORE_ALIASES = [
   { match: "SCOTIABANK", store: "Scotiabank" },
   { match: "BANCO AZTECA", store: "Banco Azteca" },
   { match: "BANREGIO", store: "Banregio" },
-  { match: "INBURSA", store: "Inbursa" }
+  { match: "INBURSA", store: "Inbursa" },
+  { match: "AGUA CRISTAL", store: "Agua Cristal" }
 ];
 
 /* =========================================================
@@ -2234,6 +2251,11 @@ function showView(name){
   document.querySelectorAll("nav.bottom button").forEach(b=>b.classList.remove("active"));
   const navBtn = document.querySelector(`nav.bottom button[data-view="${name}"]`);
   if(navBtn) navBtn.classList.add("active");
+
+  // En cámara y recorte el nav flotante tapaba el obturador / los botones
+  // de confirmar — se oculta mientras se usan esas pantallas.
+  document.querySelector("nav.bottom").style.display = (name==="camera"||name==="crop") ? "none" : "flex";
+
   if(name==="dashboard") refreshDashboard();
   if(name==="history") refreshHistory();
 }
@@ -3272,6 +3294,8 @@ document.addEventListener("click", async (e)=>{
    ========================================================= */
 let productSortMode = "spent"; // "spent" | "qty"
 let productSearchTerm = "";
+let productsShowAll = false;
+const PRODUCTS_PAGE_SIZE = 6;
 
 function buildProductIndex(allTickets){
   const map = {};
@@ -3310,7 +3334,10 @@ function renderProductsListing(){
     return;
   }
 
-  container.innerHTML = list.map(p=>{
+  const total = list.length;
+  const visibleList = productsShowAll ? list : list.slice(0, PRODUCTS_PAGE_SIZE);
+
+  const cardsHtml = visibleList.map(p=>{
     const last = p.purchases[p.purchases.length-1];
     const prev = p.purchases.length>1 ? p.purchases[p.purchases.length-2] : null;
     let change = "";
@@ -3336,10 +3363,20 @@ function renderProductsListing(){
         <div class="pc-history" style="display:none;">${historyRows}</div>
       </div>`;
   }).join("");
+
+  let moreBtnHtml = "";
+  if(total > PRODUCTS_PAGE_SIZE){
+    moreBtnHtml = productsShowAll
+      ? `<button class="show-more-btn" id="btnToggleProducts">Ver menos</button>`
+      : `<button class="show-more-btn" id="btnToggleProducts">Ver más productos (${total - PRODUCTS_PAGE_SIZE})</button>`;
+  }
+
+  container.innerHTML = cardsHtml + moreBtnHtml;
 }
 
 document.getElementById("productSearch").addEventListener("input", (e)=>{
   productSearchTerm = e.target.value;
+  productsShowAll = false;
   renderProductsListing();
 });
 document.querySelectorAll(".sort-btn").forEach(btn=>{
@@ -3349,6 +3386,12 @@ document.querySelectorAll(".sort-btn").forEach(btn=>{
     productSortMode = btn.dataset.sort;
     renderProductsListing();
   });
+});
+document.addEventListener("click", (e)=>{
+  if(e.target.id==="btnToggleProducts"){
+    productsShowAll = !productsShowAll;
+    renderProductsListing();
+  }
 });
 // Expandir/contraer el historial de precios de un producto al tocarlo
 document.addEventListener("click", (e)=>{
