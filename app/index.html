@@ -2986,8 +2986,6 @@ document.querySelectorAll(".tab").forEach(tab=>{
 let allTicketsCache = [];
 let ticketsById = {}; // lookup rápido id->ticket para abrir la vista de recibo
 
-let bannersLoadedOnce = false;
-
 async function refreshDashboard(){
   allTicketsCache = await getAllTickets();
   allTicketsCache.forEach(t=> ticketsById[t.id]=t);
@@ -3003,11 +3001,7 @@ async function refreshDashboard(){
 
   renderPeriodContent();
   renderProductsListing();
-
-  if(!bannersLoadedOnce){
-    bannersLoadedOnce = true;
-    loadBanners();
-  }
+  loadBanners();
 }
 
 /* =========================================================
