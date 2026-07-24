@@ -241,44 +241,59 @@ document.getElementById("btnBackFromStores").addEventListener("click", ()=> show
 /* ============ ESTADÍSTICAS ============ */
 async function loadStats(){
   const statsGrid = document.getElementById("statsGrid");
-  try{
-    const now = new Date();
-    const fiveMinAgo = new Date(now - 5*60000);
-    const dayAgo = new Date(now - 24*3600000);
-    const weekAgo = new Date(now - 7*24*3600000);
+  const now = new Date();
+  const fiveMinAgo = new Date(now - 5*60000);
+  const dayAgo = new Date(now - 24*3600000);
+  const weekAgo = new Date(now - 7*24*3600000);
 
+  let profilesSnap = null;
+  let profilesError = null;
+  try{
     // Los documentos de userProfiles son minúsculos (solo correo/nombre/fechas,
     // nada de fotos), así que leerlos completos para contar es barato — a
     // diferencia de .count(), esto funciona en cualquier versión del SDK.
-    const [profilesSnap, ticketsSnap] = await Promise.all([
-      db.collection("userProfiles").get(),
-      db.collectionGroup("tickets").get()
-    ]);
-
-    let onlineNow = 0, activeToday = 0, newWeek = 0;
-    profilesSnap.forEach(doc=>{
-      const d = doc.data();
-      const lastSeen = d.lastSeen && d.lastSeen.toDate ? d.lastSeen.toDate() : null;
-      const firstSeen = d.firstSeen && d.firstSeen.toDate ? d.firstSeen.toDate() : null;
-      if(lastSeen && lastSeen >= fiveMinAgo) onlineNow++;
-      if(lastSeen && lastSeen >= dayAgo) activeToday++;
-      if(firstSeen && firstSeen >= weekAgo) newWeek++;
-    });
-
-    const stats = [
-      { label:"Usuarios totales", value: profilesSnap.size },
-      { label:"Conectados ahora", value: onlineNow },
-      { label:"Activos hoy", value: activeToday },
-      { label:"Nuevos esta semana", value: newWeek },
-      { label:"Tickets totales", value: ticketsSnap.size }
-    ];
-    statsGrid.innerHTML = stats.map(s=>`<div class="stat-card"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>`).join("");
-
-    renderSignupChart(profilesSnap);
+    profilesSnap = await db.collection("userProfiles").get();
   }catch(err){
-    console.error(err);
-    statsGrid.innerHTML = `<p style="color:var(--accent-2); font-size:12.5px; grid-column:1/-1;">No se pudieron cargar las estadísticas: ${err.message}</p>`;
+    console.error("Error leyendo userProfiles:", err);
+    profilesError = err;
   }
+
+  let ticketsTotal = "—";
+  try{
+    // Esta consulta ("collection group") junta los tickets de TODOS los
+    // usuarios y necesita una regla de Firestore aparte a la de arriba.
+    // Si falla, seguimos mostrando el resto de las estadísticas igual.
+    const ticketsSnap = await db.collectionGroup("tickets").get();
+    ticketsTotal = ticketsSnap.size;
+  }catch(err){
+    console.warn("No se pudo leer el total de tickets (falta la regla de collection group para 'tickets'):", err);
+  }
+
+  if(profilesError){
+    statsGrid.innerHTML = `<p style="color:var(--accent-2); font-size:12.5px; grid-column:1/-1;">No se pudieron cargar las estadísticas de usuarios: ${profilesError.message}</p>`;
+    return;
+  }
+
+  let onlineNow = 0, activeToday = 0, newWeek = 0;
+  profilesSnap.forEach(doc=>{
+    const d = doc.data();
+    const lastSeen = d.lastSeen && d.lastSeen.toDate ? d.lastSeen.toDate() : null;
+    const firstSeen = d.firstSeen && d.firstSeen.toDate ? d.firstSeen.toDate() : null;
+    if(lastSeen && lastSeen >= fiveMinAgo) onlineNow++;
+    if(lastSeen && lastSeen >= dayAgo) activeToday++;
+    if(firstSeen && firstSeen >= weekAgo) newWeek++;
+  });
+
+  const stats = [
+    { label:"Usuarios totales", value: profilesSnap.size },
+    { label:"Conectados ahora", value: onlineNow },
+    { label:"Activos hoy", value: activeToday },
+    { label:"Nuevos esta semana", value: newWeek },
+    { label:"Tickets totales", value: ticketsTotal }
+  ];
+  statsGrid.innerHTML = stats.map(s=>`<div class="stat-card"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>`).join("");
+
+  renderSignupChart(profilesSnap);
 }
 
 function renderSignupChart(snap){
