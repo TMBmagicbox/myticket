@@ -247,34 +247,43 @@ async function loadStats(){
     const dayAgo = new Date(now - 24*3600000);
     const weekAgo = new Date(now - 7*24*3600000);
 
-    const [totalUsers, onlineNow, activeToday, newWeek, totalTickets] = await Promise.all([
-      db.collection("userProfiles").count().get(),
-      db.collection("userProfiles").where("lastSeen",">=", fiveMinAgo).count().get(),
-      db.collection("userProfiles").where("lastSeen",">=", dayAgo).count().get(),
-      db.collection("userProfiles").where("firstSeen",">=", weekAgo).count().get(),
-      db.collectionGroup("tickets").count().get()
+    // Los documentos de userProfiles son minúsculos (solo correo/nombre/fechas,
+    // nada de fotos), así que leerlos completos para contar es barato — a
+    // diferencia de .count(), esto funciona en cualquier versión del SDK.
+    const [profilesSnap, ticketsSnap] = await Promise.all([
+      db.collection("userProfiles").get(),
+      db.collectionGroup("tickets").get()
     ]);
 
+    let onlineNow = 0, activeToday = 0, newWeek = 0;
+    profilesSnap.forEach(doc=>{
+      const d = doc.data();
+      const lastSeen = d.lastSeen && d.lastSeen.toDate ? d.lastSeen.toDate() : null;
+      const firstSeen = d.firstSeen && d.firstSeen.toDate ? d.firstSeen.toDate() : null;
+      if(lastSeen && lastSeen >= fiveMinAgo) onlineNow++;
+      if(lastSeen && lastSeen >= dayAgo) activeToday++;
+      if(firstSeen && firstSeen >= weekAgo) newWeek++;
+    });
+
     const stats = [
-      { label:"Usuarios totales", value: totalUsers.data().count },
-      { label:"Conectados ahora", value: onlineNow.data().count },
-      { label:"Activos hoy", value: activeToday.data().count },
-      { label:"Nuevos esta semana", value: newWeek.data().count },
-      { label:"Tickets totales", value: totalTickets.data().count }
+      { label:"Usuarios totales", value: profilesSnap.size },
+      { label:"Conectados ahora", value: onlineNow },
+      { label:"Activos hoy", value: activeToday },
+      { label:"Nuevos esta semana", value: newWeek },
+      { label:"Tickets totales", value: ticketsSnap.size }
     ];
     statsGrid.innerHTML = stats.map(s=>`<div class="stat-card"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>`).join("");
 
-    loadSignupChart();
+    renderSignupChart(profilesSnap);
   }catch(err){
     console.error(err);
     statsGrid.innerHTML = `<p style="color:var(--accent-2); font-size:12.5px; grid-column:1/-1;">No se pudieron cargar las estadísticas: ${err.message}</p>`;
   }
 }
 
-async function loadSignupChart(){
+function renderSignupChart(snap){
   const chartEl = document.getElementById("signupChart");
   try{
-    const snap = await db.collection("userProfiles").get();
     const byDay = {};
     const today = new Date();
     for(let i=13;i>=0;i--){
@@ -296,7 +305,7 @@ async function loadSignupChart(){
         <span class="chart-bar-value">${count}</span>
       </div>`).join("");
   }catch(e){
-    console.warn("No se pudo cargar el gráfico de registros:", e);
+    console.warn("No se pudo dibujar el gráfico de registros:", e);
     chartEl.innerHTML = `<p style="color:var(--muted); font-size:12px;">Sin datos suficientes todavía.</p>`;
   }
 }
