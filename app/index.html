@@ -229,7 +229,7 @@ header.top p{
   position:relative;
   flex: 0 0 100%;
   scroll-snap-align: start;
-  aspect-ratio: 16/8;
+  aspect-ratio: 16/7.5;
   border-radius: 20px;
   overflow:hidden;
   text-decoration:none;
@@ -1968,6 +1968,7 @@ async function migrateLocalDataToCloud(){
       delete clean.id;
       await addTicket(clean);
     }
+    ticketsCacheReady = false;
     await refreshDashboard();
     await refreshHistory();
     alert("Migración completada.");
@@ -1990,6 +1991,28 @@ function showSyncStatus(message){
   if(message.includes("✓")) setTimeout(()=> el.classList.remove("show"), 2000);
 }
 
+let presenceInterval = null;
+
+// Guarda/actualiza un registro liviano (sin tickets, sin fotos) para que el
+// panel de admin pueda mostrar cuántos usuarios hay y cuántos están activos,
+// sin tener que leer los tickets de nadie.
+async function updatePresence(){
+  if(!currentUser) return;
+  try{
+    const ref = db.collection("userProfiles").doc(currentUser.uid);
+    const snap = await ref.get();
+    const payload = {
+      email: currentUser.email || "",
+      name: currentUser.displayName || "",
+      lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if(!snap.exists) payload.firstSeen = firebase.firestore.FieldValue.serverTimestamp();
+    await ref.set(payload, { merge:true });
+  }catch(e){
+    console.warn("No se pudo registrar la presencia del usuario:", e);
+  }
+}
+
 function initAuth(){
   if(!firebaseReady) return; // ya se mostró el error en authError
   auth.onAuthStateChanged(async (user)=>{
@@ -1999,10 +2022,15 @@ function initAuth(){
       document.getElementById("app").style.display = "block";
       document.getElementById("userAvatarHeader").src = user.photoURL || "";
       document.getElementById("userAvatarHeader").style.display = user.photoURL ? "block" : "none";
+      updatePresence();
+      clearInterval(presenceInterval);
+      presenceInterval = setInterval(updatePresence, 60000);
+      loadCustomStores();
       await refreshDashboard();
       await refreshHistory();
     } else {
       currentUser = null;
+      clearInterval(presenceInterval);
       document.getElementById("authOverlay").classList.remove("hidden");
       document.getElementById("app").style.display = "none";
     }
@@ -2323,30 +2351,65 @@ function showView(name){
 const fStore = document.getElementById("fStore");
 const fCategory = document.getElementById("fCategory");
 
+// Comercios agregados desde el panel de administración (Firestore, colección
+// "customStores"), además de la lista fija STORES de este archivo.
+let customStores = [];
+
+function findStoreDef(name){
+  return STORES.find(s=>s.name===name) || customStores.find(s=>s.name===name);
+}
+
 // El menú de comercios ya es largo — lo agrupamos por categoría (optgroup)
 // para que sea fácil de recorrer en vez de una sola lista plana. "Otro"
 // siempre queda al final, fuera de cualquier grupo.
-const storesByCategory = {};
-STORES.forEach(s=>{
-  const cat = s.category || "Otro";
-  if(!storesByCategory[cat]) storesByCategory[cat] = [];
-  storesByCategory[cat].push(s);
-});
-Object.keys(storesByCategory).filter(c=>c!=="Otro").forEach(cat=>{
-  const group = document.createElement("optgroup");
-  group.label = cat;
-  storesByCategory[cat].forEach(s=>{
+function populateStoreSelect(){
+  const previousValue = fStore.value;
+  fStore.innerHTML = "";
+  const storesByCategory = {};
+  [...STORES, ...customStores].forEach(s=>{
+    const cat = s.category || "Otro";
+    if(!storesByCategory[cat]) storesByCategory[cat] = [];
+    storesByCategory[cat].push(s);
+  });
+  Object.keys(storesByCategory).filter(c=>c!=="Otro").sort().forEach(cat=>{
+    const group = document.createElement("optgroup");
+    group.label = cat;
+    storesByCategory[cat].forEach(s=>{
+      const opt = document.createElement("option");
+      opt.value = s.name; opt.textContent = s.name;
+      group.appendChild(opt);
+    });
+    fStore.appendChild(group);
+  });
+  (storesByCategory["Otro"]||[]).forEach(s=>{
     const opt = document.createElement("option");
     opt.value = s.name; opt.textContent = s.name;
-    group.appendChild(opt);
+    fStore.appendChild(opt);
   });
-  fStore.appendChild(group);
-});
-(storesByCategory["Otro"]||[]).forEach(s=>{
-  const opt = document.createElement("option");
-  opt.value = s.name; opt.textContent = s.name;
-  fStore.appendChild(opt);
-});
+  if(previousValue && findStoreDef(previousValue)) fStore.value = previousValue;
+}
+populateStoreSelect();
+
+// Los comercios personalizados también se agregan como alias de detección
+// OCR (coincidencia exacta por nombre) y a los mapas de dominio/color, para
+// que se comporten igual que los que ya venían de fábrica.
+async function loadCustomStores(){
+  try{
+    const snap = await db.collection("customStores").get();
+    customStores = [];
+    snap.forEach(doc=>{
+      const d = doc.data();
+      if(!d.name || !d.category) return;
+      customStores.push({ name:d.name, category:d.category });
+      if(!STORE_ALIASES.some(a=>a.store===d.name)){
+        STORE_ALIASES.push({ match: d.name.toUpperCase(), store: d.name });
+      }
+    });
+  }catch(e){
+    console.warn("No se pudieron cargar los comercios personalizados:", e);
+  }
+  populateStoreSelect();
+}
 
 CATEGORIES.forEach(c=>{
   const opt = document.createElement("option");
@@ -2357,7 +2420,7 @@ CATEGORIES.forEach(c=>{
 fStore.addEventListener("change", ()=>{
   const otherWrap = document.getElementById("fStoreOtherWrap");
   otherWrap.style.display = fStore.value==="Otro" ? "block" : "none";
-  const found = STORES.find(s=>s.name===fStore.value);
+  const found = findStoreDef(fStore.value);
   if(found && found.category) fCategory.value = found.category;
   updateDeducibleHint();
 });
@@ -2504,7 +2567,7 @@ function openForm({ image=null, store="", date="", total="", items=[], ocrMessag
   else{ ocrHint.style.display="none"; }
 
   // Comercio
-  const matchStore = STORES.find(s=>s.name===store);
+  const matchStore = findStoreDef(store);
   fStore.value = matchStore ? store : "Otro";
   document.getElementById("fStoreOtherWrap").style.display = fStore.value==="Otro" ? "block":"none";
   document.getElementById("fStoreOther").value = matchStore ? "" : store;
@@ -2574,6 +2637,7 @@ document.getElementById("btnSave").addEventListener("click", async ()=>{
   pendingImageData = null;
   pendingCfdiData = null;
   editingTicketId = null;
+  ticketsCacheReady = false;
   showView("dashboard");
 });
 
@@ -2988,10 +3052,24 @@ document.querySelectorAll(".tab").forEach(tab=>{
 
 let allTicketsCache = [];
 let ticketsById = {}; // lookup rápido id->ticket para abrir la vista de recibo
+let ticketsCacheReady = false;
+
+// Antes, cada vez que se cambiaba de pantalla (Inicio -> Historial -> Inicio...)
+// se volvía a descargar TODO el historial completo de Firestore, incluyendo las
+// fotos — entre más tickets con foto tenga el usuario, más tardaba cada cambio
+// de pantalla. Ahora solo se descarga una vez y se reutiliza; solo se vuelve a
+// pedir de verdad después de guardar, borrar, importar o migrar algo.
+async function ensureTicketsLoaded(force=false){
+  if(force || !ticketsCacheReady){
+    allTicketsCache = await getAllTickets();
+    allTicketsCache.forEach(t=> ticketsById[t.id]=t);
+    ticketsCacheReady = true;
+  }
+  return allTicketsCache;
+}
 
 async function refreshDashboard(){
-  allTicketsCache = await getAllTickets();
-  allTicketsCache.forEach(t=> ticketsById[t.id]=t);
+  await ensureTicketsLoaded();
   const today = todayISO();
 
   const todayTotal = allTicketsCache.filter(t=>t.date===today).reduce((a,t)=>a+t.amount,0);
@@ -3432,6 +3510,7 @@ document.getElementById("btnReceiptDelete").addEventListener("click", async ()=>
   if(confirm("¿Eliminar este ticket? Esta acción no se puede deshacer.")){
     await deleteTicket(currentReceiptId);
     currentReceiptId = null;
+    ticketsCacheReady = false;
     await refreshDashboard();
     await refreshHistory();
     showView("dashboard");
@@ -3444,6 +3523,7 @@ document.addEventListener("click", async (e)=>{
     const id = e.target.dataset.id;
     if(confirm("¿Eliminar este ticket?")){
       await deleteTicket(id);
+      ticketsCacheReady = false;
       await refreshDashboard();
       await refreshHistory();
     }
@@ -3590,13 +3670,13 @@ function downloadBlob(content, filename, mime){
 }
 
 document.getElementById("btnExportJSON").addEventListener("click", async ()=>{
-  const list = await getAllTickets();
+  const list = await ensureTicketsLoaded();
   const json = JSON.stringify(list, null, 2);
   downloadBlob(json, `outgo-respaldo-${todayISO()}.json`, "application/json");
 });
 
 document.getElementById("btnExportCSV").addEventListener("click", async ()=>{
-  const list = await getAllTickets();
+  const list = await ensureTicketsLoaded();
   const rows = [[
     "ticket_id","fecha","comercio","categoria_ticket","descripcion_ticket",
     "producto","categoria_producto","cantidad","costo_unitario","descuento_producto","subtotal_producto",
@@ -3644,6 +3724,7 @@ document.getElementById("importFileInput").addEventListener("change", async (e)=
       delete clean.id; // deja que IndexedDB asigne un id nuevo, evita choques
       await addTicket(clean);
     }
+    ticketsCacheReady = false;
     await refreshDashboard();
     await refreshHistory();
     alert("Importación completada.");
@@ -3823,7 +3904,7 @@ document.addEventListener("click", (e)=>{
    HISTORIAL COMPLETO
    ========================================================= */
 async function refreshHistory(){
-  const list = await getAllTickets();
+  const list = await ensureTicketsLoaded();
   list.forEach(t=> ticketsById[t.id]=t);
   const historyEl = document.getElementById("historyList");
   historyEl.innerHTML = renderTicketList(list);
