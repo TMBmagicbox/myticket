@@ -79,6 +79,56 @@ h1{ font-family:var(--font-display); font-size:24px; margin:0 0 4px; }
 .mini-preview .overlay img.logo{ display:block; max-width:275px; max-height:70px; width:auto; height:auto; margin-bottom:6px; object-fit:contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35)); }
 .mini-preview .overlay .t{ font-family:var(--font-display); font-weight:600; font-size:13px; }
 .mini-preview .overlay .d{ font-size:10.5px; opacity:0.9; }
+
+/* ---------- Hub / navegación ---------- */
+.back-link{
+  display:inline-block; background:none; border:none; color:var(--muted);
+  font-size:13px; cursor:pointer; margin-bottom:14px; padding:0;
+}
+.hub-btn{
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  padding:16px 18px; margin-bottom:12px; border:1px solid var(--glass-border); border-radius:var(--radius);
+  background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  box-shadow:var(--glass-shadow); font-weight:600; font-size:14.5px; color:var(--ink); cursor:pointer;
+}
+.hub-btn .arrow{ color:var(--brand-purple); font-size:18px; }
+
+/* ---------- Estadísticas ---------- */
+.stats-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:22px; }
+.stat-card{
+  background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border); border-radius:12px; padding:14px 10px; text-align:center;
+}
+.stat-value{ font-family:'Space Mono',monospace; font-weight:700; font-size:22px; color:var(--brand-purple); }
+.stat-label{ font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:0.03em; margin-top:4px; }
+.chart-section{
+  background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border); border-radius:var(--radius); padding:18px; margin-bottom:22px;
+}
+.chart-section h3{ font-family:var(--font-display); font-size:14.5px; margin:0 0 14px; }
+.chart-bar-row{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.chart-bar-label{ font-size:10px; color:var(--muted); width:34px; flex-shrink:0; font-family:'Space Mono',monospace; }
+.chart-bar-track{ flex:1; background:var(--line); border-radius:5px; height:8px; overflow:hidden; }
+.chart-bar-fill{ height:100%; background:linear-gradient(90deg,var(--brand-purple),var(--accent)); border-radius:5px; }
+.chart-bar-value{ font-size:10.5px; color:var(--ink); width:16px; text-align:right; font-family:'Space Mono',monospace; }
+
+/* ---------- Comercios personalizados ---------- */
+.add-store-card{
+  background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border); border-radius:var(--radius); padding:18px; margin-bottom:18px;
+}
+.field select{
+  width:100%; padding:10px 11px; border-radius:9px; border:1px solid var(--line);
+  background:#fff; font-family:var(--font-body); font-size:14px;
+}
+.add-store-status{ font-size:12px; margin-top:8px; min-height:14px; }
+.store-row{
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:10px;
+  padding:10px 14px; margin-bottom:8px; font-size:13.5px;
+}
+.store-row .store-cat{ display:block; font-size:11px; color:var(--muted); margin-top:2px; }
+.del-btn{ background:none; border:none; color:var(--accent-2); font-size:15px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -92,16 +142,58 @@ h1{ font-family:var(--font-display); font-size:24px; margin:0 0 4px; }
 
 <div class="wrap">
   <div id="authGate" class="auth-gate">
-    <h1>Administrar banners</h1>
-    <p class="sub">Inicia sesión con la cuenta autorizada para editar el carrusel promocional de la app.</p>
+    <h1>Panel de administración</h1>
+    <p class="sub">Inicia sesión con la cuenta autorizada.</p>
     <button class="google-btn" id="googleSignInBtn">Iniciar sesión con Google</button>
-    <p class="denied" id="deniedMsg">Tu cuenta inició sesión correctamente, pero no tiene permisos de administrador para editar los banners (revisa las reglas de Firestore).</p>
+    <p class="denied" id="deniedMsg">Tu cuenta inició sesión correctamente, pero no tiene permisos de administrador (revisa las reglas de Firestore).</p>
   </div>
 
+  <!-- ============ HUB PRINCIPAL ============ -->
+  <div id="hubWrap" style="display:none;">
+    <h1>Panel de administración</h1>
+    <p class="sub">Estadísticas generales de Outgo.</p>
+
+    <div class="stats-grid" id="statsGrid">
+      <p style="color:var(--muted); font-size:13px;">Cargando estadísticas...</p>
+    </div>
+
+    <div class="chart-section">
+      <h3>Nuevos usuarios · últimos 14 días</h3>
+      <div id="signupChart"></div>
+    </div>
+
+    <button class="hub-btn" id="btnGoBanners">🖼️ Administrar banners <span class="arrow">→</span></button>
+    <button class="hub-btn" id="btnGoStores">🏬 Administrar comercios <span class="arrow">→</span></button>
+  </div>
+
+  <!-- ============ BANNERS ============ -->
   <div id="slotsWrap" style="display:none;">
+    <button class="back-link" id="btnBackFromBanners">← Volver al panel</button>
     <h1>Banners del carrusel</h1>
     <p class="sub">6 espacios disponibles. Los que actives aparecerán en la app, en este orden. Cambios se ven reflejados la próxima vez que un usuario abra o refresque su Inicio.</p>
     <div id="slotsContainer"></div>
+  </div>
+
+  <!-- ============ COMERCIOS PERSONALIZADOS ============ -->
+  <div id="storesWrap" style="display:none;">
+    <button class="back-link" id="btnBackFromStores">← Volver al panel</button>
+    <h1>Comercios personalizados</h1>
+    <p class="sub">Agrega aquí nuevos comercios/proveedores para que aparezcan en la app de todos los usuarios — sin tocar el código. Aparecen agrupados por la categoría que elijas.</p>
+
+    <div class="add-store-card">
+      <div class="field">
+        <label>Nombre del comercio</label>
+        <input type="text" id="newStoreName" placeholder="Ej. Superfarmacia del Centro">
+      </div>
+      <div class="field">
+        <label>Categoría</label>
+        <select id="newStoreCategory"></select>
+      </div>
+      <button class="save-btn" id="btnAddStore">+ Agregar comercio</button>
+      <div class="add-store-status" id="addStoreStatus"></div>
+    </div>
+
+    <div id="customStoresList"></div>
   </div>
 </div>
 
@@ -124,7 +216,151 @@ const db = firebase.firestore();
 
 const SLOT_IDS = ["1","2","3","4","5","6"];
 
+// Misma lista de categorías que usa index.html, para que coincidan los grupos
+// del menú de comercios en la app.
+const CATEGORIES = [
+  "Supermercado","Conveniencia/Tiendita","Club de precios","Salud/Farmacia",
+  "Ferretería/Hogar","Tienda departamental","Comida/Restaurante","Gasolina",
+  "Gas LP (cocina)","Transporte","Servicios (agua, luz, internet)","Streaming y plataformas",
+  "Compras en línea","Banca y transferencias","Entretenimiento","Otros"
+];
+
 function escapeHtml(str){ const d=document.createElement("div"); d.textContent=str||""; return d.innerHTML; }
+
+/* ============ NAVEGACIÓN ENTRE SECCIONES DEL HUB ============ */
+function showHubSection(name){
+  document.getElementById("hubWrap").style.display = name==="hub" ? "block" : "none";
+  document.getElementById("slotsWrap").style.display = name==="banners" ? "block" : "none";
+  document.getElementById("storesWrap").style.display = name==="stores" ? "block" : "none";
+}
+document.getElementById("btnGoBanners").addEventListener("click", ()=>{ showHubSection("banners"); loadSlots(); });
+document.getElementById("btnBackFromBanners").addEventListener("click", ()=> showHubSection("hub"));
+document.getElementById("btnGoStores").addEventListener("click", ()=>{ showHubSection("stores"); populateCategorySelect(); loadCustomStoresList(); });
+document.getElementById("btnBackFromStores").addEventListener("click", ()=> showHubSection("hub"));
+
+/* ============ ESTADÍSTICAS ============ */
+async function loadStats(){
+  const statsGrid = document.getElementById("statsGrid");
+  try{
+    const now = new Date();
+    const fiveMinAgo = new Date(now - 5*60000);
+    const dayAgo = new Date(now - 24*3600000);
+    const weekAgo = new Date(now - 7*24*3600000);
+
+    const [totalUsers, onlineNow, activeToday, newWeek, totalTickets] = await Promise.all([
+      db.collection("userProfiles").count().get(),
+      db.collection("userProfiles").where("lastSeen",">=", fiveMinAgo).count().get(),
+      db.collection("userProfiles").where("lastSeen",">=", dayAgo).count().get(),
+      db.collection("userProfiles").where("firstSeen",">=", weekAgo).count().get(),
+      db.collectionGroup("tickets").count().get()
+    ]);
+
+    const stats = [
+      { label:"Usuarios totales", value: totalUsers.data().count },
+      { label:"Conectados ahora", value: onlineNow.data().count },
+      { label:"Activos hoy", value: activeToday.data().count },
+      { label:"Nuevos esta semana", value: newWeek.data().count },
+      { label:"Tickets totales", value: totalTickets.data().count }
+    ];
+    statsGrid.innerHTML = stats.map(s=>`<div class="stat-card"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>`).join("");
+
+    loadSignupChart();
+  }catch(err){
+    console.error(err);
+    statsGrid.innerHTML = `<p style="color:var(--accent-2); font-size:12.5px; grid-column:1/-1;">No se pudieron cargar las estadísticas: ${err.message}</p>`;
+  }
+}
+
+async function loadSignupChart(){
+  const chartEl = document.getElementById("signupChart");
+  try{
+    const snap = await db.collection("userProfiles").get();
+    const byDay = {};
+    const today = new Date();
+    for(let i=13;i>=0;i--){
+      const d = new Date(today); d.setDate(d.getDate()-i);
+      byDay[d.toISOString().slice(0,10)] = 0;
+    }
+    snap.forEach(doc=>{
+      const firstSeen = doc.data().firstSeen;
+      if(firstSeen && firstSeen.toDate){
+        const key = firstSeen.toDate().toISOString().slice(0,10);
+        if(key in byDay) byDay[key]++;
+      }
+    });
+    const max = Math.max(1, ...Object.values(byDay));
+    chartEl.innerHTML = Object.entries(byDay).map(([day,count])=>`
+      <div class="chart-bar-row">
+        <span class="chart-bar-label">${day.slice(5)}</span>
+        <div class="chart-bar-track"><div class="chart-bar-fill" style="width:${(count/max*100)}%"></div></div>
+        <span class="chart-bar-value">${count}</span>
+      </div>`).join("");
+  }catch(e){
+    console.warn("No se pudo cargar el gráfico de registros:", e);
+    chartEl.innerHTML = `<p style="color:var(--muted); font-size:12px;">Sin datos suficientes todavía.</p>`;
+  }
+}
+
+/* ============ COMERCIOS PERSONALIZADOS ============ */
+function populateCategorySelect(){
+  const sel = document.getElementById("newStoreCategory");
+  if(sel.dataset.filled) return;
+  sel.innerHTML = CATEGORIES.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+  sel.dataset.filled = "1";
+}
+
+async function loadCustomStoresList(){
+  const listEl = document.getElementById("customStoresList");
+  listEl.innerHTML = `<p style="color:var(--muted); font-size:13px;">Cargando...</p>`;
+  try{
+    const snap = await db.collection("customStores").orderBy("addedAt","desc").get();
+    if(snap.empty){
+      listEl.innerHTML = `<p style="color:var(--muted); font-size:13px;">Aún no has agregado ningún comercio personalizado.</p>`;
+      return;
+    }
+    listEl.innerHTML = "";
+    snap.forEach(doc=>{
+      const d = doc.data();
+      const row = document.createElement("div");
+      row.className = "store-row";
+      row.innerHTML = `<div><b>${escapeHtml(d.name)}</b><span class="store-cat">${escapeHtml(d.category)}</span></div><button class="del-btn" data-id="${doc.id}">✕</button>`;
+      listEl.appendChild(row);
+    });
+    listEl.querySelectorAll(".del-btn").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        if(confirm("¿Eliminar este comercio de la lista?")){
+          await db.collection("customStores").doc(btn.dataset.id).delete();
+          loadCustomStoresList();
+        }
+      });
+    });
+  }catch(err){
+    listEl.innerHTML = `<p style="color:var(--accent-2); font-size:13px;">No se pudo cargar: ${err.message}</p>`;
+  }
+}
+
+document.getElementById("btnAddStore").addEventListener("click", async ()=>{
+  const name = document.getElementById("newStoreName").value.trim();
+  const category = document.getElementById("newStoreCategory").value;
+  const statusEl = document.getElementById("addStoreStatus");
+  if(!name){
+    statusEl.textContent = "Escribe un nombre de comercio.";
+    statusEl.style.color = "var(--accent-2)";
+    return;
+  }
+  statusEl.textContent = "Guardando...";
+  statusEl.style.color = "var(--muted)";
+  try{
+    await db.collection("customStores").add({ name, category, addedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    document.getElementById("newStoreName").value = "";
+    statusEl.textContent = "Agregado ✓ — ya aparecerá en la app.";
+    statusEl.style.color = "var(--accent)";
+    loadCustomStoresList();
+  }catch(err){
+    statusEl.textContent = "No se pudo guardar: " + err.message;
+    statusEl.style.color = "var(--accent-2)";
+  }
+});
 
 function compressImage(file, maxWidth, quality, format){
   format = format || "jpeg";
@@ -305,7 +541,7 @@ document.getElementById("googleSignInBtn").addEventListener("click", async ()=>{
 auth.onAuthStateChanged(async (user)=>{
   if(!user){
     document.getElementById("authGate").style.display = "block";
-    document.getElementById("slotsWrap").style.display = "none";
+    showHubSection(null);
     document.getElementById("userLabel").textContent = "";
     return;
   }
@@ -314,12 +550,12 @@ auth.onAuthStateChanged(async (user)=>{
   try{
     await db.collection("banners").doc("1").get();
     document.getElementById("authGate").style.display = "none";
-    document.getElementById("slotsWrap").style.display = "block";
-    loadSlots();
+    showHubSection("hub");
+    loadStats();
   }catch(err){
     console.error(err);
     document.getElementById("authGate").style.display = "block";
-    document.getElementById("slotsWrap").style.display = "none";
+    showHubSection(null);
     document.getElementById("deniedMsg").style.display = "block";
   }
 });
