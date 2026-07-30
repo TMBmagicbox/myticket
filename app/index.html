@@ -253,10 +253,11 @@ header.top p{
   color:#fff;
 }
 .banner-logo{
-  display:block;
-  max-width:325px; max-height:80px; width:auto; height:auto;
+  position:absolute;
+  z-index:2;
+  transform: translate(-50%,-50%);
+  max-width:none;
   object-fit:contain;
-  margin-bottom:10px;
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
 }
 .banner-title{ font-family: var(--font-display); font-weight:600; font-size:17px; line-height:1.2; }
@@ -3117,8 +3118,8 @@ function renderBannerCarousel(){
   track.innerHTML = bannerData.map((b)=>`
     <a class="banner-slide" href="${escapeAttr(b.link||'#')}" target="_blank" rel="noopener">
       <div class="banner-slide-bg" style="background-image:url('${b.bgImage}')"></div>
+      ${b.logoImage ? `<img class="banner-logo" src="${b.logoImage}" alt="" style="left:${b.logoX??50}%; top:${b.logoY??25}%; width:${b.logoWidthPct??35}%;">` : ""}
       <div class="banner-slide-content">
-        ${b.logoImage ? `<img class="banner-logo" src="${b.logoImage}" alt="">` : ""}
         <div class="banner-title">${escapeHtml(b.title||"")}</div>
         ${b.description ? `<div class="banner-desc">${escapeHtml(b.description)}</div>` : ""}
       </div>
