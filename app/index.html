@@ -3115,16 +3115,18 @@ function renderBannerCarousel(){
   if(!bannerData.length){ wrap.style.display = "none"; return; }
   wrap.style.display = "block";
 
-  track.innerHTML = bannerData.map((b)=>`
+  track.innerHTML = bannerData.map((b)=>{
+    const zoom = (b.bgZoom??100)/100;
+    return `
     <a class="banner-slide" href="${escapeAttr(b.link||'#')}" target="_blank" rel="noopener">
-      <div class="banner-slide-bg" style="background-image:url('${b.bgImage}')"></div>
+      <div class="banner-slide-bg" data-zoom="${zoom}" style="background-image:url('${b.bgImage}'); background-position:${b.bgPosX??50}% ${b.bgPosY??50}%; transform:scale(${zoom});"></div>
       ${b.logoImage ? `<img class="banner-logo" src="${b.logoImage}" alt="" style="left:${b.logoX??50}%; top:${b.logoY??25}%; width:${b.logoWidthPct??35}%;">` : ""}
       <div class="banner-slide-content">
         <div class="banner-title">${escapeHtml(b.title||"")}</div>
         ${b.description ? `<div class="banner-desc">${escapeHtml(b.description)}</div>` : ""}
       </div>
     </a>
-  `).join("");
+  `;}).join("");
 
   dotsEl.innerHTML = bannerData.length>1
     ? bannerData.map((_,i)=> `<div class="banner-dot ${i===0?"active":""}" data-dot="${i}"></div>`).join("")
@@ -3151,7 +3153,8 @@ function attachBannerScrollHandler(){
       const bg = slide.querySelector(".banner-slide-bg");
       if(bg){
         const offset = Math.max(-1, Math.min(1, dist/trackRect.width)) * 26; // efecto parallax
-        bg.style.transform = `translateX(${offset}px)`;
+        const zoom = bg.dataset.zoom || 1;
+        bg.style.transform = `translateX(${offset}px) scale(${zoom})`;
       }
     });
     document.querySelectorAll(".banner-dot").forEach((d,i)=> d.classList.toggle("active", i===closestIdx));
