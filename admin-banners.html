@@ -72,6 +72,14 @@ h1{ font-family:var(--font-display); font-size:24px; margin:0 0 4px; }
   background:#ddd; display:flex; align-items:flex-end;
 }
 .mini-preview img.bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.bg-pan-layer{ position:absolute; inset:0; overflow:hidden; cursor:grab; touch-action:none; }
+.bg-pan-layer:active{ cursor:grabbing; }
+.bg-pan-layer .bg{
+  position:absolute; inset:0;
+  background-size:cover;
+  background-repeat:no-repeat;
+  transform-origin:center center;
+}
 .mini-preview .overlay{
   position:relative; z-index:1; width:100%; padding:10px 12px;
   background: linear-gradient(to top, rgba(20,15,40,0.72), rgba(20,15,40,0.05) 65%); color:#fff;
@@ -432,17 +440,20 @@ function compressImage(file, maxWidth, quality, format){
 }
 
 function slotCardHTML(id, data){
-  data = data || { enabled:false, title:"", description:"", link:"", bgImage:"", logoImage:"", logoX:50, logoY:25, logoWidthPct:35 };
+  data = data || { enabled:false, title:"", description:"", link:"", bgImage:"", logoImage:"", logoX:50, logoY:25, logoWidthPct:35, bgPosX:50, bgPosY:50, bgZoom:100 };
   const logoX = data.logoX ?? 50, logoY = data.logoY ?? 25, logoW = data.logoWidthPct ?? 35;
+  const bgPosX = data.bgPosX ?? 50, bgPosY = data.bgPosY ?? 50, bgZoom = data.bgZoom ?? 100;
   return `
-    <div class="slot-card" data-slot="${id}" data-logo-x="${logoX}" data-logo-y="${logoY}" data-logo-w="${logoW}">
+    <div class="slot-card" data-slot="${id}" data-logo-x="${logoX}" data-logo-y="${logoY}" data-logo-w="${logoW}" data-bg-x="${bgPosX}" data-bg-y="${bgPosY}" data-bg-zoom="${bgZoom}">
       <div class="slot-head">
         <h3>Espacio ${id}</h3>
         <label class="toggle"><input type="checkbox" class="f-enabled" ${data.enabled?"checked":""}> Activo</label>
       </div>
 
       <div class="mini-preview" id="preview-${id}">
-        <img class="bg" src="${data.bgImage||""}" style="${data.bgImage?"":"display:none;"}">
+        <div class="bg-pan-layer" id="bgPanLayer-${id}">
+          <div class="bg" id="bgImg-${id}" style="background-image:url('${data.bgImage||""}'); background-position:${bgPosX}% ${bgPosY}%; transform:scale(${bgZoom/100});"></div>
+        </div>
         <div class="logo-layer" id="logoLayer-${id}">
           <img class="drag-logo" id="dragLogo-${id}" src="${data.logoImage||""}" style="${data.logoImage?"":"display:none;"}">
           <div class="logo-resize-handle" id="logoHandle-${id}" style="${data.logoImage?"":"display:none;"}"></div>
@@ -452,7 +463,7 @@ function slotCardHTML(id, data){
           <div class="d">${escapeHtml(data.description||"Descripción breve")}</div>
         </div>
       </div>
-      <p class="drag-hint">Arrastra el logo para moverlo; usa el punto de la esquina para cambiar su tamaño.</p>
+      <p class="drag-hint">Arrastra el fondo o el logo para moverlos; usa el punto de la esquina para el tamaño del logo, y el control de abajo para el zoom del fondo.</p>
 
       <div class="field">
         <label>Imagen de fondo</label>
@@ -461,6 +472,8 @@ function slotCardHTML(id, data){
           <input type="file" accept="image/*" id="bg-${id}" style="display:none;">
           <img class="thumb-preview" id="bgThumb-${id}" src="${data.bgImage||""}" style="${data.bgImage?"":"display:none;"}">
         </div>
+        <label style="margin-top:10px;">Zoom del fondo</label>
+        <input type="range" id="bgZoomSlider-${id}" min="100" max="300" value="${bgZoom}">
       </div>
 
       <div class="field">
@@ -511,9 +524,17 @@ function wireSlotEvents(){
       document.getElementById(`bgThumb-${id}`).src = dataUrl;
       document.getElementById(`bgThumb-${id}`).style.display = "block";
       const card = document.querySelector(`.slot-card[data-slot="${id}"]`);
-      const previewImg = card.querySelector(`#preview-${id} img.bg`);
-      previewImg.src = dataUrl; previewImg.style.display = "block";
       card.dataset.bgImage = dataUrl;
+      // Imagen nueva: reiniciamos posición/zoom para empezar centrado.
+      card.dataset.bgX = 50; card.dataset.bgY = 50; card.dataset.bgZoom = 100;
+      document.getElementById(`bgZoomSlider-${id}`).value = 100;
+      document.getElementById(`bgImg-${id}`).style.backgroundImage = `url('${dataUrl}')`;
+      applyBgPosition(id);
+    });
+    document.getElementById(`bgZoomSlider-${id}`).addEventListener("input", (e)=>{
+      const card = document.querySelector(`.slot-card[data-slot="${id}"]`);
+      card.dataset.bgZoom = e.target.value;
+      applyBgPosition(id);
     });
     document.getElementById(`logo-${id}`).addEventListener("change", async (e)=>{
       const file = e.target.files[0]; if(!file) return;
@@ -531,6 +552,8 @@ function wireSlotEvents(){
     card_liveTitleDesc(id);
     setupLogoDragResize(id);
     applyLogoPosition(id);
+    setupBgPan(id);
+    applyBgPosition(id);
   });
 
   document.querySelectorAll("[data-save]").forEach(btn=>{
@@ -539,6 +562,45 @@ function wireSlotEvents(){
 }
 
 // Aplica al DOM la posición/tamaño guardados en los data-* de la tarjeta.
+// Aplica al DOM la posición (arrastre) y el zoom del fondo guardados en los data-*.
+function applyBgPosition(id){
+  const card = document.querySelector(`.slot-card[data-slot="${id}"]`);
+  const bgEl = document.getElementById(`bgImg-${id}`);
+  const x = parseFloat(card.dataset.bgX)??50, y = parseFloat(card.dataset.bgY)??50;
+  const zoom = (parseFloat(card.dataset.bgZoom)||100)/100;
+  bgEl.style.backgroundPosition = `${x}% ${y}%`;
+  bgEl.style.transform = `scale(${zoom})`;
+}
+
+// Arrastrar el fondo para elegir qué parte de la imagen se ve (como elegir el
+// encuadre), en porcentaje — funciona igual sin importar el tamaño de pantalla.
+function setupBgPan(id){
+  const layer = document.getElementById(`bgPanLayer-${id}`);
+  const card = document.querySelector(`.slot-card[data-slot="${id}"]`);
+  let dragging = false, startClientX, startClientY, startX, startY;
+
+  layer.addEventListener("pointerdown", (e)=>{
+    if(!card.dataset.bgImage) return;
+    dragging = true;
+    startClientX = e.clientX; startClientY = e.clientY;
+    startX = parseFloat(card.dataset.bgX)||50;
+    startY = parseFloat(card.dataset.bgY)||50;
+    e.preventDefault();
+  });
+  document.addEventListener("pointermove", (e)=>{
+    if(!dragging) return;
+    const rect = layer.getBoundingClientRect();
+    const dxPct = (e.clientX-startClientX)/rect.width*100;
+    const dyPct = (e.clientY-startClientY)/rect.height*100;
+    // Restamos: arrastrar hacia la derecha debe revelar la parte izquierda
+    // de la imagen (como si movieras la foto con el dedo, no la ventana).
+    card.dataset.bgX = Math.max(0, Math.min(100, startX-dxPct));
+    card.dataset.bgY = Math.max(0, Math.min(100, startY-dyPct));
+    applyBgPosition(id);
+  });
+  document.addEventListener("pointerup", ()=>{ dragging = false; });
+}
+
 function applyLogoPosition(id){
   const card = document.querySelector(`.slot-card[data-slot="${id}"]`);
   const img = document.getElementById(`dragLogo-${id}`);
@@ -630,7 +692,10 @@ async function saveSlot(id){
     logoImage: card.dataset.logoImage || (logoThumb.style.display!=="none" ? logoThumb.src : "") || "",
     logoX: parseFloat(card.dataset.logoX)||50,
     logoY: parseFloat(card.dataset.logoY)||25,
-    logoWidthPct: parseFloat(card.dataset.logoW)||35
+    logoWidthPct: parseFloat(card.dataset.logoW)||35,
+    bgPosX: parseFloat(card.dataset.bgX)||50,
+    bgPosY: parseFloat(card.dataset.bgY)||50,
+    bgZoom: parseFloat(card.dataset.bgZoom)||100
   };
 
   if(payload.enabled && !payload.bgImage){
