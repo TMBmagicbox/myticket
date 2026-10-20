@@ -196,6 +196,74 @@ header.top p{
   padding: 8px 12px;
   cursor:pointer;
 }
+.home-reminder{
+  margin: 12px 20px 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(140,122,230,0.12);
+  border: 1px solid rgba(140,122,230,0.4);
+}
+.home-reminder strong{ display:block; font-size: 14px; margin-bottom: 2px; }
+.home-reminder span{ display:block; font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+.verdict-filters{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  padding: 0 0 10px;
+  -webkit-overflow-scrolling: touch;
+}
+.verdict-filters button{
+  flex: 0 0 auto;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.verdict-filters button.active{ background: var(--brand-purple); color:#fff; border-color: var(--brand-purple); }
+.verdict-line{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:4px; }
+.verdict-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+.verdict-ok{ background: rgba(46,217,195,0.2); color:#0b3d38; }
+.verdict-falta{ background: rgba(224,85,74,0.14); color:#8a2e28; }
+.verdict-no{ background: rgba(111,106,94,0.14); color:#4e4940; }
+.verdict-reason{ font-size: 11px; color: var(--muted); line-height: 1.3; }
+.factura-reminder{
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #8a2e28;
+  line-height: 1.3;
+}
+.estimate-box{
+  border: 1px solid rgba(140,122,230,0.4);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin: 12px 0;
+  background: rgba(140,122,230,0.08);
+}
+.estimate-box h3{ margin: 0 0 6px; font-size: 15px; }
+.tarifa-table{ width:100%; border-collapse: collapse; font-size: 11px; }
+.tarifa-table th, .tarifa-table td{ padding: 4px 2px; text-align:right; }
+.tarifa-table input{
+  width: 100%;
+  min-width: 0;
+  font-size: 12px;
+  padding: 6px 4px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  text-align: right;
+}
 .tutorial-overlay{
   position: fixed;
   inset: 0;
@@ -1488,6 +1556,8 @@ nav.bottom button.active{ color: var(--brand-purple); }
   <!-- ============ VISTA: DASHBOARD ============ -->
   <div class="view active" id="view-dashboard">
 
+    <div class="home-reminder" id="homeReminder"></div>
+
     <div class="banner-carousel-wrap" id="bannerCarouselWrap" style="display:none;">
       <div class="banner-carousel" id="bannerCarousel"></div>
       <div class="banner-dots" id="bannerDots"></div>
@@ -1514,7 +1584,15 @@ nav.bottom button.active{ color: var(--brand-purple); }
         <span class="report-entry-text">
           <span class="report-entry-kicker">Para tu declaración</span>
           <span class="report-entry-title">Reporte para declaración</span>
-          <span class="report-entry-sub">El mes: gastos de trabajo e IVA acreditable. El año: deducciones personales y sus topes.</span>
+          <span class="report-entry-sub">El mes: IVA a pagar e ISR provisional. El año: deducciones personales y sus topes.</span>
+        </span>
+      </button>
+      <button class="report-entry" id="btnOpenIngresos" type="button">
+        <span class="report-entry-icon" aria-hidden="true">💰</span>
+        <span class="report-entry-text">
+          <span class="report-entry-kicker">Honorarios</span>
+          <span class="report-entry-title">Ingresos del mes</span>
+          <span class="report-entry-sub">Subtotal, IVA trasladado, ISR retenido e IVA retenido. También desde el XML que tú emitiste.</span>
         </span>
       </button>
       <div class="rfc-prompt" id="rfcPrompt" hidden>
@@ -1563,7 +1641,9 @@ nav.bottom button.active{ color: var(--brand-purple); }
         <div class="hint" style="margin-bottom:10px;">Tus tickets ahora se guardan en tu cuenta de Google (Firestore), no solo en este navegador — puedes entrar desde otro celular y verlos igual. Aun así, exportar un respaldo de vez en cuando nunca está de más.</div>
         <div class="backup-actions">
           <button class="backup-btn" id="btnOpenReporteHistory">📋 Reporte para declaración</button>
+          <button class="backup-btn" id="btnOpenIngresosHistory">💰 Ingresos del mes</button>
           <button class="backup-btn" id="btnOpenAjustesHistory">🪪 Perfil fiscal (RFC)</button>
+          <button class="backup-btn" id="btnImportXmlHistory">📄 Importar XML de facturas</button>
           <button class="backup-btn" id="btnExportJSON">⬇️ Exportar JSON</button>
           <button class="backup-btn" id="btnExportCSV">⬇️ Exportar CSV (Excel)</button>
           <button class="backup-btn" id="btnImportJSON">⬆️ Importar respaldo JSON</button>
@@ -1608,6 +1688,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
       </div>
 
       <div class="section-title">Todos los tickets</div>
+      <div class="verdict-filters" id="historyVerdictFilters"></div>
       <div id="historyList"></div>
     </section>
   </div>
@@ -1703,6 +1784,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
       </div>
 
       <div class="deducible-box">
+        <button type="button" class="backup-btn" id="btnAttachXml">📎 Adjuntar XML de la factura</button>
         <div id="cfdiFormBlock"></div>
         <div class="hint" id="deducibleHint"></div>
         <div class="fiscal-alerts" id="fiscalAlerts"></div>
@@ -1756,6 +1838,11 @@ nav.bottom button.active{ color: var(--brand-purple); }
           <label for="reporteMes">Mes</label>
           <input type="month" id="reporteMes">
         </div>
+        <div class="field">
+          <label for="reportePagosPrevios">Pagos provisionales de ISR ya enterados antes de este mes</label>
+          <input type="number" id="reportePagosPrevios" min="0" step="0.01" inputmode="decimal" placeholder="Vacío = se estiman con esta guía">
+          <div class="hint">Si ya pagaste otra cantidad, anótala. Si lo dejas vacío, se usa la suma estimada de los meses anteriores.</div>
+        </div>
       </div>
       <div id="reporteAnioPanel" style="display:none;">
         <div class="field">
@@ -1780,6 +1867,61 @@ nav.bottom button.active{ color: var(--brand-purple); }
         <button class="backup-btn" id="btnReportePDF" type="button">⬇️ Exportar PDF</button>
       </div>
       <div class="hint disclaimer">Esto es solo una guía general para tu control personal, no es asesoría fiscal. No presenta tu declaración ni valida facturas ante el SAT. Para deducir normalmente necesitas la <strong>factura (CFDI)</strong> a tu nombre y, por arriba de 2,000 pesos, un pago electrónico.</div>
+    </div>
+  </div>
+
+  <!-- ============ VISTA: INGRESOS ============ -->
+  <div class="view" id="view-ingresos">
+    <div class="form-view">
+      <button class="back" id="btnIngresosBack" type="button">← Volver</button>
+      <div class="section-title" style="margin-top:0;">Ingresos del mes</div>
+      <div class="hint" style="margin-bottom:12px;">Honorarios y otros ingresos que cobraste. Si subes el XML que tú emitiste, se llenan el cliente, el subtotal y las retenciones. El IVA trasladado de estos ingresos entra al estimado del mes.</div>
+      <div class="field">
+        <label for="ingresosMes">Mes</label>
+        <input type="month" id="ingresosMes">
+      </div>
+      <div id="ingresosList"></div>
+      <div class="section-title">Registrar un ingreso</div>
+      <div class="field">
+        <label for="ingCliente">Cliente</label>
+        <input type="text" id="ingCliente" placeholder="Nombre o razón social">
+      </div>
+      <div class="field">
+        <label for="ingRfcCliente">RFC del cliente</label>
+        <input type="text" id="ingRfcCliente" maxlength="18" autocapitalize="characters" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="ingFecha">Fecha de cobro</label>
+        <input type="date" id="ingFecha">
+      </div>
+      <div class="field">
+        <label for="ingSubtotal">Subtotal (sin IVA)</label>
+        <input type="number" id="ingSubtotal" min="0" step="0.01" inputmode="decimal" placeholder="0.00">
+      </div>
+      <div class="tax-row">
+        <div class="field" style="margin-bottom:0;">
+          <label for="ingIva">IVA trasladado 16%</label>
+          <input type="number" id="ingIva" min="0" step="0.01" inputmode="decimal">
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label for="ingIsrRet">ISR retenido 10%</label>
+          <input type="number" id="ingIsrRet" min="0" step="0.01" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label for="ingIvaRet">IVA retenido (2/3 del IVA)</label>
+        <input type="number" id="ingIvaRet" min="0" step="0.01" inputmode="decimal">
+        <div class="hint">Al cambiar el subtotal se proponen estas tasas de honorarios. Si el cliente no retuvo, edítalas: a partir de ahí ya no se pisan.</div>
+      </div>
+      <button class="backup-btn" id="btnIngresoTasas" type="button">Volver a calcular 16% / 10% / 2/3</button>
+      <button class="save-btn" id="btnSaveIngreso" type="button">Guardar ingreso</button>
+      <button class="backup-btn" id="btnImportXmlIngreso" type="button">📄 Importar XML que yo emití</button>
+      <div class="hint disclaimer">Esto es solo una guía general para tu control personal, no es asesoría fiscal. El estimado del mes no presenta tu declaración.</div>
+
+      <div class="section-title">Tarifa de ISR</div>
+      <div class="hint" id="tarifaHint" style="margin-bottom:8px;"></div>
+      <button class="backup-btn" id="btnToggleTarifa" type="button">Ver y editar la tarifa</button>
+      <div id="tarifaEditor" style="display:none;"></div>
     </div>
   </div>
 
@@ -1836,6 +1978,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <div class="account-email" id="accountEmail"></div>
     <button class="action-sheet-btn" id="actPerfil" type="button">🪪 Perfil fiscal (RFC)</button>
     <button class="action-sheet-btn" id="actReporte" type="button">📋 Reporte para declaración</button>
+    <button class="action-sheet-btn" id="actIngresos" type="button">💰 Ingresos del mes</button>
     <button class="action-sheet-btn" id="actTutorial" type="button">? Cómo funciona</button>
     <button class="action-sheet-btn" id="actLogout" type="button">Cerrar sesión</button>
     <button class="action-sheet-cancel" id="actAccountClose" type="button">Cancelar</button>
@@ -1848,6 +1991,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <button class="action-sheet-btn" id="actTakePhoto">📷 Tomar foto</button>
     <button class="action-sheet-btn" id="actGallery">🖼️ Elegir de galería</button>
     <button class="action-sheet-btn" id="actManual">✏️ Ticket manual</button>
+    <button class="action-sheet-btn" id="actXml">📄 Importar XML de facturas</button>
     <button class="action-sheet-cancel" id="actCancel">Cancelar</button>
   </div>
 </div>
@@ -1868,6 +2012,9 @@ nav.bottom button.active{ color: var(--brand-purple); }
 <!-- Inputs de archivo (ocultos) -->
 <input type="file" accept="image/*" capture="environment" id="fileInputCamera">
 <input type="file" accept="image/*" id="fileInputGallery">
+<input type="file" id="xmlAttachInput" accept=".xml,text/xml,application/xml" style="display:none;">
+<input type="file" id="xmlBatchInput" accept=".xml,text/xml,application/xml" multiple style="display:none;">
+<input type="file" id="xmlIngresoInput" accept=".xml,text/xml,application/xml" multiple style="display:none;">
 
 <!-- ============ NAV INFERIOR ============ -->
 <nav class="bottom">
@@ -2079,7 +2226,11 @@ const TIPO_SUGERIDO = {
   "Salud/Farmacia": "personal"
 };
 
-let fiscalProfile = { rfc:"", umaDiaria: DEFAULT_UMA_DIARIA, ingresoAnual: 0, tutorialSeen:false };
+let fiscalProfile = { rfc:"", umaDiaria: DEFAULT_UMA_DIARIA, ingresoAnual: 0, tutorialSeen:false, tarifaIsr:null, isrPagosOverride:{} };
+let ingresosCache = [];
+let ingresoTaxManual = false;
+let ingresosReturn = "dashboard";
+let verdictFilter = "todos";
 let tipoManual = false;
 let reporteModo = "mes";
 let reporteReturn = "dashboard";
@@ -2321,9 +2472,20 @@ function renderCfdiFormBlock(){
   const cfdi = pendingCfdiData;
   if(!cfdi){ el.innerHTML = ""; return; }
   const check = cfdiRfcCheck(cfdi, fiscalProfile.rfc);
-  let badge = "CFDI leído";
-  if(check.status==="match") badge = "CFDI a tu RFC";
+  let badge = cfdi.fuente==="xml" ? "CFDI leído del XML" : "CFDI leído";
+  if(check.status==="match") badge = cfdi.fuente==="xml" ? "XML a tu RFC" : "CFDI a tu RFC";
   if(check.status==="mismatch") badge = "CFDI a otro RFC";
+  const extra = cfdi.fuente==="xml" ? [
+    cfdi.nombreEmisor ? `<div class="cfdi-row"><span>Emisor</span><span>${escapeHtml(cfdi.nombreEmisor)}</span></div>` : "",
+    cfdi.subtotal!=null ? `<div class="cfdi-row"><span>Subtotal</span><span>${fmtMoney(cfdi.subtotal)}</span></div>` : "",
+    cfdi.descuento ? `<div class="cfdi-row"><span>Descuento</span><span>${fmtMoney(cfdi.descuento)}</span></div>` : "",
+    cfdi.ivaTrasladado!=null ? `<div class="cfdi-row"><span>IVA trasladado</span><span>${fmtMoney(cfdi.ivaTrasladado)}</span></div>` : "",
+    cfdi.isrRetenido ? `<div class="cfdi-row"><span>ISR retenido</span><span>${fmtMoney(cfdi.isrRetenido)}</span></div>` : "",
+    cfdi.ivaRetenido ? `<div class="cfdi-row"><span>IVA retenido</span><span>${fmtMoney(cfdi.ivaRetenido)}</span></div>` : "",
+    cfdi.formaPagoLabel ? `<div class="cfdi-row"><span>Forma de pago</span><span>${escapeHtml(cfdi.formaPagoLabel)}</span></div>` : "",
+    cfdi.metodoPagoCfdi ? `<div class="cfdi-row"><span>Método</span><span>${escapeHtml(cfdi.metodoPagoCfdi)}</span></div>` : "",
+    cfdi.usoCfdi ? `<div class="cfdi-row"><span>Uso CFDI</span><span>${escapeHtml(cfdi.usoCfdi)}</span></div>` : ""
+  ].join("") : "";
   el.innerHTML = `
     <div class="cfdi-block" style="margin-bottom:8px;">
       <div class="cfdi-title">${escapeHtml(badge)}</div>
@@ -2331,6 +2493,7 @@ function renderCfdiFormBlock(){
       ${cfdi.rfcEmisor ? `<div class="cfdi-row"><span>RFC emisor</span><span>${escapeHtml(cfdi.rfcEmisor)}</span></div>` : ""}
       ${cfdi.rfcReceptor ? `<div class="cfdi-row"><span>RFC receptor</span><span>${escapeHtml(cfdi.rfcReceptor)}</span></div>` : ""}
       ${cfdi.total ? `<div class="cfdi-row"><span>Total del CFDI</span><span>${escapeHtml(String(cfdi.total))}</span></div>` : ""}
+      ${extra}
     </div>`;
 }
 function refreshFiscalUI(){
@@ -2345,7 +2508,10 @@ function refreshFiscalUI(){
     cfdi: pendingCfdiData
   };
   const a = assessDeduction(draft, fiscalProfile.rfc);
-  let html = a.issues.map(i=>`<div class="fiscal-alert">${escapeHtml(i.text)}</div>`).join("");
+  const v = ticketVerdict(draft, fiscalProfile.rfc);
+  const icon = v.status==="ok" ? "✅" : v.status==="falta" ? "⚠️" : "❌";
+  let html = `<div class="verdict-line"><span class="verdict-badge verdict-${v.status}">${icon} ${escapeHtml(v.label)}</span><span class="verdict-reason">${escapeHtml(v.reason)}</span></div>`;
+  html += a.issues.map(i=>`<div class="fiscal-alert">${escapeHtml(i.text)}</div>`).join("");
   html += a.notes.map(n=>`<div class="hint warn">${escapeHtml(n)}</div>`).join("");
   if(a.quiere && a.issues.length===0){
     const ok = a.tipo==="trabajo"
@@ -2373,6 +2539,12 @@ async function loadFiscalProfile(){
         fiscalProfile.tutorialSeen = true;
         try{ localStorage.setItem(TUTORIAL_LS_KEY, "1"); }catch(e){}
       }
+      if(Array.isArray(d.ingresos)) ingresosCache = d.ingresos;
+      else {
+        try{ ingresosCache = JSON.parse(localStorage.getItem("outgo.ingresos.v1")||"[]"); }catch(err){ ingresosCache = []; }
+      }
+      if(Array.isArray(d.tarifaIsr) && d.tarifaIsr.length) fiscalProfile.tarifaIsr = d.tarifaIsr;
+      if(d.isrPagosOverride && typeof d.isrPagosOverride==="object") fiscalProfile.isrPagosOverride = d.isrPagosOverride;
     }
   }catch(e){
     console.warn("No se pudo leer el perfil fiscal:", e);
@@ -2431,6 +2603,7 @@ function reportRowHTML(row, mode){
     <div class="report-row">
       <div class="report-row-top"><b>${escapeHtml(t.store||"Sin comercio")}</b><span class="report-row-amt">${money}</span></div>
       <div class="report-row-meta">${escapeHtml(t.date||"")} · ${escapeHtml(t.category||"")} · ${escapeHtml(METODO_LABELS[t.metodoPago||""]||"")}${t.cfdi && t.cfdi.uuid ? " · "+escapeHtml(t.cfdi.uuid) : ""}</div>
+      ${verdictBadgeHTML(t, true)}
       ${notes}${reasons}
     </div>`;
 }
@@ -2454,10 +2627,12 @@ function renderReporte(){
       ${report.sinSubtotal ? `<div class="hint warn">${report.sinSubtotal} comprobante(s) válido(s) no traen subtotal y no suman arriba.</div>` : ""}
       ${report.sinIva ? `<div class="hint warn">${report.sinIva} comprobante(s) válido(s) no traen IVA y no suman al acreditable.</div>` : ""}
       ${report.personalCount ? `<div class="hint">${report.personalCount} deducción(es) personal(es) de este mes se ven en la pestaña del año, no en el ISR/IVA mensual.</div>` : ""}
+      ${monthlyEstimateHTML(month)}
+      ${verdictFiltersHTMLWrap()}
       <div class="section-title">Entran al mes</div>
-      ${report.included.length ? report.included.map(r=>reportRowHTML(r,"incluido")).join("") : `<div class="empty-state">Nada con CFDI válido de gasto de trabajo en este mes.</div>`}
+      ${filterReportRows(report.included).length ? filterReportRows(report.included).map(r=>reportRowHTML(r,"incluido")).join("") : `<div class="empty-state">Nada que mostrar con este filtro.</div>`}
       <div class="section-title">Quedaron fuera</div>
-      ${report.excluded.length ? report.excluded.map(r=>reportRowHTML(r,"excluido")).join("") : `<div class="empty-state">No hay gastos de trabajo excluidos en este mes.</div>`}
+      ${filterReportRows(report.excluded).length ? filterReportRows(report.excluded).map(r=>reportRowHTML(r,"excluido")).join("") : `<div class="empty-state">Nada que mostrar con este filtro.</div>`}
     `;
     return;
   }
@@ -2508,8 +2683,9 @@ function renderReporte(){
         ${cat===LENTES_CATEGORY && report.lentesExceso>0 ? `<div class="report-note">Gastado ${fmtMoney(val)}; se cuentan ${fmtMoney(report.lentesDeducible)} por el tope de lentes.</div>` : ""}
       </div>`).join("") : `<div class="empty-state">No hay deducciones personales válidas dentro del tope en ${escapeHtml(String(year))}.</div>`}
     ${report.sinClasificar ? `<div class="hint warn">${report.sinClasificar} ticket(s) del año siguen sin clasificar y no entran a este total.</div>` : ""}
+    ${verdictFiltersHTMLWrap()}
     <div class="section-title">Quedaron fuera</div>
-    ${report.excluded.length ? report.excluded.map(r=>reportRowHTML(r,"excluido")).join("") : `<div class="empty-state">No hay deducciones personales excluidas en este año.</div>`}
+    ${filterReportRows(report.excluded).length ? filterReportRows(report.excluded).map(r=>reportRowHTML(r,"excluido")).join("") : `<div class="empty-state">Nada que mostrar con este filtro.</div>`}
   `;
 }
 function syncReporteInputsFromProfile(){
@@ -2524,6 +2700,7 @@ function syncReporteInputsFromProfile(){
   if(uma) uma.value = fiscalProfile.umaDiaria || DEFAULT_UMA_DIARIA;
   const note = document.getElementById("reporteUmaNote");
   if(note) note.textContent = umaHintText(parseFloat(uma && uma.value) || fiscalProfile.umaDiaria);
+  syncPagosInput();
 }
 function readYearAssumptions(persist){
   const ingEl = document.getElementById("reporteIngreso");
@@ -2543,11 +2720,13 @@ function exportReporteCSV(){
   if(!lastReporte) renderReporte();
   const rows = [];
   if(lastReporte.kind==="mes"){
-    rows.push(["estado","fecha","comercio","categoria","tipo","metodo_pago","subtotal","iva","total","uuid","rfc_receptor","motivos"].map(csvEscapeCell));
+    rows.push(["estado","fecha","comercio","categoria","tipo","metodo_pago","semaforo","motivo","subtotal","iva","total","uuid","rfc_receptor","motivos"].map(csvEscapeCell));
     const push = (r, estado)=>{
       const t = r.ticket;
+      const v = ticketVerdict(t);
       rows.push([
         estado, t.date, t.store, t.category, TIPO_LABELS[r.assessment.tipo], METODO_LABELS[t.metodoPago||""]||"",
+        v.label, v.reason,
         ticketSubtotalTrabajo(t)??"", ticketIva(t)??"", t.amount,
         t.cfdi?.uuid||"", t.cfdi?.rfcReceptor||"",
         r.assessment.issues.map(i=>i.text).concat(r.assessment.notes||[]).join(" | ")
@@ -2559,6 +2738,11 @@ function exportReporteCSV(){
     rows.push(["subtotal_valido", lastReporte.subtotal].map(csvEscapeCell));
     rows.push(["iva_acreditable", lastReporte.iva].map(csvEscapeCell));
     rows.push(["comprobantes_validos", lastReporte.count].map(csvEscapeCell));
+    const estCsv = buildMonthlyEstimate(lastReporte.month, document.getElementById("reportePagosPrevios")?.value || "");
+    rows.push(["iva_trasladado_cobrado", estCsv.ivaTrasladado].map(csvEscapeCell));
+    rows.push(["iva_retenido", estCsv.ivaRetenido].map(csvEscapeCell));
+    rows.push(["iva_a_pagar", estCsv.ivaPagar].map(csvEscapeCell));
+    rows.push(["isr_provisional_estimado", estCsv.isrMes].map(csvEscapeCell));
     downloadBlob("\uFEFF"+rows.map(r=>r.join(",")).join("\n"), `outgo-declaracion-${lastReporte.month}.csv`, "text/csv;charset=utf-8;");
     return;
   }
@@ -2625,6 +2809,9 @@ function exportReportePDF(){
       write(`Subtotal de gastos de trabajo con CFDI valido: ${fmtMoney(lastReporte.subtotal)}`, 11, "normal", 2);
       write(`IVA acreditable: ${fmtMoney(lastReporte.iva)}`, 11, "normal", 2);
       write(`Comprobantes validos: ${lastReporte.count}`, 11, "normal", 8);
+      const estPdf = buildMonthlyEstimate(lastReporte.month, document.getElementById("reportePagosPrevios")?.value || "");
+      write(`Estimado, no es asesoria fiscal. IVA trasladado ${fmtMoney(estPdf.ivaTrasladado)} - IVA retenido ${fmtMoney(estPdf.ivaRetenido)} - IVA acreditable ${fmtMoney(estPdf.ivaAcreditable)} = ${estPdf.ivaPagar<0 ? "saldo a favor "+fmtMoney(Math.abs(estPdf.ivaPagar)) : "IVA a pagar "+fmtMoney(estPdf.ivaPagar)}.`, 10, "normal", 2);
+      write(`ISR provisional estimado del mes: ${fmtMoney(estPdf.isrMes)}. Base acumulada ${fmtMoney(estPdf.base)} con tarifa de ${estPdf.monthNum} meses.`, 10, "normal", 8);
       write("Entran al mes", 12, "bold", 4);
       if(!lastReporte.included.length) write("Ninguno.", 10, "normal", 6);
       lastReporte.included.forEach(r=>{
@@ -2715,6 +2902,23 @@ function startLocalPreview(){
   ticketsById = {};
   allTicketsCache.forEach(t=> ticketsById[t.id]=t);
   ticketsCacheReady = true;
+  ingresosCache = [{
+    id:"ing1",
+    fecha:"2026-10-12",
+    cliente:"Productora Norte",
+    rfcCliente:"PNO010101AA1",
+    subtotal:40000,
+    descuento:0,
+    ivaTrasladado:6400,
+    isrRetenido:4000,
+    ivaRetenido:4266.67,
+    total:38133.33,
+    uuid:"dddddddd-dddd-dddd-dddd-dddddddddddd",
+    formaPago:"03",
+    metodoPagoCfdi:"PUE",
+    usoCfdi:"G03",
+    fuente:"manual"
+  }];
   refreshDashboard();
   refreshHistory();
   refreshRfcPrompt();
@@ -3499,6 +3703,7 @@ function showView(name){
   if(name==="dashboard") refreshDashboard();
   if(name==="history") refreshHistory();
   if(name==="ajustes") fillAjustesForm();
+  if(name==="ingresos") renderIngresos();
   if(name==="reporte"){
     syncReporteInputsFromProfile();
     renderReporte();
@@ -4278,6 +4483,7 @@ async function refreshDashboard(){
   renderProductsListing();
   loadBanners();
   refreshRfcPrompt();
+  renderHomeReminder();
 }
 
 /* =========================================================
@@ -4478,7 +4684,7 @@ function renderPeriodContent(){
     let html = `<div class="section-title">Gastos del día</div>`;
     html += renderProductCategorySection(list);
     html += renderDeducibleSummary(list);
-    html += `<div class="section-title">Tickets</div>` + renderTicketList(list);
+    html += `<div class="section-title">Tickets</div>` + verdictFiltersHTMLWrap() + renderTicketList(list);
     container.innerHTML = html;
   }
 
@@ -4504,7 +4710,7 @@ function renderPeriodContent(){
     });
     html += renderProductCategorySection(list);
     html += renderDeducibleSummary(list);
-    html += `<div class="section-title">Tickets</div>` + renderTicketList(list);
+    html += `<div class="section-title">Tickets</div>` + verdictFiltersHTMLWrap() + renderTicketList(list);
     container.innerHTML = html;
   }
 
@@ -4517,7 +4723,7 @@ function renderPeriodContent(){
       html += renderProductCategorySection(list);
       html += renderDeducibleSummary(list);
     }
-    html += `<div class="section-title">Tickets</div>` + renderTicketList(list);
+    html += `<div class="section-title">Tickets</div>` + verdictFiltersHTMLWrap() + renderTicketList(list);
     container.innerHTML = html;
   }
 
@@ -4532,12 +4738,15 @@ function tipoMetaHTML(t){
 
 function renderTicketList(list){
   if(!list.length) return `<div class="empty-state">No hay tickets registrados en este período.</div>`;
-  return list.map(t=>`
+  const shown = list.filter(ticketPassesVerdict);
+  if(!shown.length) return `<div class="empty-state">Ningún ticket coincide con este semáforo.</div>`;
+  return shown.map(t=>`
     <div class="ticket" data-id="${t.id}">
       ${t.image ? `<div class="avatar-wrap">${storeBadgeHTML(t.store)}<span class="photo-dot">📷</span></div>` : storeBadgeHTML(t.store)}
       <div class="info">
         <div class="store">${escapeHtml(t.store)}</div>
         <div class="meta">${t.category} · ${t.date}${t.description ? " · "+escapeHtml(t.description) : ""}${t.items && t.items.length ? " · "+t.items.length+" producto"+(t.items.length>1?"s":"") : ""}${tipoMetaHTML(t)}</div>
+        ${verdictBadgeHTML(t)}
       </div>
       <div class="amount">${fmtMoney(t.amount)}</div>
       <button class="del" data-id="${t.id}" title="Eliminar">🗑</button>
@@ -4600,7 +4809,7 @@ function renderReceiptHTML(t){
   const cfdiBlock = t.cfdi ? `
     <div class="receipt-dashes"></div>
     <div class="cfdi-block">
-      <div class="cfdi-title">🧾 CFDI detectado por QR</div>
+      <div class="cfdi-title">${t.cfdi.fuente==="xml" ? "🧾 CFDI leído del XML" : "🧾 CFDI detectado por QR"}</div>
       ${t.cfdi.uuid ? `<div class="cfdi-row"><span>UUID/Folio</span><span>${escapeHtml(t.cfdi.uuid)}</span></div>` : ""}
       ${t.cfdi.rfcEmisor ? `<div class="cfdi-row"><span>RFC emisor</span><span>${escapeHtml(t.cfdi.rfcEmisor)}</span></div>` : ""}
       ${t.cfdi.rfcReceptor ? `<div class="cfdi-row"><span>RFC receptor</span><span>${escapeHtml(t.cfdi.rfcReceptor)}</span></div>` : ""}
@@ -4623,6 +4832,7 @@ function renderReceiptHTML(t){
         </div>
       </div>
       <div class="receipt-chips">${chips}</div>
+      ${verdictBadgeHTML(t, true)}
       ${t.description ? `<div class="receipt-note" style="margin-bottom:10px;">${escapeHtml(t.description)}</div>` : ""}
       <div class="receipt-dashes"></div>
       ${itemsHtml}
@@ -4912,12 +5122,13 @@ document.getElementById("btnExportCSV").addEventListener("click", async ()=>{
   const rows = [[
     "ticket_id","fecha","comercio","categoria_ticket","descripcion_ticket",
     "producto","categoria_producto","cantidad","costo_unitario","descuento_producto","subtotal_producto",
-    "total_ticket","subtotal_ticket","iva","isr","deducible","tipo_deduccion","metodo_pago","cfdi_uuid"
+    "total_ticket","subtotal_ticket","iva","isr","deducible","tipo_deduccion","metodo_pago","semaforo","motivo_semaforo","cfdi_uuid"
   ]];
   const csvEscape = (v)=> `"${String(v??"").replace(/"/g,'""')}"`;
 
   list.forEach(t=>{
     const tipo = resolveTipoDeduccion(t);
+    const ver = ticketVerdict(t);
     const base = [
       t.id, t.date, t.store, t.category, t.description||"",
     ];
@@ -4926,6 +5137,8 @@ document.getElementById("btnExportCSV").addEventListener("click", async ()=>{
       deducibleFromTipo(tipo)?"Sí":"No",
       TIPO_LABELS[tipo]||"",
       METODO_LABELS[t.metodoPago||""]||"",
+      ver.label,
+      ver.reason,
       t.cfdi?.uuid||""
     ];
     if(t.items && t.items.length){
@@ -5144,6 +5357,8 @@ async function refreshHistory(){
   const list = await ensureTicketsLoaded();
   list.forEach(t=> ticketsById[t.id]=t);
   const historyEl = document.getElementById("historyList");
+  const filters = document.getElementById("historyVerdictFilters");
+  if(filters) filters.innerHTML = verdictFilterButtonsHTML();
   historyEl.innerHTML = renderTicketList(list);
   attachLogoFallbacks(historyEl);
 }
@@ -5214,7 +5429,17 @@ document.querySelectorAll(".report-tab").forEach(btn=>{
     renderReporte();
   });
 });
-document.getElementById("reporteMes").addEventListener("change", renderReporte);
+document.getElementById("reporteMes").addEventListener("change", ()=>{ syncPagosInput(); renderReporte(); });
+document.getElementById("reportePagosPrevios").addEventListener("input", renderReporte);
+document.getElementById("reportePagosPrevios").addEventListener("change", async ()=>{
+  const mes = document.getElementById("reporteMes").value;
+  const raw = document.getElementById("reportePagosPrevios").value;
+  if(!fiscalProfile.isrPagosOverride) fiscalProfile.isrPagosOverride = {};
+  if(raw==="") delete fiscalProfile.isrPagosOverride[mes];
+  else fiscalProfile.isrPagosOverride[mes] = parseFloat(raw)||0;
+  try{ await persistTarifaYPagos(); }catch(e){ console.warn(e); }
+  renderReporte();
+});
 document.getElementById("reporteAnio").addEventListener("change", renderReporte);
 document.getElementById("reporteIngreso").addEventListener("input", ()=> readYearAssumptions(false) || renderReporte());
 document.getElementById("reporteUma").addEventListener("input", ()=> readYearAssumptions(false) || renderReporte());
@@ -5222,6 +5447,693 @@ document.getElementById("reporteIngreso").addEventListener("change", ()=>{ readY
 document.getElementById("reporteUma").addEventListener("change", ()=>{ readYearAssumptions(true); renderReporte(); });
 document.getElementById("btnReporteCSV").addEventListener("click", exportReporteCSV);
 document.getElementById("btnReportePDF").addEventListener("click", exportReportePDF);
+
+
+/* =========================================================
+   SEMÁFORO, XML DE CFDI, INGRESOS Y RECORDATORIOS
+   ========================================================= */
+const VERDICT_SHORT = {
+  sin_cfdi: "Sin factura",
+  rfc_distinto: "RFC no coincide",
+  sin_rfc_guardado: "Falta tu RFC",
+  sin_rr: "QR sin RFC receptor",
+  sin_metodo_pago: "Falta método de pago",
+  efectivo_mayor_2000: "Efectivo mayor a 2,000",
+  gasolina_efectivo: "Gasolina en efectivo",
+  sin_clasificar: "Falta el tipo de deducción"
+};
+const FORMA_PAGO_SAT = {
+  "01": ["efectivo", "Efectivo"],
+  "02": ["", "Cheque nominativo"],
+  "03": ["transferencia", "Transferencia electrónica"],
+  "04": ["credito", "Tarjeta de crédito"],
+  "28": ["debito", "Tarjeta de débito"],
+  "99": ["", "Por definir"]
+};
+const DEFAULT_TARIFA_ISR = [
+  { li: 0.01, ls: 844.59, cuota: 0, pct: 1.92 },
+  { li: 844.60, ls: 7168.51, cuota: 16.22, pct: 6.40 },
+  { li: 7168.52, ls: 12598.02, cuota: 420.95, pct: 10.88 },
+  { li: 12598.03, ls: 14644.64, cuota: 1011.68, pct: 16 },
+  { li: 14644.65, ls: 17533.64, cuota: 1339.14, pct: 17.92 },
+  { li: 17533.65, ls: 35362.83, cuota: 1856.84, pct: 21.36 },
+  { li: 35362.84, ls: 55736.68, cuota: 5665.16, pct: 23.52 },
+  { li: 55736.69, ls: 106410.50, cuota: 10457.09, pct: 30 },
+  { li: 106410.51, ls: 141880.66, cuota: 25659.23, pct: 32 },
+  { li: 141880.67, ls: 425641.99, cuota: 37009.69, pct: 34 },
+  { li: 425642.00, ls: null, cuota: 133488.54, pct: 35 }
+];
+const TARIFA_HINT = "Tarifa mensual del artículo 96 de la LISR para 2026 (Anexo 8 de la RMF, DOF 28 de diciembre de 2025). Para el acumulado se multiplican el límite inferior, el límite superior y la cuota fija por los meses transcurridos; el porcentaje no cambia. El SAT también publica la tarifa del artículo 106 ya armada por mes. Aquí puedes editar los renglones.";
+
+function round2(n){ return Math.round((Number(n)||0) * 100) / 100; }
+function ticketVerdict(ticket, userRfc){
+  const a = assessDeduction(ticket || {}, userRfc==null ? fiscalProfile.rfc : userRfc);
+  if(!a.quiere){
+    let reason = "No está marcado como deducción.";
+    if(a.issues.some(i=>i.code==="gasolina_efectivo")) reason = "Gasolina en efectivo no es deducible.";
+    else if(a.issues.some(i=>i.code==="rfc_distinto")) reason = "La factura no está a tu nombre.";
+    return { status:"no", label:"No deducible", reason, assessment:a };
+  }
+  if(a.issues.length){
+    return {
+      status:"falta",
+      label:"Falta algo",
+      reason: a.issues.map(i=> VERDICT_SHORT[i.code] || i.text).join(" · "),
+      assessment:a
+    };
+  }
+  return {
+    status:"ok",
+    label:"Deducible",
+    reason: a.tipo==="trabajo" ? "Gasto de trabajo con factura válida." : "Deducción personal con factura válida.",
+    assessment:a
+  };
+}
+function ticketPassesVerdict(t){
+  if(verdictFilter==="todos") return true;
+  return ticketVerdict(t).status===verdictFilter;
+}
+function verdictFilterButtonsHTML(){
+  const opts = [["todos","Todos"],["ok","✅ Deducible"],["falta","⚠️ Falta algo"],["no","❌ No deducible"]];
+  return opts.map(([v,l])=>`<button type="button" data-verdict="${v}" class="${verdictFilter===v?"active":""}">${l}</button>`).join("");
+}
+function verdictFiltersHTMLWrap(){
+  return `<div class="verdict-filters">${verdictFilterButtonsHTML()}</div>`;
+}
+function filterReportRows(rows){
+  return (rows||[]).filter(r=> ticketPassesVerdict(r.ticket));
+}
+function verdictBadgeHTML(t, detail){
+  const v = ticketVerdict(t);
+  const icon = v.status==="ok" ? "✅" : v.status==="falta" ? "⚠️" : "❌";
+  const showReason = detail || v.status!=="ok";
+  const rem = facturaReminder(t);
+  return `<div class="verdict-line"><span class="verdict-badge verdict-${v.status}">${icon} ${escapeHtml(v.label)}</span>${showReason ? `<span class="verdict-reason">${escapeHtml(v.reason)}</span>` : ""}</div>${rem ? `<div class="factura-reminder">${escapeHtml(rem)}</div>` : ""}`;
+}
+function facturaReminder(t, today){
+  if(!t || t.cfdi) return "";
+  const now = today || new Date();
+  const parts = String(t.date||"").split("-").map(Number);
+  if(parts.length<2 || parts[0]!==now.getFullYear() || parts[1]!==now.getMonth()+1) return "";
+  const last = new Date(parts[0], parts[1], 0).getDate();
+  const left = last - now.getDate();
+  const when = left<=0 ? "hoy es el último día" : left===1 ? "queda 1 día" : `quedan ${left} días`;
+  return `Pide tu factura antes de fin de mes · ${when}`;
+}
+function declaracionReminder(today){
+  const now = today || new Date();
+  const day = now.getDate();
+  let due = new Date(now.getFullYear(), now.getMonth(), 17);
+  let period = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  if(day>17){
+    due = new Date(now.getFullYear(), now.getMonth()+1, 17);
+    period = new Date(now.getFullYear(), now.getMonth(), 1);
+  }
+  const mes = (d)=> d.toLocaleDateString("es-MX", { month:"long" });
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const left = Math.round((due - start) / 86400000);
+  const when = left<=0 ? "Hoy es el día 17." : left===1 ? "Queda 1 día." : `Quedan ${left} días.`;
+  return {
+    title: "Presenta tu declaración mensual antes del día 17",
+    detail: `La de ${mes(period)} se presenta a más tardar el 17 de ${mes(due)}. ${when}`
+  };
+}
+function renderHomeReminder(){
+  const el = document.getElementById("homeReminder");
+  if(!el) return;
+  const r = declaracionReminder();
+  el.innerHTML = `<strong>${escapeHtml(r.title)}</strong><span>${escapeHtml(r.detail)}</span>`;
+}
+
+function xmlLocal(node){
+  return (node.localName || String(node.nodeName||"").split(":").pop());
+}
+function xmlChildren(el, name){
+  return [...(el.children||[])].filter(n=> xmlLocal(n)===name);
+}
+function xmlAttr(el, name){
+  if(!el) return "";
+  const direct = el.getAttribute(name);
+  if(direct!=null && direct!=="") return direct;
+  for(const a of [...(el.attributes||[])]){
+    const ln = a.localName || String(a.name).split(":").pop();
+    if(ln.toLowerCase()===name.toLowerCase()) return a.value;
+  }
+  return "";
+}
+function xmlNum(el, name){
+  const n = parseFloat(xmlAttr(el, name));
+  return isNaN(n) ? 0 : round2(n);
+}
+function parseCfdiXml(xmlText){
+  const text = String(xmlText||"").replace(/^\uFEFF/, "").trim();
+  if(!text) throw new Error("El archivo está vacío.");
+  const doc = new DOMParser().parseFromString(text, "text/xml");
+  if(doc.getElementsByTagName("parsererror").length) throw new Error("No es un XML válido.");
+  const comp = [...doc.getElementsByTagName("*")].find(n=> xmlLocal(n)==="Comprobante");
+  if(!comp) throw new Error("No encontré un comprobante CFDI.");
+  const version = xmlAttr(comp, "Version") || xmlAttr(comp, "version");
+  if(version!=="4.0" && version!=="3.3"){
+    throw new Error(version ? `Solo leo CFDI 4.0 y 3.3. Este archivo dice versión ${version}.` : "El comprobante no trae versión 4.0 ni 3.3.");
+  }
+  const emisor = xmlChildren(comp, "Emisor")[0];
+  const receptor = xmlChildren(comp, "Receptor")[0];
+  const conceptosNode = xmlChildren(comp, "Conceptos")[0];
+  const impuestos = xmlChildren(comp, "Impuestos")[0];
+  const tfd = [...doc.getElementsByTagName("*")].find(n=> xmlLocal(n)==="TimbreFiscalDigital");
+  const conceptos = conceptosNode ? xmlChildren(conceptosNode, "Concepto").map(c=>({
+    descripcion: xmlAttr(c, "Descripcion"),
+    cantidad: xmlNum(c, "Cantidad") || 1,
+    valorUnitario: xmlNum(c, "ValorUnitario"),
+    importe: xmlNum(c, "Importe"),
+    descuento: xmlNum(c, "Descuento"),
+    claveProdServ: xmlAttr(c, "ClaveProdServ")
+  })) : [];
+  const sumImp = (root, bucket, pred)=>{
+    if(!root) return 0;
+    let total = 0;
+    xmlChildren(root, bucket).forEach(group=>{
+      const rowName = bucket==="Traslados" ? "Traslado" : "Retencion";
+      xmlChildren(group, rowName).forEach(row=>{ if(pred(row)) total += xmlNum(row, "Importe"); });
+    });
+    return round2(total);
+  };
+  const isIva = (row)=> xmlAttr(row,"Impuesto")==="002";
+  const isIsr = (row)=> xmlAttr(row,"Impuesto")==="001";
+  let ivaTrasladado = sumImp(impuestos, "Traslados", isIva);
+  let isrRetenido = sumImp(impuestos, "Retenciones", isIsr);
+  let ivaRetenido = sumImp(impuestos, "Retenciones", isIva);
+  if(!impuestos && conceptosNode){
+    xmlChildren(conceptosNode, "Concepto").forEach(c=>{
+      const imp = xmlChildren(c, "Impuestos")[0];
+      ivaTrasladado = round2(ivaTrasladado + sumImp(imp, "Traslados", isIva));
+      isrRetenido = round2(isrRetenido + sumImp(imp, "Retenciones", isIsr));
+      ivaRetenido = round2(ivaRetenido + sumImp(imp, "Retenciones", isIva));
+    });
+  }
+  const fechaRaw = xmlAttr(comp, "Fecha");
+  const forma = xmlAttr(comp, "FormaPago");
+  const formaInfo = FORMA_PAGO_SAT[forma] || ["", forma ? `Forma ${forma}` : ""];
+  return {
+    fuente: "xml",
+    version,
+    uuid: tfd ? (xmlAttr(tfd, "UUID") || "") : "",
+    rfcEmisor: normalizeRFC(xmlAttr(emisor, "Rfc")),
+    nombreEmisor: xmlAttr(emisor, "Nombre"),
+    rfcReceptor: normalizeRFC(xmlAttr(receptor, "Rfc")),
+    nombreReceptor: xmlAttr(receptor, "Nombre"),
+    fecha: fechaRaw ? fechaRaw.slice(0,10) : "",
+    subtotal: xmlNum(comp, "SubTotal"),
+    descuento: xmlNum(comp, "Descuento"),
+    ivaTrasladado,
+    isrRetenido,
+    ivaRetenido,
+    total: xmlNum(comp, "Total"),
+    formaPago: forma,
+    formaPagoLabel: formaInfo[1],
+    metodoPagoApp: formaInfo[0],
+    metodoPagoCfdi: xmlAttr(comp, "MetodoPago"),
+    usoCfdi: xmlAttr(receptor, "UsoCFDI"),
+    tipoDeComprobante: xmlAttr(comp, "TipoDeComprobante"),
+    conceptos
+  };
+}
+function cfdiRole(parsed){
+  const mine = normalizeRFC(fiscalProfile.rfc);
+  const emisor = normalizeRFC(parsed.rfcEmisor);
+  const receptor = normalizeRFC(parsed.rfcReceptor);
+  if(mine && emisor===mine) return "ingreso";
+  return "gasto";
+}
+function uuidExists(uuid){
+  const id = String(uuid||"").toLowerCase();
+  if(!id) return false;
+  if((allTicketsCache||[]).some(t=> String(t.cfdi && t.cfdi.uuid || "").toLowerCase()===id)) return true;
+  return ingresosCache.some(i=> String(i.uuid||"").toLowerCase()===id);
+}
+function ticketFromParsedCfdi(parsed){
+  const nombre = parsed.nombreEmisor || parsed.rfcEmisor || "Factura";
+  const match = findStoreDef(nombre);
+  const category = (match && match.category) || "Otros";
+  const decision = classifyScannedCfdi(parsed, category, fiscalProfile.rfc);
+  return {
+    store: match ? nombre : nombre,
+    category,
+    description: (parsed.conceptos||[]).map(c=>c.descripcion).filter(Boolean).slice(0,3).join("; "),
+    date: parsed.fecha || todayISO(),
+    amount: parsed.total || 0,
+    subtotal: parsed.subtotal,
+    iva: parsed.ivaTrasladado,
+    isr: parsed.isrRetenido,
+    items: (parsed.conceptos||[]).map(c=>({
+      description: c.descripcion || "Concepto",
+      quantity: c.cantidad || 1,
+      cost: c.valorUnitario || c.importe || 0,
+      discount: c.descuento || 0,
+      category: "Otros"
+    })),
+    tipoDeduccion: decision.tipo,
+    deducible: deducibleFromTipo(decision.tipo),
+    metodoPago: parsed.metodoPagoApp || "",
+    cfdi: parsed,
+    image: null
+  };
+}
+function ingresoFromParsedCfdi(parsed){
+  return {
+    id: "ing-"+Date.now()+"-"+Math.random().toString(36).slice(2,6),
+    fecha: parsed.fecha || todayISO(),
+    cliente: parsed.nombreReceptor || "",
+    rfcCliente: parsed.rfcReceptor || "",
+    subtotal: parsed.subtotal || 0,
+    descuento: parsed.descuento || 0,
+    ivaTrasladado: parsed.ivaTrasladado || 0,
+    isrRetenido: parsed.isrRetenido || 0,
+    ivaRetenido: parsed.ivaRetenido || 0,
+    total: parsed.total || 0,
+    uuid: parsed.uuid || "",
+    formaPago: parsed.formaPago || "",
+    metodoPagoCfdi: parsed.metodoPagoCfdi || "",
+    usoCfdi: parsed.usoCfdi || "",
+    fuente: "xml"
+  };
+}
+function readXmlFile(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(String(reader.result||""));
+    reader.onerror = ()=> reject(new Error("No se pudo leer " + (file && file.name)));
+    reader.readAsText(file);
+  });
+}
+async function persistTicketLocalOrCloud(ticket){
+  if(!currentUser || isLocalPreview()){
+    ticket.id = ticket.id || ("xml-"+Date.now()+"-"+Math.random().toString(36).slice(2,6));
+    allTicketsCache.unshift(ticket);
+    ticketsById[ticket.id] = ticket;
+    return ticket.id;
+  }
+  const id = await addTicket(ticket);
+  ticket.id = id;
+  ticketsCacheReady = false;
+  return id;
+}
+async function persistIngresos(){
+  try{ localStorage.setItem("outgo.ingresos.v1", JSON.stringify(ingresosCache)); }catch(e){}
+  if(!currentUser || !db || isLocalPreview()) return;
+  await db.collection("userProfiles").doc(currentUser.uid).set({
+    ingresos: stripUndefinedDeep(ingresosCache)
+  }, { merge:true });
+}
+async function persistTarifaYPagos(){
+  if(!currentUser || !db || isLocalPreview()) return;
+  await db.collection("userProfiles").doc(currentUser.uid).set({
+    tarifaIsr: fiscalProfile.tarifaIsr || null,
+    isrPagosOverride: fiscalProfile.isrPagosOverride || {}
+  }, { merge:true });
+}
+function applyParsedCfdiToForm(parsed, fileName){
+  pendingCfdiData = parsed;
+  const nombre = parsed.nombreEmisor || "";
+  if(nombre){
+    const match = findStoreDef(nombre);
+    fStore.value = match ? nombre : "Otro";
+    document.getElementById("fStoreOtherWrap").style.display = fStore.value==="Otro" ? "block" : "none";
+    document.getElementById("fStoreOther").value = match ? "" : nombre;
+  }
+  if(parsed.fecha) document.getElementById("fDate").value = parsed.fecha;
+  document.getElementById("fSubtotal").value = parsed.subtotal!=null ? parsed.subtotal : "";
+  document.getElementById("fIVA").value = parsed.ivaTrasladado!=null ? parsed.ivaTrasladado : "";
+  document.getElementById("fISR").value = parsed.isrRetenido!=null ? parsed.isrRetenido : "";
+  if(parsed.total) document.getElementById("fAmount").value = parsed.total;
+  if(parsed.metodoPagoApp) document.getElementById("fMetodoPago").value = parsed.metodoPagoApp;
+  if(parsed.conceptos && parsed.conceptos.length){
+    if(!document.getElementById("fDescription").value){
+      document.getElementById("fDescription").value = parsed.conceptos.map(c=>c.descripcion).filter(Boolean).slice(0,2).join("; ");
+    }
+    clearItemsUI();
+    parsed.conceptos.forEach(c=> addItemRow({
+      description: c.descripcion,
+      quantity: c.cantidad || 1,
+      cost: c.valorUnitario || c.importe || 0,
+      discount: c.descuento || 0,
+      category: "Otros"
+    }));
+  }
+  showTaxFieldsIfNeeded();
+  const decision = classifyScannedCfdi(parsed, fCategory.value, fiscalProfile.rfc);
+  setTipoDeduccion(decision.tipo);
+  tipoManual = decision.blockAuto || tipoManual;
+  const hint = document.getElementById("ocrHint");
+  const propio = cfdiRole(parsed)==="ingreso" ? " Este XML lo emitiste tú. Si es un honorario, regístralo en Ingresos." : "";
+  hint.style.display = "block";
+  hint.className = decision.blockAuto || propio ? "hint alert" : "hint warn";
+  hint.textContent = [`XML ${fileName||""}`.trim()+": los montos de la factura sustituyen a la foto.", decision.message, propio].filter(Boolean).join(" ");
+  updateDeducibleHint();
+  refreshFiscalUI();
+}
+async function importXmlFiles(fileList, prefer){
+  const files = [...(fileList||[])];
+  const notes = [];
+  let gastos = 0, ingresos = 0, repetidos = 0;
+  for(const file of files){
+    try{
+      const parsed = parseCfdiXml(await readXmlFile(file));
+      parsed.archivo = file.name || "";
+      if(parsed.uuid && uuidExists(parsed.uuid)){ repetidos++; notes.push(`${file.name}: el folio ya estaba guardado.`); continue; }
+      let role = cfdiRole(parsed);
+      if(prefer==="ingreso"){
+        if(!normalizeRFC(fiscalProfile.rfc) || role==="ingreso") role = "ingreso";
+        else { role = "gasto"; notes.push(`${file.name}: la factura no la emitiste tú; se guardó como gasto.`); }
+      } else if(prefer==="gasto"){
+        if(role==="ingreso") notes.push(`${file.name}: este XML lo emitiste tú; se guardó en Ingresos.`);
+        else role = "gasto";
+      }
+      if(role==="ingreso"){
+        ingresosCache.unshift(ingresoFromParsedCfdi(parsed));
+        ingresos++;
+      } else {
+        await persistTicketLocalOrCloud(ticketFromParsedCfdi(parsed));
+        gastos++;
+      }
+    }catch(err){
+      notes.push(`${file.name}: ${err.message}`);
+    }
+  }
+  if(ingresos) await persistIngresos();
+  if(gastos && currentUser && !isLocalPreview()) ticketsCacheReady = false;
+  await refreshDashboard();
+  await refreshHistory();
+  const head = [];
+  if(gastos) head.push(`${gastos} gasto(s)`);
+  if(ingresos) head.push(`${ingresos} ingreso(s)`);
+  if(repetidos) head.push(`${repetidos} ya estaban`);
+  alert((head.length ? "Listo: "+head.join(", ")+"." : "No se importó ningún archivo.") + (notes.length ? "\n\n"+notes.join("\n") : ""));
+}
+
+function activeTarifa(){
+  const custom = fiscalProfile.tarifaIsr;
+  if(Array.isArray(custom) && custom.length){
+    return custom.map(r=>({
+      li: Number(r.li)||0,
+      ls: r.ls==null || r.ls==="" ? null : Number(r.ls),
+      cuota: Number(r.cuota)||0,
+      pct: Number(r.pct)||0
+    }));
+  }
+  return DEFAULT_TARIFA_ISR.map(r=>({ ...r }));
+}
+function scaleTarifa(rows, months){
+  const n = Math.max(1, Number(months)||1);
+  return rows.map(r=>({
+    li: round2(r.li * n),
+    ls: r.ls==null ? null : round2(Number(r.ls) * n),
+    cuota: round2(r.cuota * n),
+    pct: Number(r.pct)||0
+  }));
+}
+function applyTarifa(base, rows){
+  const b = round2(base);
+  if(!(b>0) || !rows.length) return { impuesto: 0 };
+  let row = rows[rows.length-1];
+  for(const r of rows){
+    const hi = r.ls==null ? Infinity : r.ls;
+    if(b >= r.li - 0.001 && b <= hi + 0.001){ row = r; break; }
+  }
+  const excedente = Math.max(0, round2(b - row.li));
+  return { impuesto: round2(row.cuota + excedente * (Number(row.pct)||0) / 100), row };
+}
+function ytdFigures(monthYYYYMM){
+  const year = String(monthYYYYMM||"").slice(0,4);
+  const ingresos = ingresosCache.filter(i=> String(i.fecha||"").slice(0,4)===year && String(i.fecha||"").slice(0,7)<=monthYYYYMM);
+  const ingresosAcum = round2(ingresos.reduce((s,i)=> s + (Number(i.subtotal)||0), 0));
+  const isrRetAcum = round2(ingresos.reduce((s,i)=> s + (Number(i.isrRetenido)||0), 0));
+  const tickets = (allTicketsCache||[]).filter(t=> String(t.date||"").slice(0,4)===year && String(t.date||"").slice(0,7)<=monthYYYYMM);
+  let deducciones = 0;
+  tickets.forEach(t=>{
+    const a = assessDeduction(t, fiscalProfile.rfc);
+    if(a.tipo==="trabajo" && a.issues.length===0){
+      const sub = ticketSubtotalTrabajo(t);
+      if(sub!=null) deducciones += sub;
+    }
+  });
+  return { ingresosAcum, isrRetAcum, deducciones: round2(deducciones), base: round2(ingresosAcum - deducciones) };
+}
+function cargoAcumulado(monthYYYYMM){
+  const monthNum = Number(String(monthYYYYMM).slice(5,7)) || 1;
+  const figs = ytdFigures(monthYYYYMM);
+  const tarifa = scaleTarifa(activeTarifa(), monthNum);
+  const impuesto = applyTarifa(Math.max(0, figs.base), tarifa).impuesto;
+  return { ...figs, monthNum, impuesto, cargo: Math.max(0, round2(impuesto - figs.isrRetAcum)) };
+}
+function buildMonthlyEstimate(monthYYYYMM, pagosOverride){
+  const year = String(monthYYYYMM||"").slice(0,4);
+  const monthNum = Number(String(monthYYYYMM).slice(5,7)) || 1;
+  let pagosCalc = 0;
+  for(let m=1; m<monthNum; m++){
+    const ym = `${year}-${String(m).padStart(2,"0")}`;
+    const pago = Math.max(0, round2(cargoAcumulado(ym).cargo - pagosCalc));
+    pagosCalc = round2(pagosCalc + pago);
+  }
+  const ahora = cargoAcumulado(monthYYYYMM);
+  const manual = pagosOverride!=null && pagosOverride!=="" && !isNaN(Number(pagosOverride));
+  const pagosPrevios = manual ? round2(Number(pagosOverride)) : pagosCalc;
+  const isrMes = round2(ahora.cargo - pagosPrevios);
+  const delMes = ingresosCache.filter(i=> String(i.fecha||"").slice(0,7)===monthYYYYMM);
+  const ivaTrasladado = round2(delMes.reduce((s,i)=> s+(Number(i.ivaTrasladado)||0), 0));
+  const ivaRetenido = round2(delMes.reduce((s,i)=> s+(Number(i.ivaRetenido)||0), 0));
+  let ivaAcreditable = 0;
+  (allTicketsCache||[]).forEach(t=>{
+    if(String(t.date||"").slice(0,7)!==monthYYYYMM) return;
+    const a = assessDeduction(t, fiscalProfile.rfc);
+    if(a.tipo==="trabajo" && a.issues.length===0){
+      const iva = ticketIva(t);
+      if(iva!=null) ivaAcreditable += iva;
+    }
+  });
+  ivaAcreditable = round2(ivaAcreditable);
+  const ivaPagar = round2(ivaTrasladado - ivaRetenido - ivaAcreditable);
+  return {
+    month: monthYYYYMM, ...ahora, pagosPrevios, pagosCalc, pagosManual: manual,
+    isrMes, ivaTrasladado, ivaRetenido, ivaAcreditable, ivaPagar,
+    ingresosMes: delMes.length
+  };
+}
+function monthlyEstimateHTML(month){
+  if(!month) return "";
+  const override = document.getElementById("reportePagosPrevios");
+  const est = buildMonthlyEstimate(month, override ? override.value : "");
+  const ivaLabel = est.ivaPagar<0 ? "Saldo a favor de IVA" : "IVA a pagar";
+  const ivaValor = est.ivaPagar<0 ? fmtMoney(Math.abs(est.ivaPagar)) : fmtMoney(est.ivaPagar);
+  const isrLabel = est.isrMes<0 ? "ISR a favor en el estimado" : "ISR provisional del mes";
+  return `
+    <div class="estimate-box">
+      <h3>Estimado del mes · Régimen 612</h3>
+      <div class="hint" style="margin-bottom:8px;">Estimación para una persona física, no es asesoría fiscal ni el número que debes declarar. El IVA usa lo cobrado este mes. El ISR usa ingresos y deducciones acumulados desde enero.</div>
+      <div class="report-stats">
+        <div class="report-stat"><div class="label">${ivaLabel}</div><div class="value">${ivaValor}</div></div>
+        <div class="report-stat"><div class="label">${isrLabel}</div><div class="value">${fmtMoney(Math.abs(est.isrMes))}</div></div>
+      </div>
+      <div class="report-row">
+        <div class="report-row-top"><b>IVA</b><span class="report-row-amt">${ivaValor}</span></div>
+        <div class="report-row-meta">Trasladado cobrado ${fmtMoney(est.ivaTrasladado)} − retenido ${fmtMoney(est.ivaRetenido)} − acreditable de gastos de trabajo ${fmtMoney(est.ivaAcreditable)}.${est.ivaPagar<0 ? " Sale negativo: saldo a favor." : ""}</div>
+      </div>
+      <div class="report-row">
+        <div class="report-row-top"><b>ISR</b><span class="report-row-amt">${fmtMoney(est.isrMes)}</span></div>
+        <div class="report-row-meta">Ingresos acumulados ${fmtMoney(est.ingresosAcum)} − deducciones acumuladas ${fmtMoney(est.deducciones)} = base ${fmtMoney(est.base)}. Tarifa de ${est.monthNum} mes(es): ${fmtMoney(est.impuesto)}. Menos ISR retenido acumulado ${fmtMoney(est.isrRetAcum)} y pagos provisionales previos ${fmtMoney(est.pagosPrevios)}${est.pagosManual ? " (los que anotaste)" : " (estimados)"}.</div>
+        ${est.isrMes<0 ? `<div class="report-note">El resultado es negativo: con estas cifras las retenciones y los pagos previos cubren el estimado.</div>` : ""}
+      </div>
+      <button class="backup-btn" id="btnEstimateToIngresos" type="button">Registrar o revisar ingresos</button>
+    </div>`;
+}
+
+function suggestIngresoTaxes(){
+  const sub = parseFloat(document.getElementById("ingSubtotal").value)||0;
+  const iva = round2(sub * 0.16);
+  document.getElementById("ingIva").value = iva ? iva : "";
+  document.getElementById("ingIsrRet").value = sub ? round2(sub * 0.10) : "";
+  document.getElementById("ingIvaRet").value = iva ? round2(iva * 2 / 3) : "";
+  ingresoTaxManual = false;
+}
+function renderIngresos(){
+  const mesEl = document.getElementById("ingresosMes");
+  if(mesEl && !mesEl.value){
+    const n = new Date();
+    mesEl.value = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`;
+  }
+  const mes = mesEl.value;
+  const fechaIngreso = document.getElementById("ingFecha");
+  if(fechaIngreso && !fechaIngreso.value) fechaIngreso.value = todayISO();
+  const list = ingresosCache.filter(i=> String(i.fecha||"").slice(0,7)===mes)
+    .sort((a,b)=> String(b.fecha).localeCompare(String(a.fecha)));
+  const box = document.getElementById("ingresosList");
+  box.innerHTML = list.length ? list.map(i=>`
+    <div class="report-row">
+      <div class="report-row-top"><b>${escapeHtml(i.cliente||"Sin cliente")}</b><span class="report-row-amt">${fmtMoney(i.subtotal)}</span></div>
+      <div class="report-row-meta">${escapeHtml(i.fecha||"")} · ${escapeHtml(i.rfcCliente||"sin RFC")} · IVA ${fmtMoney(i.ivaTrasladado)} · ISR ret. ${fmtMoney(i.isrRetenido)} · IVA ret. ${fmtMoney(i.ivaRetenido)}${i.uuid ? " · "+escapeHtml(i.uuid) : ""}</div>
+      <button class="bank-quick-btn" data-del-ingreso="${escapeHtml(i.id)}" type="button">Eliminar</button>
+    </div>`).join("") : `<div class="empty-state">No hay ingresos en ${escapeHtml(fmtMonthLabel(mes))}.</div>`;
+  document.getElementById("tarifaHint").textContent = TARIFA_HINT;
+  if(document.getElementById("tarifaEditor").style.display!=="none") renderTarifaEditor();
+}
+function renderTarifaEditor(){
+  const rows = activeTarifa();
+  const edited = Array.isArray(fiscalProfile.tarifaIsr) && fiscalProfile.tarifaIsr.length;
+  document.getElementById("tarifaEditor").innerHTML = `
+    <div class="hint" style="margin:8px 0;">${edited ? "Estás usando tu tarifa guardada." : "Estás viendo la tarifa de 2026 que viene con la app."}</div>
+    <table class="tarifa-table">
+      <thead><tr><th>Lím. inf.</th><th>Lím. sup.</th><th>Cuota fija</th><th>%</th></tr></thead>
+      <tbody>
+        ${rows.map((r,idx)=>`<tr>
+          <td><input data-tarifa="${idx}" data-k="li" inputmode="decimal" value="${r.li}"></td>
+          <td><input data-tarifa="${idx}" data-k="ls" inputmode="decimal" value="${r.ls==null?"":r.ls}" placeholder="En adelante"></td>
+          <td><input data-tarifa="${idx}" data-k="cuota" inputmode="decimal" value="${r.cuota}"></td>
+          <td><input data-tarifa="${idx}" data-k="pct" inputmode="decimal" value="${r.pct}"></td>
+        </tr>`).join("")}
+      </tbody>
+    </table>
+    <button class="backup-btn" id="btnSaveTarifa" type="button" style="margin-top:8px;">Guardar tarifa</button>
+    <button class="backup-btn" id="btnResetTarifa" type="button">Volver a la de 2026</button>`;
+}
+function readTarifaFromEditor(){
+  const rows = [];
+  document.querySelectorAll("#tarifaEditor input[data-tarifa]").forEach(inp=>{
+    const idx = Number(inp.dataset.tarifa);
+    rows[idx] = rows[idx] || { li:0, ls:null, cuota:0, pct:0 };
+    if(inp.dataset.k==="ls" && inp.value.trim()==="") rows[idx].ls = null;
+    else rows[idx][inp.dataset.k] = parseFloat(inp.value)||0;
+  });
+  return rows.filter(Boolean);
+}
+function openIngresos(from){
+  ingresosReturn = from || "dashboard";
+  showView("ingresos");
+}
+function syncPagosInput(){
+  const mes = document.getElementById("reporteMes");
+  const el = document.getElementById("reportePagosPrevios");
+  if(!mes || !el) return;
+  const v = fiscalProfile.isrPagosOverride && fiscalProfile.isrPagosOverride[mes.value];
+  el.value = v!=null && v!=="" ? v : "";
+}
+
+document.getElementById("btnOpenIngresos").addEventListener("click", ()=> openIngresos("dashboard"));
+document.getElementById("btnOpenIngresosHistory").addEventListener("click", ()=> openIngresos("history"));
+document.getElementById("actIngresos").addEventListener("click", ()=>{ closeAccountSheet(); openIngresos("dashboard"); });
+document.getElementById("btnIngresosBack").addEventListener("click", ()=> showView(ingresosReturn||"dashboard"));
+document.getElementById("ingresosMes").addEventListener("change", renderIngresos);
+document.getElementById("ingSubtotal").addEventListener("input", ()=>{ if(!ingresoTaxManual) suggestIngresoTaxes(); });
+["ingIva","ingIsrRet","ingIvaRet"].forEach(id=>{
+  document.getElementById(id).addEventListener("input", ()=>{ ingresoTaxManual = true; });
+});
+document.getElementById("btnIngresoTasas").addEventListener("click", suggestIngresoTaxes);
+document.getElementById("btnSaveIngreso").addEventListener("click", async ()=>{
+  const sub = parseFloat(document.getElementById("ingSubtotal").value);
+  if(!sub || sub<=0){ alert("Escribe el subtotal del ingreso."); return; }
+  const fecha = document.getElementById("ingFecha").value || todayISO();
+  const iva = parseFloat(document.getElementById("ingIva").value)||0;
+  const isr = parseFloat(document.getElementById("ingIsrRet").value)||0;
+  const ivaRet = parseFloat(document.getElementById("ingIvaRet").value)||0;
+  ingresosCache.unshift({
+    id: "ing-"+Date.now(),
+    fecha,
+    cliente: document.getElementById("ingCliente").value.trim(),
+    rfcCliente: normalizeRFC(document.getElementById("ingRfcCliente").value),
+    subtotal: round2(sub),
+    descuento: 0,
+    ivaTrasladado: round2(iva),
+    isrRetenido: round2(isr),
+    ivaRetenido: round2(ivaRet),
+    total: round2(sub + iva - isr - ivaRet),
+    uuid: "",
+    fuente: "manual"
+  });
+  document.getElementById("ingCliente").value = "";
+  document.getElementById("ingRfcCliente").value = "";
+  document.getElementById("ingSubtotal").value = "";
+  document.getElementById("ingIva").value = "";
+  document.getElementById("ingIsrRet").value = "";
+  document.getElementById("ingIvaRet").value = "";
+  ingresoTaxManual = false;
+  const mes = document.getElementById("ingresosMes");
+  if(mes && fecha.slice(0,7)!==mes.value) mes.value = fecha.slice(0,7);
+  try{ await persistIngresos(); showSyncStatus("Ingreso guardado ✓"); }
+  catch(e){ console.error(e); alert("No se pudo guardar el ingreso en tu cuenta."); }
+  renderIngresos();
+});
+document.getElementById("ingresosList").addEventListener("click", async (e)=>{
+  const btn = e.target.closest("[data-del-ingreso]");
+  if(!btn) return;
+  const id = btn.dataset.delIngreso;
+  if(!confirm("¿Eliminar este ingreso?")) return;
+  ingresosCache = ingresosCache.filter(i=> i.id!==id);
+  await persistIngresos();
+  renderIngresos();
+});
+document.getElementById("btnToggleTarifa").addEventListener("click", ()=>{
+  const box = document.getElementById("tarifaEditor");
+  const open = box.style.display==="none";
+  box.style.display = open ? "block" : "none";
+  if(open) renderTarifaEditor();
+});
+document.getElementById("tarifaEditor").addEventListener("click", async (e)=>{
+  if(e.target.id==="btnSaveTarifa"){
+    fiscalProfile.tarifaIsr = readTarifaFromEditor();
+    try{ await persistTarifaYPagos(); showSyncStatus("Tarifa guardada ✓"); }
+    catch(err){ console.error(err); alert("No se pudo guardar la tarifa."); }
+    renderTarifaEditor();
+    return;
+  }
+  if(e.target.id==="btnResetTarifa"){
+    fiscalProfile.tarifaIsr = null;
+    try{ await persistTarifaYPagos(); }catch(err){ console.warn(err); }
+    renderTarifaEditor();
+  }
+});
+document.getElementById("btnAttachXml").addEventListener("click", ()=> document.getElementById("xmlAttachInput").click());
+document.getElementById("xmlAttachInput").addEventListener("change", async (e)=>{
+  const file = e.target.files && e.target.files[0];
+  e.target.value = "";
+  if(!file) return;
+  try{
+    const parsed = parseCfdiXml(await readXmlFile(file));
+    parsed.archivo = file.name;
+    applyParsedCfdiToForm(parsed, file.name);
+  }catch(err){
+    alert(err.message);
+  }
+});
+document.getElementById("actXml").addEventListener("click", ()=>{
+  closeActionSheet();
+  document.getElementById("xmlBatchInput").click();
+});
+document.getElementById("btnImportXmlHistory").addEventListener("click", ()=> document.getElementById("xmlBatchInput").click());
+document.getElementById("xmlBatchInput").addEventListener("change", async (e)=>{
+  const files = e.target.files;
+  e.target.value = "";
+  if(files && files.length) await importXmlFiles(files, "auto");
+});
+document.getElementById("btnImportXmlIngreso").addEventListener("click", ()=> document.getElementById("xmlIngresoInput").click());
+document.getElementById("xmlIngresoInput").addEventListener("change", async (e)=>{
+  const files = e.target.files;
+  e.target.value = "";
+  if(files && files.length){
+    await importXmlFiles(files, "ingreso");
+    renderIngresos();
+  }
+});
+document.addEventListener("click", (e)=>{
+  const btn = e.target.closest(".verdict-filters button");
+  if(!btn) return;
+  verdictFilter = btn.dataset.verdict || "todos";
+  document.querySelectorAll(".verdict-filters button").forEach(b=> b.classList.toggle("active", b.dataset.verdict===verdictFilter));
+  if(document.getElementById("view-dashboard").classList.contains("active")) renderPeriodContent();
+  if(document.getElementById("view-history").classList.contains("active")) refreshHistory();
+  if(document.getElementById("view-reporte").classList.contains("active")) renderReporte();
+});
+document.getElementById("reporteBody").addEventListener("click", (e)=>{
+  if(e.target.id==="btnEstimateToIngresos") openIngresos("reporte");
+});
 
 /* =========================================================
    CÓMO FUNCIONA — recorrido corto, la primera vez
@@ -5240,7 +6152,7 @@ const TUTORIAL_STEPS = [
   {
     kicker: "2 · Registrar",
     title: "A mano o con una foto",
-    html: "<p>El botón <strong>+</strong> abre tres caminos: tomar foto, elegir una de la galería o escribir el gasto a mano. Si hay foto, la lectura intenta reconocer comercio, fecha y total. Tú revisas antes de guardar.</p>",
+    html: "<p>El botón <strong>+</strong> abre la foto, la galería, un gasto a mano o varios <strong>XML de factura</strong>. Si hay foto, la lectura intenta reconocer comercio, fecha y total. El XML manda sobre esa lectura: emisor, fecha, impuestos y total. Tú revisas antes de guardar.</p>",
     view: "dashboard",
     target: "#navFabBtn"
   },
@@ -5254,7 +6166,7 @@ const TUTORIAL_STEPS = [
   {
     kicker: "4 · Facturas y SAT",
     title: "Tipo de deducción y cómo pagaste",
-    html: "<p><strong>Gasto de trabajo</strong> es lo que deduces cada mes, con el IVA que puedes acreditar. <strong>Deducción personal</strong> es la de la declaración anual. Indica si pagaste en efectivo, con débito, crédito o transferencia. Si la foto trae QR, leemos el folio y los RFC.</p><p>Los datos de ejemplo no se guardan.</p>",
+    html: "<p><strong>Gasto de trabajo</strong> es lo que deduces cada mes, con el IVA que puedes acreditar. <strong>Deducción personal</strong> es la de la declaración anual. Indica si pagaste en efectivo, con débito, crédito o transferencia. Si la foto trae QR, leemos el folio y los RFC. Con <strong>Adjuntar XML</strong> se leen también impuestos, forma de pago y conceptos.</p><p>Los datos de ejemplo no se guardan.</p>",
     view: "form",
     preset: "trabajo",
     target: "#satTicketFields"
@@ -5262,7 +6174,7 @@ const TUTORIAL_STEPS = [
   {
     kicker: "5 · Facturas y SAT",
     title: "Qué suele contar y qué no",
-    html: "<ul><li>Efectivo de más de 2,000 pesos: no cuenta.</li><li>Gasolina en efectivo: nunca es deducible.</li><li>Sin factura a tu RFC, el ticket no alcanza.</li></ul><p>Suele ser gasto de trabajo lo que usas para producir (cámara, software, internet laboral). Suele ser deducción personal lo médico, los lentes, el seguro, las colegiaturas y el retiro. La despensa y el entretenimiento, en general, no.</p>",
+    html: "<ul><li>Efectivo de más de 2,000 pesos: no cuenta.</li><li>Gasolina en efectivo: nunca es deducible.</li><li>Sin factura a tu RFC, el ticket no alcanza.</li></ul><p>En la lista cada gasto trae semáforo: <strong>✅ Deducible</strong>, <strong>⚠️ Falta algo</strong> (sin factura, RFC, pago…) o <strong>❌ No deducible</strong>. Puedes filtrar por ese resultado. Si el gasto es de este mes y no tiene factura, te recordamos pedirla antes de que cierre el mes.</p><p>Suele ser gasto de trabajo lo que usas para producir (cámara, software, internet laboral). Suele ser deducción personal lo médico, los lentes, el seguro, las colegiaturas y el retiro. La despensa y el entretenimiento, en general, no.</p>",
     view: "form",
     preset: "alerta",
     target: "#fiscalAlerts"
@@ -5270,9 +6182,16 @@ const TUTORIAL_STEPS = [
   {
     kicker: "6 · Reportes",
     title: "El reporte para tu declaración",
-    html: "<p><strong>Reporte para declaración</strong> arma el mes (subtotal e IVA acreditable de los gastos de trabajo con factura válida) y el año (deducciones personales frente al tope). Lo bajas en CSV o PDF. En Tickets puedes subir el CSV de tu banco y ver qué movimientos ya tienen ticket.</p>",
+    html: "<p><strong>Reporte para declaración</strong> arma el mes (subtotal e IVA acreditable, y un estimado de IVA a pagar e ISR provisional) y el año (deducciones personales frente al tope). Lo bajas en CSV o PDF. En Tickets puedes subir el CSV de tu banco y ver qué movimientos ya tienen ticket.</p>",
     view: "dashboard",
     target: "#btnOpenReporte"
+  },
+  {
+    kicker: "7 · Ingresos",
+    title: "Honorarios y el día 17",
+    html: "<p>En <strong>Ingresos del mes</strong> anotas lo que te pagaron, o subes el XML que tú emitiste: subtotal, IVA trasladado, ISR retenido e IVA retenido. El reporte resta el IVA acreditable de tus gastos de trabajo. Es una estimación, no tu declaración.</p><p>Arriba en Inicio, el recordatorio dice de qué mes es la declaración y que se presenta antes del día 17.</p>",
+    view: "dashboard",
+    target: "#btnOpenIngresos"
   }
 ];
 let tutorialIndex = 0;

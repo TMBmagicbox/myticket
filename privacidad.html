@@ -76,7 +76,8 @@ h1{ font-family:var(--font-display); font-size:32px; margin-bottom:6px; }
       <li><b>De tus tickets:</b> comercio, fecha, montos, productos, categorías, método de pago, tipo de deducción (si lo indicas) y la fotografía del ticket que subes.</li>
       <li><b>De tu perfil fiscal:</b> si lo capturas, tu RFC, la UMA diaria y un ingreso anual estimado. Se guardan en tu cuenta para comparar facturas y armar el reporte de deducciones. No se envían al SAT.</li>
       <li><b>Del recorrido de inicio:</b> si ya viste “Cómo funciona”, guardamos esa marca en este navegador y en tu perfil para no mostrarlo otra vez.</li>
-      <li><b>De facturas (CFDI):</b> si el ticket incluye un código QR de factura, leemos el folio (UUID) y los RFC emisor/receptor contenidos en ese QR.</li>
+      <li><b>De facturas (CFDI):</b> si el ticket incluye un código QR de factura, leemos el folio (UUID) y los RFC emisor/receptor contenidos en ese QR. Si adjuntas el XML de la factura, leemos también emisor, receptor, fecha, subtotal, descuento, IVA, retenciones, total, forma y método de pago, uso del CFDI y conceptos. Esos datos se guardan con el ticket, en tu cuenta. No se envían al SAT.</li>
+      <li><b>De tus ingresos:</b> si los registras, el cliente, su RFC, la fecha y los montos (subtotal, IVA, retenciones). Si el XML es uno que tú emitiste, se guardan los mismos datos del CFDI. También se guarda la tarifa de ISR si la editas, y los pagos provisionales que anotes.</li>
       <li><b>De tu estado de cuenta:</b> si usas la función de cotejo bancario, los movimientos del archivo CSV que subas se procesan únicamente en tu dispositivo/sesión para compararlos con tus tickets.</li>
     </ul>
   </div>
