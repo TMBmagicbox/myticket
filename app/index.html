@@ -116,6 +116,8 @@ header.top p{
   text-transform: capitalize;
   letter-spacing: 0.02em;
 }
+.header-actions{ display:flex; align-items:flex-start; gap:8px; }
+.header-help-btn,
 .header-user-btn{
   flex-shrink:0;
   width: 38px; height:38px;
@@ -128,6 +130,161 @@ header.top p{
   overflow:hidden;
   cursor:pointer;
   margin-top: 2px;
+}
+.header-help-btn{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+}
+.discover-block{ padding: 14px 20px 0; display:flex; flex-direction:column; gap:10px; }
+.report-entry{
+  width:100%;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  text-align:left;
+  padding: 14px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(140,122,230,0.45);
+  background: var(--glass-bg-2);
+  box-shadow: var(--glass-shadow);
+  cursor:pointer;
+  color: var(--ink);
+}
+.report-entry-icon{
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(140,122,230,0.16);
+  flex-shrink:0;
+  font-size: 18px;
+}
+.report-entry-text{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.report-entry-kicker{
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brand-purple);
+  font-weight: 700;
+}
+.report-entry-title{ font-weight: 700; font-size: 15px; }
+.report-entry-sub{ font-size: 12px; color: var(--muted); line-height: 1.35; }
+.rfc-prompt{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(224,85,74,0.4);
+  background: rgba(224,85,74,0.08);
+}
+.rfc-prompt[hidden]{ display:none !important; }
+.rfc-prompt-text{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.rfc-prompt-text strong{ font-size: 13.5px; }
+.rfc-prompt-text span{ font-size: 12px; color: var(--muted); line-height: 1.35; }
+.rfc-prompt-btn{
+  flex-shrink:0;
+  border:none;
+  background: var(--brand-purple);
+  color:#fff;
+  font-weight: 700;
+  font-size: 12.5px;
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor:pointer;
+}
+.tutorial-overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+}
+.tutorial-overlay[hidden]{ display:none !important; }
+.tutorial-blocker{ position:absolute; inset:0; }
+.tutorial-hole{
+  position: fixed;
+  z-index: 501;
+  border-radius: 16px;
+  box-shadow: 0 0 0 9999px rgba(43,38,64,0.72);
+  outline: 2px solid var(--accent);
+  pointer-events: none;
+}
+.tutorial-card{
+  position: fixed;
+  z-index: 502;
+  left: 16px;
+  right: 16px;
+  max-width: 448px;
+  margin: 0 auto;
+  background: #fff;
+  color: var(--ink);
+  border-radius: 18px;
+  padding: 14px 14px 12px;
+  box-shadow: 0 16px 40px rgba(43,38,64,0.28);
+  max-height: min(46vh, 360px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.tutorial-card.is-sat{ outline: 2px solid rgba(140,122,230,0.45); }
+.tutorial-kicker{
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--brand-purple);
+  font-weight: 700;
+}
+.tutorial-card h2{
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.25;
+  margin: 4px 0 6px;
+}
+.tutorial-scroll{ overflow: auto; min-height: 0; flex: 1 1 auto; }
+.tutorial-body{ font-size: 13.5px; line-height: 1.4; margin: 0; }
+.tutorial-nav{ flex-shrink: 0; }
+.tutorial-body ul{ margin: 6px 0 0; padding-left: 18px; }
+.tutorial-body li{ margin: 2px 0; }
+.tutorial-disclaimer{
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.tutorial-nav{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.tutorial-dots{ display:flex; gap:5px; flex:1; }
+.tutorial-dots span{
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--line);
+}
+.tutorial-dots span.on{ background: var(--brand-purple); }
+.tutorial-skip, .tutorial-back{
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 8px 4px;
+}
+.tutorial-next{
+  border: none;
+  background: var(--brand-purple);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13.5px;
+  border-radius: 999px;
+  padding: 9px 14px;
+  cursor: pointer;
 }
 .user-avatar-img{
   width:100%; height:100%;
@@ -1319,10 +1476,13 @@ nav.bottom button.active{ color: var(--brand-purple); }
       </div>
       <p id="todayLabel">—</p>
     </div>
-    <button class="header-user-btn" id="userMenuBtn" title="Cuenta">
-      <img id="userAvatarHeader" class="user-avatar-img" alt="" style="display:none;">
-      <svg id="userIconDefault" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6.5 8-6.5s8 2.5 8 6.5"/></svg>
-    </button>
+    <div class="header-actions">
+      <button class="header-help-btn" id="btnHelp" type="button" title="Cómo funciona" aria-label="Cómo funciona">?</button>
+      <button class="header-user-btn" id="userMenuBtn" title="Cuenta">
+        <img id="userAvatarHeader" class="user-avatar-img" alt="" style="display:none;">
+        <svg id="userIconDefault" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6.5 8-6.5s8 2.5 8 6.5"/></svg>
+      </button>
+    </div>
   </header>
 
   <!-- ============ VISTA: DASHBOARD ============ -->
@@ -1348,11 +1508,22 @@ nav.bottom button.active{ color: var(--brand-purple); }
       </div>
     </div>
 
-    <div class="action-row">
-      <button class="big-btn secondary" id="btnOpenReporte" type="button">
-        <span class="icon">📋</span>
-        Reporte para declaración
+    <div class="discover-block">
+      <button class="report-entry" id="btnOpenReporte" type="button">
+        <span class="report-entry-icon" aria-hidden="true">📋</span>
+        <span class="report-entry-text">
+          <span class="report-entry-kicker">Para tu declaración</span>
+          <span class="report-entry-title">Reporte para declaración</span>
+          <span class="report-entry-sub">El mes: gastos de trabajo e IVA acreditable. El año: deducciones personales y sus topes.</span>
+        </span>
       </button>
+      <div class="rfc-prompt" id="rfcPrompt" hidden>
+        <div class="rfc-prompt-text">
+          <strong>Agrega tu RFC</strong>
+          <span>Sin él no podemos avisar si una factura está a tu nombre.</span>
+        </div>
+        <button type="button" class="rfc-prompt-btn" id="btnRfcPrompt">Agregar</button>
+      </div>
     </div>
 
     <div class="tabs">
@@ -1514,22 +1685,24 @@ nav.bottom button.active{ color: var(--brand-purple); }
         <div class="hint" id="totalMismatchHint" style="display:none;"></div>
       </div>
 
-      <div class="field">
-        <label for="fMetodoPago">Método de pago</label>
-        <select id="fMetodoPago">
-          <option value="">Sin especificar</option>
-          <option value="efectivo">Efectivo</option>
-          <option value="debito">Tarjeta de débito</option>
-          <option value="credito">Tarjeta de crédito</option>
-          <option value="transferencia">Transferencia</option>
-        </select>
-      </div>
-
-      <div class="deducible-box">
+      <div id="satTicketFields">
+        <div class="field">
+          <label for="fMetodoPago">Método de pago</label>
+          <select id="fMetodoPago">
+            <option value="">Sin especificar</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="debito">Tarjeta de débito</option>
+            <option value="credito">Tarjeta de crédito</option>
+            <option value="transferencia">Transferencia</option>
+          </select>
+        </div>
         <div class="field" style="margin-bottom:8px;">
           <label for="fTipoDeduccion">Tipo de deducción</label>
           <select id="fTipoDeduccion"></select>
         </div>
+      </div>
+
+      <div class="deducible-box">
         <div id="cfdiFormBlock"></div>
         <div class="hint" id="deducibleHint"></div>
         <div class="fiscal-alerts" id="fiscalAlerts"></div>
@@ -1564,7 +1737,8 @@ nav.bottom button.active{ color: var(--brand-purple); }
       </div>
       <button class="save-btn" id="btnSavePerfil" type="button">Guardar perfil</button>
       <div class="hint disclaimer">Esto es solo una guía general para tu control personal, no es asesoría fiscal. Para deducir ante el SAT normalmente necesitas la <strong>factura (CFDI)</strong> a tu nombre — el ticket por sí solo casi nunca es suficiente.</div>
-      <button class="backup-btn" id="btnLogout" type="button" style="margin-top:14px;">Cerrar sesión</button>
+      <button class="backup-btn" id="btnReplayTutorial" type="button" style="margin-top:14px;">? Cómo funciona</button>
+      <button class="backup-btn" id="btnLogout" type="button" style="margin-top:8px;">Cerrar sesión</button>
     </div>
   </div>
 
@@ -1662,6 +1836,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <div class="account-email" id="accountEmail"></div>
     <button class="action-sheet-btn" id="actPerfil" type="button">🪪 Perfil fiscal (RFC)</button>
     <button class="action-sheet-btn" id="actReporte" type="button">📋 Reporte para declaración</button>
+    <button class="action-sheet-btn" id="actTutorial" type="button">? Cómo funciona</button>
     <button class="action-sheet-btn" id="actLogout" type="button">Cerrar sesión</button>
     <button class="action-sheet-cancel" id="actAccountClose" type="button">Cancelar</button>
   </div>
@@ -1707,6 +1882,25 @@ nav.bottom button.active{ color: var(--brand-purple); }
   </button>
 </nav>
 
+</div>
+
+<div id="tutorialOverlay" class="tutorial-overlay" hidden>
+  <div class="tutorial-blocker"></div>
+  <div class="tutorial-hole" id="tutorialHole"></div>
+  <div class="tutorial-card" id="tutorialCard" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+    <div class="tutorial-scroll">
+      <div class="tutorial-kicker" id="tutorialKicker"></div>
+      <h2 id="tutorialTitle"></h2>
+      <div class="tutorial-body" id="tutorialBody"></div>
+      <p class="tutorial-disclaimer">Esto es solo una guía general para tu control personal, no es asesoría fiscal.</p>
+    </div>
+    <div class="tutorial-nav">
+      <div class="tutorial-dots" id="tutorialDots"></div>
+      <button type="button" class="tutorial-back" id="tutorialBack">Atrás</button>
+      <button type="button" class="tutorial-skip" id="tutorialSkip">Saltar</button>
+      <button type="button" class="tutorial-next" id="tutorialNext">Siguiente</button>
+    </div>
+  </div>
 </div>
 
 <!-- Firebase (login con Google + base de datos en la nube + fotos) -->
@@ -1885,7 +2079,7 @@ const TIPO_SUGERIDO = {
   "Salud/Farmacia": "personal"
 };
 
-let fiscalProfile = { rfc:"", umaDiaria: DEFAULT_UMA_DIARIA, ingresoAnual: 0 };
+let fiscalProfile = { rfc:"", umaDiaria: DEFAULT_UMA_DIARIA, ingresoAnual: 0, tutorialSeen:false };
 let tipoManual = false;
 let reporteModo = "mes";
 let reporteReturn = "dashboard";
@@ -2175,6 +2369,10 @@ async function loadFiscalProfile(){
       if(d.rfc) fiscalProfile.rfc = normalizeRFC(d.rfc);
       if(d.umaDiaria) fiscalProfile.umaDiaria = Number(d.umaDiaria) || DEFAULT_UMA_DIARIA;
       if(d.ingresoAnual!=null && d.ingresoAnual!=="") fiscalProfile.ingresoAnual = Number(d.ingresoAnual) || 0;
+      if(d.tutorialSeen){
+        fiscalProfile.tutorialSeen = true;
+        try{ localStorage.setItem(TUTORIAL_LS_KEY, "1"); }catch(e){}
+      }
     }
   }catch(e){
     console.warn("No se pudo leer el perfil fiscal:", e);
@@ -2495,7 +2693,7 @@ function isLocalPreview(){
 function startLocalPreview(){
   document.getElementById("authOverlay").classList.add("hidden");
   document.getElementById("app").style.display = "block";
-  fiscalProfile = { rfc:"GODE800101AA1", umaDiaria: DEFAULT_UMA_DIARIA, ingresoAnual: 600000 };
+  fiscalProfile = { rfc:"GODE800101AA1", umaDiaria: DEFAULT_UMA_DIARIA, ingresoAnual: 600000, tutorialSeen:false };
   const rfc = fiscalProfile.rfc;
   const cfdi = (uuid, receptor, total)=>({ uuid, rfcEmisor:"XAXX010101000", rfcReceptor: receptor, total:String(total) });
   allTicketsCache = [
@@ -2519,6 +2717,8 @@ function startLocalPreview(){
   ticketsCacheReady = true;
   refreshDashboard();
   refreshHistory();
+  refreshRfcPrompt();
+  maybeStartTutorial();
 }
 
 // Dominios y colores para mostrar el logo/ícono del comercio en tickets y recibos.
@@ -2952,6 +3152,7 @@ function initAuth(){
       await loadFiscalProfile();
       await refreshDashboard();
       await refreshHistory();
+      maybeStartTutorial();
     } else {
       currentUser = null;
       clearInterval(presenceInterval);
@@ -4076,6 +4277,7 @@ async function refreshDashboard(){
   renderPeriodContent();
   renderProductsListing();
   loadBanners();
+  refreshRfcPrompt();
 }
 
 /* =========================================================
@@ -5000,6 +5202,7 @@ document.getElementById("btnSavePerfil").addEventListener("click", async ()=>{
     return;
   }
   refreshRfcHint();
+  refreshRfcPrompt();
 });
 document.querySelectorAll(".report-tab").forEach(btn=>{
   btn.addEventListener("click", ()=>{
@@ -5019,6 +5222,233 @@ document.getElementById("reporteIngreso").addEventListener("change", ()=>{ readY
 document.getElementById("reporteUma").addEventListener("change", ()=>{ readYearAssumptions(true); renderReporte(); });
 document.getElementById("btnReporteCSV").addEventListener("click", exportReporteCSV);
 document.getElementById("btnReportePDF").addEventListener("click", exportReportePDF);
+
+/* =========================================================
+   CÓMO FUNCIONA — recorrido corto, la primera vez
+   Se marca en este navegador y, si hay sesión, también en el
+   perfil de Firestore para no repetirlo en otro celular.
+   ========================================================= */
+const TUTORIAL_LS_KEY = "outgo.tutorial.v1";
+const TUTORIAL_STEPS = [
+  {
+    kicker: "1 · Respaldo",
+    title: "Que no se te pierda ni un gasto",
+    html: "<p>Outgo está para que sepas cuánto gastaste y el ticket no se quede en el cajón. <strong>Hoy, esta semana y este mes</strong> salen de lo que guardas en la nube con tu cuenta de Google: entras desde otro celular y lo encuentras igual.</p>",
+    view: "dashboard",
+    target: ".summary-row"
+  },
+  {
+    kicker: "2 · Registrar",
+    title: "A mano o con una foto",
+    html: "<p>El botón <strong>+</strong> abre tres caminos: tomar foto, elegir una de la galería o escribir el gasto a mano. Si hay foto, la lectura intenta reconocer comercio, fecha y total. Tú revisas antes de guardar.</p>",
+    view: "dashboard",
+    target: "#navFabBtn"
+  },
+  {
+    kicker: "3 · Facturas y SAT",
+    title: "Primero guarda tu RFC",
+    html: "<p>En Perfil fiscal anota tu RFC. Al escanear el <strong>QR de la factura (CFDI)</strong> comparamos el receptor con ese RFC. Si la factura no está a tu nombre, te avisamos: no cuenta y no se marca sola como deducible.</p>",
+    view: "rfc",
+    target: "rfc"
+  },
+  {
+    kicker: "4 · Facturas y SAT",
+    title: "Tipo de deducción y cómo pagaste",
+    html: "<p><strong>Gasto de trabajo</strong> es lo que deduces cada mes, con el IVA que puedes acreditar. <strong>Deducción personal</strong> es la de la declaración anual. Indica si pagaste en efectivo, con débito, crédito o transferencia. Si la foto trae QR, leemos el folio y los RFC.</p><p>Los datos de ejemplo no se guardan.</p>",
+    view: "form",
+    preset: "trabajo",
+    target: "#satTicketFields"
+  },
+  {
+    kicker: "5 · Facturas y SAT",
+    title: "Qué suele contar y qué no",
+    html: "<ul><li>Efectivo de más de 2,000 pesos: no cuenta.</li><li>Gasolina en efectivo: nunca es deducible.</li><li>Sin factura a tu RFC, el ticket no alcanza.</li></ul><p>Suele ser gasto de trabajo lo que usas para producir (cámara, software, internet laboral). Suele ser deducción personal lo médico, los lentes, el seguro, las colegiaturas y el retiro. La despensa y el entretenimiento, en general, no.</p>",
+    view: "form",
+    preset: "alerta",
+    target: "#fiscalAlerts"
+  },
+  {
+    kicker: "6 · Reportes",
+    title: "El reporte para tu declaración",
+    html: "<p><strong>Reporte para declaración</strong> arma el mes (subtotal e IVA acreditable de los gastos de trabajo con factura válida) y el año (deducciones personales frente al tope). Lo bajas en CSV o PDF. En Tickets puedes subir el CSV de tu banco y ver qué movimientos ya tienen ticket.</p>",
+    view: "dashboard",
+    target: "#btnOpenReporte"
+  }
+];
+let tutorialIndex = 0;
+let tutorialOpen = false;
+let tutorialReturnView = "dashboard";
+
+function tutorialAlreadySeen(){
+  try{ if(localStorage.getItem(TUTORIAL_LS_KEY)==="1") return true; }catch(e){}
+  return !!fiscalProfile.tutorialSeen;
+}
+function markTutorialSeen(){
+  fiscalProfile.tutorialSeen = true;
+  try{ localStorage.setItem(TUTORIAL_LS_KEY, "1"); }catch(e){}
+  if(!currentUser || !db) return;
+  db.collection("userProfiles").doc(currentUser.uid).set({ tutorialSeen:true }, { merge:true })
+    .catch(e=> console.warn("No se pudo guardar que ya viste el recorrido:", e));
+}
+function refreshRfcPrompt(){
+  const el = document.getElementById("rfcPrompt");
+  if(!el) return;
+  el.hidden = !!normalizeRFC(fiscalProfile.rfc);
+}
+function maybeStartTutorial(){
+  if(tutorialAlreadySeen() || tutorialOpen) return;
+  if(document.getElementById("app").style.display==="none") return;
+  openTutorial(0);
+}
+function openTutorial(index){
+  closeAccountSheet();
+  closeActionSheet();
+  const active = document.querySelector(".view.active");
+  tutorialReturnView = active ? active.id.replace("view-","") : "dashboard";
+  tutorialOpen = true;
+  document.getElementById("tutorialOverlay").hidden = false;
+  showTutorialStep(index || 0);
+}
+function closeTutorial(markSeen){
+  if(markSeen) markTutorialSeen();
+  tutorialOpen = false;
+  document.getElementById("tutorialOverlay").hidden = true;
+  window.removeEventListener("resize", repositionTutorial);
+  const back = tutorialReturnView || "dashboard";
+  const active = document.querySelector(".view.active");
+  const activeName = active ? active.id.replace("view-","") : "";
+  if(activeName!==back) showView(back);
+}
+function tutorialTarget(step){
+  if(step.target==="rfc"){
+    const prompt = document.getElementById("rfcPrompt");
+    if(prompt && !prompt.hidden) return prompt;
+    return document.getElementById("fRfc");
+  }
+  return document.querySelector(step.target);
+}
+function prepareTutorialView(step){
+  if(step.view==="form"){
+    if(editingTicketId){
+      showView("form");
+      return;
+    }
+    if(step.preset==="alerta"){
+      openForm({
+        store:"Pemex",
+        category:"Gasolina",
+        description:"Ejemplo: carga en efectivo",
+        total:"800",
+        tipoDeduccion:"trabajo",
+        metodoPago:"efectivo"
+      });
+    } else {
+      openForm({
+        store:"Otro",
+        category:"Equipo audiovisual",
+        description:"Ejemplo: renta de cámara",
+        total:"1160",
+        subtotal:"1000",
+        iva:"160",
+        tipoDeduccion:"trabajo",
+        metodoPago:"transferencia"
+      });
+    }
+    return;
+  }
+  if(step.view==="rfc"){
+    const prompt = document.getElementById("rfcPrompt");
+    if(prompt && !prompt.hidden){
+      showView("dashboard");
+      return;
+    }
+    showView("ajustes");
+    return;
+  }
+  showView("dashboard");
+}
+function showTutorialStep(index){
+  tutorialIndex = index;
+  const step = TUTORIAL_STEPS[index];
+  const card = document.getElementById("tutorialCard");
+  card.classList.toggle("is-sat", step.kicker.indexOf("SAT")!==-1);
+  document.getElementById("tutorialKicker").textContent = step.kicker + " · " + (index+1) + " de " + TUTORIAL_STEPS.length;
+  document.getElementById("tutorialTitle").textContent = step.title;
+  document.getElementById("tutorialBody").innerHTML = step.html;
+  document.getElementById("tutorialDots").innerHTML = TUTORIAL_STEPS.map((_,i)=>`<span class="${i===index?"on":""}"></span>`).join("");
+  document.getElementById("tutorialBack").style.visibility = index===0 ? "hidden" : "visible";
+  document.getElementById("tutorialNext").textContent = index===TUTORIAL_STEPS.length-1 ? "Entendido" : "Siguiente";
+  prepareTutorialView(step);
+  window.addEventListener("resize", repositionTutorial);
+  requestAnimationFrame(()=> requestAnimationFrame(()=>{
+    const el = tutorialTarget(step);
+    if(el && step.target!=="#navFabBtn"){
+      el.scrollIntoView({ block:"center", inline:"nearest" });
+    } else {
+      window.scrollTo(0, 0);
+    }
+    requestAnimationFrame(()=> placeTutorial(tutorialTarget(step)));
+  }));
+}
+function repositionTutorial(){
+  if(!tutorialOpen) return;
+  placeTutorial(tutorialTarget(TUTORIAL_STEPS[tutorialIndex]));
+}
+function placeTutorial(el){
+  const hole = document.getElementById("tutorialHole");
+  const card = document.getElementById("tutorialCard");
+  const margin = 12;
+  if(!el || el.getBoundingClientRect().height < 2){
+    hole.style.display = "none";
+    card.style.maxHeight = "min(46vh, 360px)";
+    card.style.top = "auto";
+    card.style.bottom = "24px";
+    return;
+  }
+  hole.style.display = "block";
+  const rect = el.getBoundingClientRect();
+  const pad = 8;
+  const top = Math.max(8, rect.top - pad);
+  const left = Math.max(8, rect.left - pad);
+  const width = Math.min(window.innerWidth - left - 8, Math.max(36, rect.width + pad*2));
+  const height = Math.max(36, Math.min(window.innerHeight - top - 8, rect.height + pad*2));
+  hole.style.top = top + "px";
+  hole.style.left = left + "px";
+  hole.style.width = width + "px";
+  hole.style.height = height + "px";
+  const below = Math.max(0, window.innerHeight - (top + height) - margin - 8);
+  const above = Math.max(0, top - margin - 8);
+  const cap = Math.min(360, Math.round(window.innerHeight * 0.46));
+  card.style.maxHeight = "none";
+  card.style.top = "0px";
+  card.style.bottom = "auto";
+  const natural = card.offsetHeight;
+  const need = Math.min(natural, cap);
+  const preferBelow = below >= need || (below >= above && above < need);
+  const room = Math.max(120, preferBelow ? below : above);
+  const maxH = Math.min(room, cap);
+  card.style.maxHeight = maxH + "px";
+  const used = card.offsetHeight;
+  let cardTop = preferBelow ? top + height + margin : Math.max(8, top - used - margin);
+  const limit = window.innerHeight - 8 - used;
+  if(cardTop > limit) cardTop = Math.max(8, limit);
+  card.style.top = cardTop + "px";
+}
+document.getElementById("tutorialNext").addEventListener("click", ()=>{
+  if(tutorialIndex >= TUTORIAL_STEPS.length-1) closeTutorial(true);
+  else showTutorialStep(tutorialIndex+1);
+});
+document.getElementById("tutorialBack").addEventListener("click", ()=>{
+  if(tutorialIndex>0) showTutorialStep(tutorialIndex-1);
+});
+document.getElementById("tutorialSkip").addEventListener("click", ()=> closeTutorial(true));
+document.getElementById("btnHelp").addEventListener("click", ()=> openTutorial(0));
+document.getElementById("btnReplayTutorial").addEventListener("click", ()=> openTutorial(0));
+document.getElementById("actTutorial").addEventListener("click", ()=>{
+  closeAccountSheet();
+  openTutorial(0);
+});
+document.getElementById("btnRfcPrompt").addEventListener("click", ()=> openAjustes("dashboard"));
 
 (async function init(){
   document.getElementById("todayLabel").textContent =
