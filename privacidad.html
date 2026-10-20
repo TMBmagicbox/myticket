@@ -73,7 +73,8 @@ h1{ font-family:var(--font-display); font-size:32px; margin-bottom:6px; }
     <h2>2. Qué datos recabamos</h2>
     <ul>
       <li><b>De tu cuenta de Google:</b> nombre, correo electrónico y foto de perfil, únicamente para identificarte al iniciar sesión.</li>
-      <li><b>De tus tickets:</b> comercio, fecha, montos, productos, categorías, y la fotografía del ticket que subes.</li>
+      <li><b>De tus tickets:</b> comercio, fecha, montos, productos, categorías, método de pago, tipo de deducción (si lo indicas) y la fotografía del ticket que subes.</li>
+      <li><b>De tu perfil fiscal:</b> si lo capturas, tu RFC, la UMA diaria y un ingreso anual estimado. Se guardan en tu cuenta para comparar facturas y armar el reporte de deducciones. No se envían al SAT.</li>
       <li><b>De facturas (CFDI):</b> si el ticket incluye un código QR de factura, leemos el folio (UUID) y los RFC emisor/receptor contenidos en ese QR.</li>
       <li><b>De tu estado de cuenta:</b> si usas la función de cotejo bancario, los movimientos del archivo CSV que subas se procesan únicamente en tu dispositivo/sesión para compararlos con tus tickets.</li>
     </ul>
@@ -101,7 +102,7 @@ h1{ font-family:var(--font-display); font-size:32px; margin-bottom:6px; }
 
   <div class="card">
     <h2>6. Un aviso importante sobre temas fiscales</h2>
-    <p>La función que lee el código QR de un CFDI, y cualquier indicación sobre si un gasto "podría ser deducible", es solo una guía informativa para tu control personal. Outgo no verifica tus facturas ante el SAT ni sustituye asesoría contable o fiscal profesional.</p>
+    <p>La función que lee el código QR de un CFDI, las alertas de deducción y el reporte para declaración son solo una guía informativa para tu control personal. Outgo no verifica tus facturas ante el SAT, no presenta declaraciones y no sustituye asesoría contable o fiscal profesional.</p>
   </div>
 
   <div class="card">
