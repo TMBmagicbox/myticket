@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aviso de Privacidad · Outgo</title>
+<title>Aviso de privacidad · Outgo</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='29.5' fill='none' stroke='%238C7AE6' stroke-width='10'/%3E%3Cpath d='M 32,67 Q 50,80 78,42' fill='none' stroke='%232ED9C3' stroke-width='7.5' stroke-linecap='round'/%3E%3Cpolygon points='83.9,34.4 81.3,47.1 72.2,40.0' fill='%232ED9C3'/%3E%3C/svg%3E">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
@@ -57,64 +57,83 @@ h1{ font-family:var(--font-display); font-size:32px; margin-bottom:6px; }
 </header>
 
 <div class="wrap">
-  <h1>Aviso de Privacidad</h1>
-  <p class="updated">Última actualización: 19 de julio de 2026</p>
+  <h1>Aviso de privacidad</h1>
+  <p class="updated">Última actualización: 20 de octubre de 2026</p>
 
   <div class="notice">
-    Este aviso fue redactado como borrador de partida (con ayuda de IA) y describe honestamente cómo funciona la app hoy. Antes de un lanzamiento formal o de tratar datos de terceros a escala, se recomienda que un abogado especializado en protección de datos lo revise y lo adapte a tu caso concreto.
+    Este aviso describe cómo trata Outgo los datos personales, en los términos de la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) y su reglamento. Es un borrador redactado con ayuda de IA, alineado a lo que la aplicación hace hoy. Conviene que un abogado de protección de datos lo revise antes de un lanzamiento formal.
   </div>
 
   <div class="card">
-    <h2>1. Responsable del tratamiento</h2>
-    <p>Outgo ("nosotros") es responsable del tratamiento de los datos personales que recabamos a través de la aplicación, de acuerdo con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) de México.</p>
+    <h2>1. Responsable</h2>
+    <p>El responsable del tratamiento es Outgo. El medio para contactarlo, para dudas de este aviso y para ejercer derechos ARCO es <a href="mailto:soporte@outgo.app">soporte@outgo.app</a>. En la aplicación no consta un domicilio físico; por eso este aviso no inventa uno y usa ese correo como canal del responsable.</p>
   </div>
 
   <div class="card">
-    <h2>2. Qué datos recabamos</h2>
+    <h2>2. Qué datos se guardan</h2>
     <ul>
-      <li><b>De tu cuenta de Google:</b> nombre, correo electrónico y foto de perfil, únicamente para identificarte al iniciar sesión.</li>
-      <li><b>De tus tickets:</b> comercio, fecha, montos, productos, categorías, método de pago, tipo de deducción (si lo indicas) y la fotografía del ticket que subes.</li>
-      <li><b>De tu perfil fiscal:</b> si lo capturas, tu RFC, la UMA diaria y un ingreso anual estimado. Se guardan en tu cuenta para comparar facturas y armar el reporte de deducciones. No se envían al SAT.</li>
-      <li><b>Del recorrido de inicio:</b> si ya viste “Cómo funciona”, guardamos esa marca en este navegador y en tu perfil para no mostrarlo otra vez.</li>
-      <li><b>De facturas (CFDI):</b> si el ticket incluye un código QR de factura, leemos el folio (UUID) y los RFC emisor/receptor contenidos en ese QR. Si adjuntas el XML de la factura, leemos también emisor, receptor, fecha, subtotal, descuento, IVA, retenciones, total, forma y método de pago, uso del CFDI y conceptos. Esos datos se guardan con el ticket, en tu cuenta. No se envían al SAT.</li>
-      <li><b>De tus ingresos:</b> si los registras, el cliente, su RFC, la fecha y los montos (subtotal, IVA, retenciones). Si el XML es uno que tú emitiste, se guardan los mismos datos del CFDI. También se guarda la tarifa de ISR si la editas, y los pagos provisionales que anotes.</li>
-      <li><b>De tu estado de cuenta:</b> si usas la función de cotejo bancario, los movimientos del archivo CSV que subas se procesan únicamente en tu dispositivo/sesión para compararlos con tus tickets.</li>
+      <li><b>Cuenta.</b> Al iniciar sesión con Google se guardan tu nombre, tu correo y, si Google lo comparte, la foto de perfil. Sirven para identificarte. Outgo no recibe ni guarda tu contraseña de Google.</li>
+      <li><b>Tickets.</b> Comercio, fecha, montos, productos, categoría, método de pago, tipo de deducción y el resto de lo que captures en cada gasto.</li>
+      <li><b>Fotos.</b> La fotografía del ticket, comprimida y guardada dentro del mismo registro del gasto.</li>
+      <li><b>XML y datos del CFDI.</b> Si adjuntas un XML o subes el ZIP del SAT, se leen y se guardan folio fiscal (UUID), RFC y nombre del emisor y del receptor, fecha, subtotal, impuestos, retenciones, total, forma y método de pago, uso del CFDI y conceptos. Si solo hay un QR de factura, se guardan el folio y los RFC que trae ese QR.</li>
+      <li><b>RFC y perfil fiscal.</b> Si los capturas: tu RFC, la UMA diaria, un ingreso anual estimado, la tarifa de ISR si la editas y los pagos provisionales que anotes. No se envían al SAT.</li>
+      <li><b>Ingresos.</b> Cliente, RFC del cliente, fecha y montos (subtotal, IVA, retenciones) de lo que registres o importes.</li>
+      <li><b>Preferencias de la app.</b> Si ya viste el recorrido de inicio y si ya aceptaste el aviso de que las cifras son estimaciones.</li>
+      <li><b>Estado de cuenta.</b> Si cotejas un CSV del banco, ese archivo se procesa en tu dispositivo para compararlo con tus tickets. No se sube como archivo aparte a la nube.</li>
     </ul>
+    <p>Outgo no pide datos sensibles de salud para operar. Si tú escribes en un ticket que un gasto fue médico, esa nota queda en tu cuenta porque tú la capturaste.</p>
   </div>
 
   <div class="card">
-    <h2>3. Para qué usamos tus datos</h2>
+    <h2>3. Para qué se usan</h2>
     <ul>
-      <li>Mostrarte tu propio historial de gastos y análisis (por día, semana, mes, producto, categoría).</li>
-      <li>Detectar automáticamente comercio, montos y productos en tus tickets (reconocimiento de texto).</li>
-      <li>Permitirte exportar tu información (JSON/CSV) y generar copias en PDF de tus tickets.</li>
+      <li>Crear tu sesión y mostrarte solo tu información.</li>
+      <li>Guardar y consultar tus tickets, fotos, XML, RFC e ingresos.</li>
+      <li>Armar el historial, el semáforo, los recordatorios y las estimaciones de IVA, ISR y deducciones.</li>
+      <li>Dejarte exportar una copia y borrar tu cuenta y tus datos.</li>
+      <li>Recordar que ya aceptaste el aviso fiscal y que ya viste el recorrido, para no pedirlo en cada visita.</li>
     </ul>
-    <p>No usamos tus datos para mostrarte anuncios, ni los vendemos, ni los compartimos con terceros para fines comerciales.</p>
+    <p>No se usan para publicidad, no se venden y no se comparten con terceros para que te contacten con fines comerciales. Las estimaciones son informativas: no son asesoría fiscal y no sustituyen a un contador. El detalle está en los <a href="./terminos.html">Términos y condiciones</a>.</p>
   </div>
 
   <div class="card">
-    <h2>4. Dónde se guardan tus datos</h2>
-    <p>Tu información se almacena en Firebase/Firestore (Google Cloud), bajo una cuenta asociada a tu usuario. Solo tú puedes acceder a tus propios tickets — cada cuenta está aislada de las demás mediante reglas de acceso.</p>
+    <h2>4. Dónde se guardan y quién más los trata</h2>
+    <p>La cuenta se autentica con Firebase Authentication y los datos se almacenan en Cloud Firestore. Los dos son servicios de Google. La foto del ticket va dentro del documento del gasto en Firestore. La app no sube archivos a Firebase Storage.</p>
+    <p>Google actúa como encargado de tratamiento para prestar autenticación y base de datos. Esa transferencia es necesaria para que el servicio funcione. No hay otra transferencia de tus datos.</p>
+    <p>Sin iniciar sesión, Firestore rechaza la lectura y la escritura de perfiles, tickets y anuncios. La aplicación pide los tickets y el perfil en la ruta de la persona que inició sesión. El aislamiento entre cuentas que sí tienen sesión depende de las reglas de seguridad configuradas en Firebase. Esas reglas no están publicadas en el código de esta página, así que este aviso no afirma, por el código solo, que sea imposible llegar a datos de otra cuenta con una sesión distinta. Cada persona debe usar su propia cuenta.</p>
   </div>
 
   <div class="card">
-    <h2>5. Tus derechos (ARCO)</h2>
-    <p>Puedes Acceder, Rectificar, Cancelar tus datos u Oponerte a su tratamiento en cualquier momento. Dentro de la app puedes exportar o eliminar tus tickets tú mismo; para eliminar tu cuenta por completo, escríbenos a <a href="mailto:soporte@outgo.app">soporte@outgo.app</a>.</p>
+    <h2>5. Derechos ARCO y cómo ejercerlos</h2>
+    <p>Puedes Acceder, Rectificar, Cancelar u Oponerte al tratamiento de tus datos.</p>
+    <ul>
+      <li><b>Acceso.</b> En la app, en Perfil fiscal o en Tickets, usa <b>Exportar todos mis datos</b>. El archivo JSON incluye cuenta, perfil, RFC, tickets, fotos, XML e ingresos. También puedes pedir la copia a <a href="mailto:soporte@outgo.app">soporte@outgo.app</a>.</li>
+      <li><b>Rectificación.</b> Edita el ticket, el ingreso o el perfil dentro de la app. Si algo no se puede corregir ahí, escríbenos al mismo correo.</li>
+      <li><b>Cancelación.</b> En Perfil fiscal, <b>Borrar mi cuenta y mis datos</b>. Hay dos confirmaciones: la segunda pide escribir ELIMINAR. Eso borra tus tickets, fotos, XML, ingresos, perfil y la cuenta de Outgo ligada a Google. También puedes pedir la cancelación por correo.</li>
+      <li><b>Oposición y revocación del consentimiento.</b> Escribe a <a href="mailto:soporte@outgo.app">soporte@outgo.app</a>. Borrar la cuenta es la forma de dejar de usar el tratamiento.</li>
+    </ul>
+    <p>Las solicitudes por correo se atienden en los plazos de la LFPDPPP: hasta 20 días hábiles para responder, y hasta 15 días hábiles más para hacer efectivo el derecho cuando proceda. La exportación y el borrado dentro de la app ocurren en ese momento, si la sesión de Google lo permite. Si Google pide confirmar la sesión reciente, la app abre de nuevo el acceso con Google y continúa el borrado.</p>
+    <p>Borrar tu cuenta de Outgo no cierra tu cuenta de Google. Eso se hace con Google.</p>
   </div>
 
   <div class="card">
-    <h2>6. Un aviso importante sobre temas fiscales</h2>
-    <p>La función que lee el código QR de un CFDI, las alertas de deducción y el reporte para declaración son solo una guía informativa para tu control personal. Outgo no verifica tus facturas ante el SAT, no presenta declaraciones y no sustituye asesoría contable o fiscal profesional.</p>
+    <h2>6. Conservación</h2>
+    <p>Los datos se conservan mientras tu cuenta exista y tú no los borres. Al borrar la cuenta se eliminan el perfil y los tickets asociados a esa cuenta en Firestore, y la copia local de este navegador.</p>
   </div>
 
   <div class="card">
-    <h2>7. Cambios a este aviso</h2>
-    <p>Podemos actualizar este aviso conforme la app evolucione. Los cambios importantes se notificarán dentro de la aplicación.</p>
+    <h2>7. Estimaciones fiscales</h2>
+    <p>El semáforo, el reporte para declaración y el estimado de IVA e ISR son una guía para tu control personal. Outgo no verifica facturas ante el SAT, no presenta declaraciones y no sustituye a un contador.</p>
   </div>
 
   <div class="card">
-    <h2>8. Contacto</h2>
-    <p>Dudas sobre este aviso o tus datos: <a href="mailto:soporte@outgo.app">soporte@outgo.app</a></p>
+    <h2>8. Cambios a este aviso</h2>
+    <p>Si el tratamiento cambia, se actualiza este aviso y la fecha de arriba. El uso continuado de la app después de un cambio implica que conoces la versión nueva. Los cambios importantes se reflejan también en la aplicación.</p>
+  </div>
+
+  <div class="card">
+    <h2>9. Contacto del responsable</h2>
+    <p>Para privacidad y derechos ARCO: <a href="mailto:soporte@outgo.app">soporte@outgo.app</a></p>
   </div>
 </div>
 </body>
