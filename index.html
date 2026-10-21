@@ -522,8 +522,13 @@ footer{ border-top:1px solid var(--glass-border); padding:40px 0 28px; }
     frame.dataset.state = "live";
     if(note) note.textContent = noteText || "Anuncios activos del carrusel. La imagen se muestra completa.";
   }
+  function keepHouseAds(){
+    var frame = document.getElementById("landingBanner");
+    if(frame && !frame.querySelector(".ad-slide")){
+      showBanners(houseBanners(), "Mientras no haya una campaña activa, aquí se ven los anuncios de Outgo.");
+    }
+  }
   var firebaseConfig = {
-    apiKey: "AIzaSyCxwN1C5mKvPG7x3murIuJxuYhUnLzkQvw",
     authDomain: "outgo-77b3e.firebaseapp.com",
     projectId: "outgo-77b3e",
     storageBucket: "outgo-77b3e.firebasestorage.app",
@@ -538,11 +543,9 @@ footer{ border-top:1px solid var(--glass-border); padding:40px 0 28px; }
         .then(function(snaps){
           var list = snaps.filter(function(s){ return s.exists && s.data().enabled && s.data().bgImage; }).map(function(s){ return s.data(); });
           if(list.length) showBanners(list);
-          else showBanners(houseBanners(), "Mientras no haya una campaña activa, aquí se ven los anuncios de Outgo.");
+          else keepHouseAds();
         })
-        .catch(function(){
-          showBanners(houseBanners(), "Mientras no haya una campaña activa, aquí se ven los anuncios de Outgo.");
-        });
+        .catch(keepHouseAds);
     }
   }catch(e){}
 })();
