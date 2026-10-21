@@ -1699,6 +1699,8 @@ nav.bottom button.active{ color: var(--brand-purple); }
 
 /* Etiquetas del nav: en el celular la barra sigue siendo solo iconos. */
 .nav-label{ display:none; }
+.nav-brand{ display:none; }
+.desk-home{ display:none; }
 
 /* Pantalla de giro. Solo teléfonos horizontales (puntero grueso y poca altura).
    Tablets y PC no entran: el alto de un iPad en horizontal supera 500px
@@ -1946,40 +1948,127 @@ nav.bottom button.active{ color: var(--brand-purple); }
     align-items: stretch;
     padding: 8px 28px 0;
   }
+  .nav-brand{
+    display:flex;
+    align-items:center;
+    padding: 6px 10px 18px;
+  }
+  .nav-brand .outgo-logo{ height: 32px; }
   #view-dashboard > .banner-carousel-wrap{
     grid-column: 1 / -1;
     grid-row: 1;
-    justify-self: center;
+    justify-self: stretch;
     width: 100%;
-    max-width: 760px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
     padding: 8px 0 4px;
   }
-  #view-dashboard > .summary-row{
-    grid-column: 1;
-    grid-row: 2;
-    flex-direction: column;
-    padding: 0;
-    height: auto;
+  .banner-slide{
+    background: #2B2640;
   }
-  #view-dashboard > .summary-row .summary-card{ flex: 1; }
-  #view-dashboard > .discover-block{
-    grid-column: 2;
+  .banner-slide-bg{
+    inset: 0 !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    transform: none !important;
+  }
+  #view-dashboard > .summary-row{ display:none; }
+  .desk-home{
+    display:grid;
+    grid-column: 1 / -1;
     grid-row: 2;
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.9fr);
+    gap: 16px;
+    align-items: stretch;
+  }
+  .desk-card{
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 18px;
+    padding: 18px;
+    min-width: 0;
+  }
+  .desk-kicker{
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brand-purple);
+    font-weight: 700;
+  }
+  .desk-amount{
+    margin: 8px 0 4px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .desk-sub{ margin: 0; color: var(--muted); font-size: 13px; }
+  .desk-split{
+    display:flex;
+    gap: 18px;
+    margin-top: 16px;
+  }
+  .desk-split div{ display:flex; flex-direction:column; gap: 2px; }
+  .desk-split span{
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .desk-split b{ font-family: var(--font-mono); font-size: 16px; }
+  .desk-card-head{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .desk-lights{ display:flex; flex-direction:column; gap: 10px; justify-content:center; }
+  .desk-light{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+  }
+  .desk-light b{ font-family: var(--font-mono); font-size: 20px; }
+  .desk-recent .ticket{ margin-bottom: 8px; }
+  .desk-actions{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .desk-action{
+    text-align:left;
+    border: 1px solid rgba(140,122,230,0.4);
+    background: var(--glass-bg-2);
+    color: var(--ink);
+    border-radius: 14px;
+    padding: 12px;
+    cursor:pointer;
+    font-family: var(--font-body);
+  }
+  .desk-action strong{ display:block; font-size: 14px; }
+  .desk-action span{ display:block; margin-top: 3px; color: var(--muted); font-size: 12px; line-height: 1.35; }
+  .desk-action:hover{ border-color: var(--brand-purple); }
+  #view-dashboard > .discover-block{
+    grid-column: 1 / 3;
+    grid-row: 3;
     padding: 0;
   }
   #view-dashboard > .discover-block .report-entry{ flex: 1; }
   #view-dashboard > #homeReminder{
     grid-column: 3;
-    grid-row: 2;
+    grid-row: 3;
     margin: 0;
   }
-  #view-dashboard > .tabs{ grid-column: 1 / -1; grid-row: 3; }
-  #view-dashboard > .period-nav{ grid-column: 1 / -1; grid-row: 4; }
-  #view-dashboard > .period-today{ grid-column: 1 / -1; grid-row: 5; }
-  #view-dashboard > #periodContent{ grid-column: 1 / -1; grid-row: 6; }
-  #view-dashboard > .analisis-home-link{ grid-column: 1 / -1; grid-row: 7; padding-left: 0; padding-right: 0; text-align: left; }
+  #view-dashboard > .tabs{ grid-column: 1 / -1; grid-row: 4; }
+  #view-dashboard > .period-nav{ grid-column: 1 / -1; grid-row: 5; }
+  #view-dashboard > .period-today{ grid-column: 1 / -1; grid-row: 6; }
+  #view-dashboard > #periodContent{ grid-column: 1 / -1; grid-row: 7; }
+  #view-dashboard > .analisis-home-link{ grid-column: 1 / -1; grid-row: 8; padding-left: 0; padding-right: 0; text-align: left; }
   #view-dashboard > .tabs,
   #view-dashboard > .period-nav,
   #view-dashboard > section{
@@ -2095,6 +2184,35 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <div class="banner-carousel-wrap" id="bannerCarouselWrap" style="display:none;">
       <div class="banner-carousel" id="bannerCarousel"></div>
       <div class="banner-dots" id="bannerDots"></div>
+    </div>
+
+    <div class="desk-home" id="deskHome">
+      <section class="desk-card desk-month">
+        <p class="desk-kicker">Resumen del mes</p>
+        <p class="desk-amount" id="deskMonth">$0.00</p>
+        <p class="desk-sub" id="deskMonthMeta">Tickets de este mes</p>
+        <div class="desk-split">
+          <div><span>Hoy</span><b id="deskToday">$0.00</b></div>
+          <div><span>Semana</span><b id="deskWeek">$0.00</b></div>
+        </div>
+      </section>
+      <section class="desk-card">
+        <div class="desk-card-head">Semáforo del mes</div>
+        <div class="desk-lights" id="deskLights"></div>
+      </section>
+      <section class="desk-card desk-recent">
+        <div class="desk-card-head">Últimos tickets</div>
+        <div id="deskRecent"></div>
+      </section>
+      <section class="desk-card">
+        <div class="desk-card-head">Accesos rápidos</div>
+        <div class="desk-actions">
+          <button type="button" class="desk-action" id="deskScan"><strong>Escanear</strong><span>Foto del ticket o factura en PDF.</span></button>
+          <button type="button" class="desk-action" id="deskImport"><strong>Importar</strong><span>Estado de cuenta en PDF o CSV.</span></button>
+          <button type="button" class="desk-action" id="deskIngresos"><strong>Ingresos</strong><span>Facturas que tú emitiste.</span></button>
+          <button type="button" class="desk-action" id="deskReporte"><strong>Reportes</strong><span>IVA e ISR del periodo.</span></button>
+        </div>
+      </section>
     </div>
 
     <div class="summary-row">
@@ -2619,6 +2737,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
 
 <!-- ============ NAV INFERIOR ============ -->
 <nav class="bottom">
+  <div class="nav-brand"><img class="outgo-logo" src="../assets/outgo-logo.png" alt="outgo"></div>
   <button data-view="dashboard" class="active" aria-label="Inicio">
     <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9"/></svg>
     <span class="nav-label" aria-hidden="true">Inicio</span>
@@ -4074,20 +4193,57 @@ function showSyncStatus(message){
 
 let presenceInterval = null;
 
+const UTM_KEYS = ["utm_source","utm_medium","utm_campaign","utm_content","utm_term"];
+function captureCampaignUtm(){
+  const params = new URLSearchParams(location.search);
+  const found = {};
+  UTM_KEYS.forEach(k => {
+    const v = String(params.get(k) || "").trim().slice(0, 120);
+    if(v) found[k] = v;
+  });
+  if(!found.utm_source && !found.utm_medium && !found.utm_campaign) return;
+  let prev = {};
+  try{ prev = JSON.parse(localStorage.getItem("outgo.utm") || "{}"); }catch(e){}
+  const first = prev.first && prev.first.utm_source ? prev.first : found;
+  try{ localStorage.setItem("outgo.utm", JSON.stringify({ first, last: found })); }catch(e){}
+}
+function readStoredUtm(){
+  try{
+    const prev = JSON.parse(localStorage.getItem("outgo.utm") || "{}");
+    const src = prev.first && prev.first.utm_source ? prev.first : (prev.last || {});
+    const out = {};
+    UTM_KEYS.forEach(k => {
+      if(src && typeof src[k]==="string" && src[k]) out[k] = src[k].slice(0, 120);
+    });
+    return out;
+  }catch(e){ return {}; }
+}
+function utmPayloadForProfile(existing){
+  const utm = readStoredUtm();
+  if(!utm.utm_source) return null;
+  if(existing && existing.utm_source) return null;
+  return utm;
+}
+captureCampaignUtm();
+
 // Guarda/actualiza un registro liviano (sin tickets, sin fotos) para que el
 // panel de admin pueda mostrar cuántos usuarios hay y cuántos están activos,
-// sin tener que leer los tickets de nadie.
+// sin tener que leer los tickets de nadie. La primera vez también guarda
+// la campaña (utm) con la que llegó, si la landing la dejó en este navegador.
 async function updatePresence(){
   if(!currentUser) return;
   try{
     const ref = db.collection("userProfiles").doc(currentUser.uid);
     const snap = await ref.get();
+    const data = snap.exists ? (snap.data() || {}) : {};
     const payload = {
       email: currentUser.email || "",
       name: currentUser.displayName || "",
       lastSeen: firebase.firestore.FieldValue.serverTimestamp()
     };
     if(!snap.exists) payload.firstSeen = firebase.firestore.FieldValue.serverTimestamp();
+    const utm = utmPayloadForProfile(data);
+    if(utm) Object.assign(payload, utm);
     await ref.set(payload, { merge:true });
   }catch(e){
     console.warn("No se pudo registrar la presencia del usuario:", e);
@@ -5307,6 +5463,46 @@ async function ensureTicketsLoaded(force=false){
   return allTicketsCache;
 }
 
+function renderDeskHome(todayTotal, weekTotal, monthTotal){
+  const monthEl = document.getElementById("deskMonth");
+  if(!monthEl) return;
+  const monthTickets = allTicketsCache.filter(t => isInMonthOf(t.date));
+  const counts = { ok:0, falta:0, no:0 };
+  monthTickets.forEach(t => {
+    const status = ticketVerdict(t).status;
+    if(counts[status]!=null) counts[status]++;
+  });
+  monthEl.textContent = fmtMoney(monthTotal);
+  const when = new Date().toLocaleDateString("es-MX", { month:"long", year:"numeric" });
+  document.getElementById("deskMonthMeta").textContent = monthTickets.length
+    ? `${monthTickets.length} ticket(s) en ${when}`
+    : `Sin tickets en ${when}`;
+  document.getElementById("deskToday").textContent = fmtMoney(todayTotal);
+  document.getElementById("deskWeek").textContent = fmtMoney(weekTotal);
+  const lights = [
+    ["ok", "Deducible"],
+    ["falta", "Falta algo"],
+    ["no", "No deducible"]
+  ];
+  document.getElementById("deskLights").innerHTML = lights.map(([status, label]) => `
+    <div class="desk-light">
+      <span class="verdict-badge verdict-${status}">${status==="ok" ? "✅" : status==="falta" ? "⚠️" : "❌"} ${label}</span>
+      <b>${counts[status]}</b>
+    </div>`).join("");
+  const recent = allTicketsCache.slice().sort((a,b) => String(b.date||"").localeCompare(String(a.date||""))).slice(0, 4);
+  const recentEl = document.getElementById("deskRecent");
+  recentEl.innerHTML = recent.length ? recent.map(t => `
+    <div class="ticket" data-id="${t.id}">
+      ${storeBadgeHTML(t.store)}
+      <div class="info">
+        <div class="store">${escapeHtml(t.store)}</div>
+        <div class="meta">${escapeHtml(t.date||"")}</div>
+        ${verdictBadgeHTML(t)}
+      </div>
+      <div class="amount">${fmtMoney(t.amount)}</div>
+    </div>`).join("") : `<div class="empty-state">Cuando guardes un ticket, aparece aquí.</div>`;
+  attachLogoFallbacks(recentEl);
+}
 async function refreshDashboard(){
   await ensureTicketsLoaded();
   const today = todayISO();
@@ -5318,6 +5514,7 @@ async function refreshDashboard(){
   document.getElementById("sumToday").textContent = fmtMoney(todayTotal);
   document.getElementById("sumWeek").textContent = fmtMoney(weekTotal);
   document.getElementById("sumMonth").textContent = fmtMoney(monthTotal);
+  renderDeskHome(todayTotal, weekTotal, monthTotal);
 
   renderPeriodContent();
   loadBanners();
@@ -5346,6 +5543,18 @@ async function loadBanners(){
   }catch(err){
     console.warn("No se pudieron cargar los banners (¿existen las reglas de Firestore para 'banners'?):", err);
     bannerData = [];
+  }
+  if(isLocalPreview() && !bannerData.length && window.matchMedia("(min-width: 1024px)").matches){
+    bannerData = [{
+      enabled: true,
+      title: "Tu marca aquí",
+      description: "El anuncio se muestra completo, en el teléfono y en la computadora.",
+      link: "#",
+      bgImage: "../assets/landing/banner-ejemplo.png",
+      bgZoom: 140,
+      bgPosX: 50,
+      bgPosY: 50
+    }];
   }
   renderBannerCarousel();
 }
@@ -7203,6 +7412,13 @@ window.addEventListener("resize", ()=>{
 /* =========================================================
    INICIO
    ========================================================= */
+document.getElementById("deskScan").addEventListener("click", openActionSheet);
+document.getElementById("deskImport").addEventListener("click", ()=>{
+  showView("history");
+  openBankStatementPicker();
+});
+document.getElementById("deskIngresos").addEventListener("click", ()=> openIngresos("dashboard"));
+document.getElementById("deskReporte").addEventListener("click", ()=> openReporte("dashboard"));
 document.getElementById("btnOpenReporte").addEventListener("click", ()=> openReporte("dashboard"));
 document.getElementById("btnAnalisisHome").addEventListener("click", ()=> openReporte("dashboard", "analisis"));
 document.getElementById("btnOpenReporteHistory").addEventListener("click", ()=> openReporte("history"));

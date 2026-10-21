@@ -3,271 +3,496 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Outgo · Controla tus gastos sin esfuerzo</title>
-<meta name="description" content="Control de gastos para profesionistas independientes en México: diseñadores, programadores, consultores, terapeutas, arquitectos y oficios parecidos. Foto al ticket, QR de la factura y reporte para tu declaración.">
+<title>Outgo · Tus tickets, a salvo. Tus deducciones, claras.</title>
+<meta name="description" content="Para freelancers y profesionistas independientes en México. Foto del ticket, factura PDF, estado de cuenta, facturas que emites, semáforo de deducibles y reportes de ISR e IVA. Empieza gratis con Google.">
+<link rel="canonical" href="https://tmbmagicbox.github.io/myticket/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_MX">
+<meta property="og:site_name" content="Outgo">
+<meta property="og:url" content="https://tmbmagicbox.github.io/myticket/">
+<meta property="og:title" content="Outgo · Tus tickets, a salvo. Tus deducciones, claras.">
+<meta property="og:description" content="Guarda tickets, facturas y tu estado de cuenta. El semáforo y los reportes de ISR e IVA se arman con lo que sí registraste. Empieza gratis con Google.">
+<meta property="og:image" content="https://tmbmagicbox.github.io/myticket/assets/og-outgo.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Outgo. Tus tickets, a salvo. Tus deducciones, claras.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Outgo · Tus tickets, a salvo. Tus deducciones, claras.">
+<meta name="twitter:description" content="Para freelancers en México. Tickets, facturas, estado de cuenta y reportes de ISR e IVA. Empieza gratis con Google.">
+<meta name="twitter:image" content="https://tmbmagicbox.github.io/myticket/assets/og-outgo.png">
+<meta name="twitter:image:alt" content="Outgo. Tus tickets, a salvo. Tus deducciones, claras.">
 <link rel="icon" href="assets/outgo-icon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/outgo-icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/outgo-icon-180.png">
-
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 :root{
-  --bg: #F6F4FC;
-  --paper: #FFFFFF;
-  --ink: #2B2640;
-  --muted: #8B87A0;
-  --line: #E4E0F2;
-  --accent: #2ED9C3;
-  --accent-2: #E0554A;
-  --brand-purple: #8C7AE6;
-  --radius: 18px;
-  --font-display: 'Poppins', sans-serif;
-  --font-body: 'Inter', -apple-system, sans-serif;
-  --glass-bg: rgba(255,255,255,0.5);
-  --glass-bg-2: rgba(255,255,255,0.68);
-  --glass-border: rgba(255,255,255,0.65);
-  --glass-blur: blur(22px) saturate(180%);
-  --glass-shadow: 0 8px 32px rgba(60,40,110,0.14);
+  --bg:#F6F4FC; --paper:#FFFFFF; --ink:#2B2640; --muted:#8B87A0; --line:#E4E0F2;
+  --accent:#2ED9C3; --brand-purple:#8C7AE6; --radius:18px;
+  --font-display:'Poppins',sans-serif; --font-body:'Inter',-apple-system,sans-serif;
+  --font-mono:'Space Mono',monospace;
+  --glass-bg:rgba(255,255,255,0.5); --glass-bg-2:rgba(255,255,255,0.72);
+  --glass-border:rgba(255,255,255,0.65); --glass-blur:blur(22px) saturate(180%);
+  --glass-shadow:0 8px 32px rgba(60,40,110,0.14);
 }
 *{ box-sizing:border-box; }
 html,body{ margin:0; padding:0; }
 body{
-  font-family: var(--font-body);
-  color: var(--ink);
-  background-color: var(--bg);
+  font-family:var(--font-body); color:var(--ink); background-color:var(--bg);
   background-image:
     radial-gradient(circle at 12% 8%, rgba(140,122,230,0.35), transparent 40%),
     radial-gradient(circle at 88% 15%, rgba(46,217,195,0.30), transparent 38%),
     radial-gradient(circle at 20% 90%, rgba(46,217,195,0.20), transparent 42%),
     radial-gradient(circle at 92% 85%, rgba(140,122,230,0.25), transparent 40%);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  background-attachment:fixed; background-repeat:no-repeat;
 }
-.wrap{ max-width: 1080px; margin:0 auto; padding: 0 24px; }
-a{ color: inherit; }
-
-/* Header */
+img{ max-width:100%; }
+a{ color:inherit; }
+.wrap{ max-width:1120px; margin:0 auto; padding:0 24px; }
 header{
-  position: sticky; top:0; z-index: 50;
-  background: var(--glass-bg-2);
-  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-  border-bottom: 1px solid var(--glass-border);
+  position:sticky; top:0; z-index:50;
+  background:var(--glass-bg-2);
+  backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border-bottom:1px solid var(--glass-border);
 }
-header .wrap{ display:flex; align-items:center; justify-content:space-between; padding-top:14px; padding-bottom:14px; }
-.brand{ display:flex; align-items:center; line-height:0; }
-.outgo-logo{
-  display:block;
-  height:36px;
-  width:auto;
-  object-fit:contain;
-}
+header .wrap{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding-top:14px; padding-bottom:14px; }
+.brand{ display:flex; align-items:center; line-height:0; text-decoration:none; }
+.outgo-logo{ display:block; height:36px; width:auto; object-fit:contain; }
 .outgo-logo--min{ height:28px; }
+.header-nav{ display:flex; align-items:center; gap:18px; }
+.header-nav a{ text-decoration:none; font-size:14px; font-weight:600; color:var(--ink); }
 .nav-cta{
-  background: var(--brand-purple); color:#fff; text-decoration:none;
-  padding: 10px 20px; border-radius: 30px; font-weight:600; font-size:14px;
+  background:var(--brand-purple); color:#fff !important; text-decoration:none;
+  padding:10px 18px; border-radius:30px; font-weight:600; font-size:14px; white-space:nowrap;
 }
-
-/* Hero */
-.hero{ padding: 80px 0 60px; text-align:center; }
-.hero h1{
-  font-family: var(--font-display);
-  font-size: 44px; line-height:1.15; font-weight:600; margin:0 0 18px;
+.hero{ padding:64px 0 28px; }
+.hero-grid{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(260px,0.8fr); gap:36px; align-items:center; }
+.kicker{
+  font-family:var(--font-mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--brand-purple); font-weight:700; margin:0 0 12px;
 }
-.hero h1 .hl{ color: var(--brand-purple); }
-.hero p{ font-size:18px; color: var(--muted); max-width:560px; margin:0 auto 32px; line-height:1.5; }
-.hero-ctas{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+h1{
+  font-family:var(--font-display); font-size:48px; line-height:1.12; font-weight:600; margin:0 0 16px;
+}
+h1 .hl{ color:var(--brand-purple); }
+.lede{ font-size:18px; color:var(--muted); line-height:1.55; margin:0 0 12px; max-width:38em; }
+.fine{ font-size:13px; color:var(--muted); margin:0 0 22px; }
+.hero-ctas{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
 .btn-primary{
-  background: linear-gradient(135deg, var(--brand-purple), var(--accent));
+  background:linear-gradient(135deg, var(--brand-purple), var(--accent));
   color:#fff; text-decoration:none; font-weight:700; font-size:15.5px;
-  padding: 16px 30px; border-radius: 30px; box-shadow: var(--glass-shadow);
+  padding:16px 26px; border-radius:30px; box-shadow:var(--glass-shadow); border:none; cursor:pointer;
 }
 .btn-secondary{
-  background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border); color: var(--ink); text-decoration:none;
-  font-weight:600; font-size:15.5px; padding:16px 26px; border-radius:30px;
+  background:var(--glass-bg); border:1px solid var(--glass-border); color:var(--ink);
+  text-decoration:none; font-weight:600; font-size:15px; padding:15px 22px; border-radius:30px;
 }
-
-/* Mockup / visual */
-.hero-visual{
-  margin: 50px auto 0; max-width: 320px;
-  background: var(--glass-bg-2); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border); border-radius: 28px; box-shadow: var(--glass-shadow);
-  padding: 22px; text-align:left;
+.share-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+.share-row a, .share-row button{
+  border:1px solid var(--line); background:#fff; color:var(--ink); text-decoration:none;
+  border-radius:999px; padding:8px 12px; font-size:13px; font-weight:600; cursor:pointer; font-family:var(--font-body);
 }
-.hero-visual .row{ display:flex; justify-content:space-between; font-size:13px; padding:8px 0; border-bottom:1px dashed var(--line); }
-.hero-visual .row:last-child{ border-bottom:none; }
-.hero-visual .row b{ font-family:'Space Mono', monospace; }
-.hero-visual .total{ font-family: var(--font-display); font-size:26px; font-weight:600; margin-top:10px; }
-
-/* Features */
-.section-title{ text-align:center; font-family: var(--font-display); font-size:30px; font-weight:600; margin: 0 0 10px; }
-.section-sub{ text-align:center; color:var(--muted); max-width:520px; margin:0 auto 46px; }
-.features{ display:grid; grid-template-columns: repeat(2,1fr); gap:20px; padding-bottom:70px; }
-.feature-card{
-  background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-  border:1px solid var(--glass-border); border-radius: var(--radius); padding: 26px;
-  box-shadow: var(--glass-shadow);
+.phone{
+  background:#2B2640; border-radius:32px; padding:10px;
+  box-shadow:var(--glass-shadow);
 }
-.feature-card .ic{
-  width:46px; height:46px; border-radius:14px; margin-bottom:16px;
-  display:flex; align-items:center; justify-content:center; font-size:22px;
-  background: linear-gradient(135deg, var(--brand-purple), var(--accent)); color:#fff;
+.phone img{ display:block; width:100%; height:auto; border-radius:24px; background:#F6F4FC; }
+.section{ padding:56px 0; }
+.section h2{ font-family:var(--font-display); font-size:32px; font-weight:600; margin:0 0 8px; }
+.section-intro{ color:var(--muted); max-width:40em; margin:0 0 28px; line-height:1.5; }
+.ads{
+  margin:8px 24px 10px; padding:28px 0 32px; border-radius:28px;
+  background:var(--glass-bg-2); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);
 }
-.feature-card h3{ font-family: var(--font-display); font-size:18px; margin:0 0 8px; }
-.feature-card p{ color:var(--muted); font-size:14px; line-height:1.55; margin:0; }
-
-/* Steps */
-.steps{ padding-bottom:80px; }
-.steps-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:20px; }
-.step{ text-align:center; padding: 10px; }
-.step .num{
-  width:40px; height:40px; border-radius:50%; margin:0 auto 14px;
-  background: var(--glass-bg-2); border:1px solid var(--glass-border);
-  display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--brand-purple);
-  font-family: var(--font-display);
+.ad-frame{
+  position:relative; aspect-ratio:16/7.5; border-radius:20px; overflow:hidden;
+  background:#2B2640; color:#fff;
 }
-.step h4{ font-family: var(--font-display); font-size:16px; margin:0 0 6px; }
-.step p{ color:var(--muted); font-size:13.5px; margin:0; }
-
-/* CTA band */
+.ad-frame[data-state="live"]{
+  display:flex; aspect-ratio:auto; overflow-x:auto; scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+}
+.ad-frame[data-state="live"] .ad-slide{
+  position:relative; flex:0 0 100%; min-height:0; aspect-ratio:16/7.5; scroll-snap-align:start;
+}
+.ad-slide{
+  position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end;
+  padding:22px 24px; text-decoration:none; color:#fff;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(140,122,230,0.9), transparent 42%),
+    radial-gradient(circle at 88% 80%, rgba(46,217,195,0.75), transparent 40%),
+    #2B2640;
+}
+.ad-slide img.ad-bg{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#2B2640;
+}
+.ad-slide .ad-copy{ position:relative; z-index:1; }
+.ad-kicker{ font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; opacity:0.85; margin:0 0 6px; }
+.ad-slide strong{ font-family:var(--font-display); font-size:26px; font-weight:600; display:block; }
+.ad-slide span{ display:block; margin-top:4px; max-width:36em; font-size:14px; line-height:1.4; }
+.ad-note{ color:var(--muted); font-size:13px; margin:12px 0 0; }
+.features{ display:flex; flex-direction:column; gap:22px; }
+.feature{
+  display:grid; grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); gap:22px; align-items:center;
+  background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:24px;
+  box-shadow:var(--glass-shadow); padding:18px;
+}
+.feature:nth-child(even) .feature-copy{ order:2; }
+.feature-copy h3{ font-family:var(--font-display); font-size:22px; margin:0 0 8px; }
+.feature-copy p{ margin:0; color:var(--muted); line-height:1.55; font-size:15px; }
+.shot{
+  background:#fff; border-radius:16px; overflow:hidden; border:1px solid var(--line);
+}
+.shot img{ display:block; width:100%; height:auto; }
+.browser{ border-radius:16px; overflow:hidden; border:1px solid var(--line); background:#fff; box-shadow:var(--glass-shadow); }
+.browser img{ display:block; width:100%; height:auto; }
+.privacy-grid, .faq{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.card{
+  background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:18px;
+  box-shadow:var(--glass-shadow); padding:20px;
+}
+.card h3{ font-family:var(--font-display); font-size:18px; margin:0 0 8px; }
+.card p, .faq details p{ color:var(--muted); font-size:14.5px; line-height:1.5; margin:0; }
+.faq details{
+  background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:16px; padding:14px 16px;
+}
+.faq summary{ cursor:pointer; font-weight:600; }
+.faq details p{ margin-top:8px; }
 .cta-band{
-  margin: 0 24px 80px; padding: 50px 30px; text-align:center; border-radius: 28px;
-  background: linear-gradient(135deg, var(--brand-purple), var(--accent)); color:#fff;
+  margin:10px 24px 48px; padding:42px 28px; text-align:center; border-radius:28px; color:#fff;
+  background:linear-gradient(135deg, var(--brand-purple), var(--accent));
 }
-.cta-band h2{ font-family: var(--font-display); font-size:28px; margin:0 0 10px; }
-.cta-band p{ opacity:0.9; margin:0 0 26px; }
-.cta-band .btn-primary{ background:#fff; color: var(--brand-purple); box-shadow:none; }
-
-/* Footer */
-footer{ border-top:1px solid var(--glass-border); padding: 46px 0 30px; }
-.footer-grid{ display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap:24px; margin-bottom:32px; }
+.cta-band h2{ font-family:var(--font-display); font-size:30px; margin:0 0 8px; }
+.cta-band p{ margin:0 0 18px; }
+.cta-band .btn-primary{ background:#fff; color:var(--brand-purple); }
+footer{ border-top:1px solid var(--glass-border); padding:40px 0 28px; }
+.footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 0.8fr; gap:24px; margin-bottom:24px; }
 .footer-grid h5{ font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin:0 0 12px; }
-.footer-grid a{ display:block; text-decoration:none; color:var(--ink); font-size:14px; margin-bottom:10px; }
-.footer-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; color:var(--muted); font-size:12.5px; border-top:1px solid var(--line); padding-top:20px; }
-
-@media (max-width: 760px){
-  .hero h1{ font-size:32px; }
-  .features{ grid-template-columns: 1fr; }
-  .steps-grid{ grid-template-columns: 1fr; }
-  .footer-grid{ grid-template-columns: 1fr 1fr; }
+.footer-grid a{ display:block; text-decoration:none; color:var(--ink); font-size:14px; margin-bottom:8px; }
+.footer-grid p{ color:var(--muted); font-size:13.5px; line-height:1.5; }
+.qr-link{ display:inline-block; background:#fff; border-radius:12px; padding:6px; line-height:0; }
+.qr-link img{ width:88px; height:88px; }
+.footer-bottom{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:12.5px; border-top:1px solid var(--line); padding-top:16px; }
+@media (max-width: 860px){
+  h1{ font-size:34px; }
+  .hero{ padding:36px 0 12px; }
+  .hero-grid, .feature, .privacy-grid, .faq, .footer-grid{ grid-template-columns:1fr; }
+  .feature:nth-child(even) .feature-copy{ order:0; }
+  .header-nav a:not(.nav-cta){ display:none; }
+  .ads{ margin:8px 12px; }
+  .cta-band{ margin:10px 12px 36px; }
+  .ad-slide strong{ font-size:22px; }
 }
 </style>
 </head>
 <body>
-
 <header>
   <div class="wrap">
-    <div class="brand">
-      <img class="outgo-logo" src="assets/outgo-logo.png" alt="outgo">
-    </div>
-    <a class="nav-cta" href="./app/">Iniciar sesión</a>
+    <a class="brand" href="./"><img class="outgo-logo" src="assets/outgo-logo.png" alt="outgo"></a>
+    <nav class="header-nav">
+      <a href="#funciones">Qué incluye</a>
+      <a href="#privacidad">Privacidad</a>
+      <a href="#faq">Preguntas</a>
+      <a class="nav-cta" data-app href="./app/">Empieza gratis con Google</a>
+    </nav>
   </div>
 </header>
 
 <section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="kicker">Para freelancers en México</p>
+      <h1>Tus tickets, a salvo.<br><span class="hl">Tus deducciones, claras.</span></h1>
+      <p class="lede">Si cobras por tu servicio, Outgo guarda la foto del ticket, la factura en PDF, el estado de cuenta y las facturas que tú emites. El semáforo y los reportes salen de eso, no de un ejemplo.</p>
+      <p class="fine">Es una guía para tu control. No es asesoría fiscal y no sustituye a tu contador.</p>
+      <div class="hero-ctas">
+        <a class="btn-primary" data-app href="./app/">Empieza gratis con Google</a>
+        <a class="btn-secondary" href="#funciones">Ver qué incluye</a>
+      </div>
+      <div class="share-row">
+        <a id="shareWa" href="https://wa.me/?text=Tus%20tickets%2C%20a%20salvo.%20Tus%20deducciones%2C%20claras.%20https%3A%2F%2Ftmbmagicbox.github.io%2Fmyticket%2F" target="_blank" rel="noopener">WhatsApp</a>
+        <a id="shareX" href="https://twitter.com/intent/tweet?text=Tus%20tickets%2C%20a%20salvo.%20Tus%20deducciones%2C%20claras.&url=https%3A%2F%2Ftmbmagicbox.github.io%2Fmyticket%2F" target="_blank" rel="noopener">X</a>
+        <a id="shareFb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftmbmagicbox.github.io%2Fmyticket%2F" target="_blank" rel="noopener">Facebook</a>
+        <button type="button" id="shareCopy">Copiar enlace</button>
+      </div>
+    </div>
+    <div class="phone">
+      <img src="assets/landing/tickets.png" alt="Inicio de Outgo con el semáforo de los tickets del mes">
+    </div>
+  </div>
+</section>
+
+<section class="ads" id="anuncios" aria-label="Espacio publicitario">
   <div class="wrap">
-    <h1>Controla tus gastos<br>sin <span class="hl">esfuerzo</span></h1>
-    <p>Para diseñadores, programadores, consultores, terapeutas, arquitectos, contadores y cualquier profesionista independiente. Toma foto a tus tickets, deja que Outgo lea el comercio, el total y el QR de tu factura (CFDI), y separa lo de tu actividad de lo personal.</p>
-    <div class="hero-ctas">
-      <a class="btn-primary" href="./app/">Empezar gratis</a>
-      <a class="btn-secondary" href="#como-funciona">Ver cómo funciona</a>
+    <p class="kicker">Publicidad</p>
+    <h2>Tu marca, junto a la herramienta</h2>
+    <p class="section-intro">Seis lugares del carrusel. Se ven en esta página y dentro de Outgo, en el teléfono y en la computadora, completos y sin recorte.</p>
+    <div class="ad-frame" id="landingBanner">
+      <div class="ad-slide" id="landingSlot">
+        <img class="ad-bg" alt="" src="assets/landing/banner-ejemplo.png">
+        <div class="ad-copy">
+          <p class="ad-kicker">Espacio publicitario</p>
+          <strong>Tu anuncio aquí</strong>
+          <span>Quien compra el lugar aparece en el carrusel, con su imagen completa.</span>
+        </div>
+      </div>
     </div>
+    <p class="ad-note" id="landingAdNote">Si ya hay anuncios activos, esta franja los muestra. Si no, el lugar queda libre.</p>
+  </div>
+</section>
 
-    <div class="hero-visual">
-      <div class="row"><span>OXXO · hoy</span><b>$21.50</b></div>
-      <div class="row"><span>Chedraui · ayer</span><b>$1,203.50</b></div>
-      <div class="row"><span>Pemex · lunes</span><b>$650.00</b></div>
-      <div class="total">Total del mes: <span style="color:var(--brand-purple)">$4,890</span></div>
+<section class="section" id="funciones">
+  <div class="wrap">
+    <h2>Lo que Outgo hace hoy</h2>
+    <p class="section-intro">Estas pantallas son de la app. Sirve para cualquier servicio que cobres por tu cuenta.</p>
+    <div class="features">
+      <article class="feature">
+        <div class="shot"><img src="assets/landing/tickets.png" alt="Tickets con semáforo de deducible, falta algo o no deducible"></div>
+        <div class="feature-copy">
+          <h3>Foto del ticket y factura PDF</h3>
+          <p>Tomas la foto o subes el PDF de la factura. Outgo lee el comercio, la fecha y el total en tu dispositivo para que solo confirmes.</p>
+        </div>
+      </article>
+      <article class="feature">
+        <div class="shot"><img src="assets/landing/estado.png" alt="Importar estado de cuenta en PDF o CSV"></div>
+        <div class="feature-copy">
+          <h3>Estado de cuenta en PDF o CSV</h3>
+          <p>Subes el archivo del banco, marcas qué es gasto o ingreso y lo guardas. El PDF se lee en el dispositivo, también si no trae texto. No se envía a un servidor.</p>
+        </div>
+      </article>
+      <article class="feature">
+        <div class="shot"><img src="assets/landing/ingresos.png" alt="Ingresos del mes a partir de facturas emitidas"></div>
+        <div class="feature-copy">
+          <h3>Facturas que tú emites</h3>
+          <p>Las facturas de ingreso entran como honorarios del mes: subtotal, IVA trasladado, ISR retenido e IVA retenido. También desde el XML que emitiste.</p>
+        </div>
+      </article>
+      <article class="feature">
+        <div class="shot"><img src="assets/landing/semaforo.png" alt="Semáforo de deducibles en el historial"></div>
+        <div class="feature-copy">
+          <h3>Semáforo de deducibles</h3>
+          <p>Cada ticket queda en deducible, falta algo o no deducible. Si falta la factura, el aviso está en el propio movimiento. Es una guía, no una resolución del SAT.</p>
+        </div>
+      </article>
+      <article class="feature">
+        <div class="shot"><img src="assets/landing/reportes.png" alt="Reporte de IVA e ISR del mes"></div>
+        <div class="feature-copy">
+          <h3>Reportes de ISR e IVA</h3>
+          <p>El mes junta el IVA a pagar y el ISR provisional. El año reúne las deducciones personales y sus topes, con los datos que tú cargaste.</p>
+        </div>
+      </article>
+      <article class="feature">
+        <div class="shot"><img src="assets/landing/analisis.png" alt="Análisis de compras con filtros de periodo"></div>
+        <div class="feature-copy">
+          <h3>Análisis de compras</h3>
+          <p>Filtras por este mes, el anterior, un mes, un año o un rango. Ves totales, productos, categorías y comercios de ese periodo.</p>
+        </div>
+      </article>
+      <article class="feature">
+        <div class="shot"><img src="assets/landing/respaldo.png" alt="Exportar JSON, CSV y respaldo de la cuenta"></div>
+        <div class="feature-copy">
+          <h3>Exportar un respaldo</h3>
+          <p>Bajas tus datos en JSON o CSV, o el respaldo completo, para tenerlos fuera de la app cuando tú quieras.</p>
+        </div>
+      </article>
     </div>
   </div>
 </section>
 
-<section class="wrap" id="funciones">
-  <h2 class="section-title">Todo lo que necesitas, en un solo lugar</h2>
-  <p class="section-sub">Para cualquier oficio, no para uno solo: computadora, software, material de tu trabajo, internet y teléfono en la parte proporcional, renta de oficina o coworking, papelería, cursos, publicidad, honorarios de tu contador y transporte de trabajo.</p>
-  <div class="features">
-    <div class="feature-card">
-      <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.3"/></svg></div>
-      <h3>Escanea con la cámara</h3>
-      <p>Toma la foto, recorta lo que necesites, y Outgo lee el comercio, la fecha y el total automáticamente.</p>
-    </div>
-    <div class="feature-card">
-      <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M15 15h2.2v2.2H15zM19 15h2v2h-2zM15 19h2v2h-2zM19 19h2v2h-2z" fill="currentColor" stroke="none"/></svg></div>
-      <h3>Lee el QR de tu CFDI</h3>
-      <p>Si el ticket trae factura electrónica, Outgo detecta el folio y los RFC directo del código QR — sin escribir nada.</p>
-    </div>
-    <div class="feature-card">
-      <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8l9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></div>
-      <h3>Rastrea tus productos</h3>
-      <p>Descubre qué compras más seguido y si el precio de algo ya subió, comparando entre todas tus compras.</p>
-    </div>
-    <div class="feature-card">
-      <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 4l9 6"/><path d="M5 10v9M10 10v9M14 10v9M19 10v9"/><path d="M3 21h18"/></svg></div>
-      <h3>Coteja tu estado de cuenta</h3>
-      <p>Sube el CSV de tu tarjeta y Outgo te dice qué movimientos ya tienen ticket registrado y cuáles te faltan.</p>
+<section class="section" id="escritorio">
+  <div class="wrap">
+    <h2>En la computadora, el ancho se usa</h2>
+    <p class="section-intro">En el teléfono Outgo sigue en vertical. En el escritorio hay menú lateral, el resumen del mes, el semáforo, los últimos tickets y accesos para escanear o importar.</p>
+    <div class="browser">
+      <img src="assets/landing/escritorio.png" alt="Outgo en escritorio, con menú lateral y el resumen del mes">
     </div>
   </div>
 </section>
 
-<section class="wrap steps" id="como-funciona">
-  <h2 class="section-title">Cómo funciona</h2>
-  <p class="section-sub">Tres pasos, menos de un minuto por ticket.</p>
-  <div class="steps-grid">
-    <div class="step">
-      <div class="num">1</div>
-      <h4>Toma la foto</h4>
-      <p>Con la cámara de Outgo o desde tu galería.</p>
+<section class="section" id="privacidad">
+  <div class="wrap">
+    <h2>Tus datos son tuyos</h2>
+    <p class="section-intro">Cada cuenta ve lo suyo. Nadie más entra a tus tickets.</p>
+    <div class="privacy-grid">
+      <article class="card">
+        <h3>Solo tu cuenta</h3>
+        <p>Los gastos, las fotos y el perfil fiscal quedan en tu usuario. Otra persona con su propia cuenta no los ve.</p>
+      </article>
+      <article class="card">
+        <h3>Lectura en el dispositivo</h3>
+        <p>La foto del ticket, el PDF de la factura y el estado de cuenta se leen aquí. El archivo del banco no se sube. Si el PDF no trae texto, el reconocimiento también ocurre en el teléfono o la computadora.</p>
+      </article>
     </div>
-    <div class="step">
-      <div class="num">2</div>
-      <h4>Revisa los datos</h4>
-      <p>Outgo precarga todo — tú solo confirmas o corriges.</p>
-    </div>
-    <div class="step">
-      <div class="num">3</div>
-      <h4>Analiza tus gastos</h4>
-      <p>Por día, semana, mes, categoría o producto.</p>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="wrap">
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq">
+      <details>
+        <summary>¿Outgo presenta mi declaración?</summary>
+        <p>No. Muestra estimaciones para tu control. No es asesoría fiscal, no valida facturas ante el SAT y no sustituye a un contador.</p>
+      </details>
+      <details>
+        <summary>¿Para qué tipo de trabajo sirve?</summary>
+        <p>Para quien presta un servicio por su cuenta en México: consultoría, diseño, clases, oficios u otro servicio. Los textos no están armados para un solo giro.</p>
+      </details>
+      <details>
+        <summary>¿El PDF del banco sale de mi dispositivo?</summary>
+        <p>No. Se lee en el dispositivo. Si no trae capa de texto, también se reconoce ahí. Tú eliges qué movimientos guardar.</p>
+      </details>
+      <details>
+        <summary>¿Cuánto cuesta empezar?</summary>
+        <p>Entras con tu cuenta de Google. No hay que escribir una contraseña de Outgo.</p>
+      </details>
     </div>
   </div>
 </section>
 
 <div class="cta-band">
-  <h2>Tu dinero, más claro</h2>
-  <p>Gratis, con tu cuenta de Google, listo en 30 segundos.</p>
-  <a class="btn-primary" href="./app/">Empezar gratis →</a>
+  <h2>Empieza con los tickets que ya tienes</h2>
+  <p>Gratis, con Google. La guía no reemplaza a tu contador.</p>
+  <a class="btn-primary" data-app href="./app/">Empieza gratis con Google</a>
 </div>
 
 <footer>
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <div class="brand" style="margin-bottom:10px;">
-          <img class="outgo-logo outgo-logo--min" src="assets/outgo-logo.png" alt="outgo">
-        </div>
-        <p style="color:var(--muted); font-size:13.5px; line-height:1.5; max-width:260px;">Control de gastos para profesionistas independientes en México.</p>
+        <a class="brand" href="./"><img class="outgo-logo outgo-logo--min" src="assets/outgo-logo.png" alt="outgo"></a>
+        <p>Control de gastos para freelancers y profesionistas independientes en México.</p>
       </div>
       <div>
         <h5>Producto</h5>
-        <a href="#funciones">Funciones</a>
-        <a href="./app/">Iniciar sesión</a>
+        <a href="#funciones">Qué incluye</a>
+        <a href="#anuncios">Espacios publicitarios</a>
+        <a data-app href="./app/">Entrar</a>
       </div>
       <div>
-        <h5>Legal</h5>
+        <h5>Legal y contacto</h5>
         <a href="./privacidad.html">Aviso de privacidad</a>
         <a href="./terminos.html">Términos de uso</a>
+        <a href="mailto:soporte@tmbmagicbox.studio">soporte@tmbmagicbox.studio</a>
       </div>
       <div>
-        <h5>Ayuda</h5>
-        <a href="mailto:soporte@tmbmagicbox.studio">Contacto</a>
+        <h5>Campaña QR</h5>
+        <a class="qr-link" href="marca/outgo-qr.svg"><img src="marca/outgo-qr.png" alt="Código QR hacia Outgo"></a>
+        <a href="marca/outgo-qr.png">PNG</a>
+        <a href="marca/outgo-qr.svg">SVG</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Outgo. Todos los derechos reservados.</span>
+      <span>© 2026 Outgo</span>
       <span>Hecho en México</span>
     </div>
   </div>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  var UTM_KEYS = ["utm_source","utm_medium","utm_campaign","utm_content","utm_term"];
+  function readParams(){
+    var params = new URLSearchParams(location.search);
+    var found = {};
+    UTM_KEYS.forEach(function(k){
+      var v = String(params.get(k) || "").trim().slice(0, 120);
+      if(v) found[k] = v;
+    });
+    return found;
+  }
+  var found = readParams();
+  if(found.utm_source || found.utm_medium || found.utm_campaign){
+    var prev = {};
+    try{ prev = JSON.parse(localStorage.getItem("outgo.utm") || "{}"); }catch(e){}
+    var first = prev.first && prev.first.utm_source ? prev.first : found;
+    try{ localStorage.setItem("outgo.utm", JSON.stringify({ first: first, last: found })); }catch(e){}
+  }
+  function storedFirst(){
+    try{
+      var prev = JSON.parse(localStorage.getItem("outgo.utm") || "{}");
+      return prev.first && prev.first.utm_source ? prev.first : {};
+    }catch(e){ return {}; }
+  }
+  document.querySelectorAll("[data-app]").forEach(function(a){
+    var u = new URL(a.getAttribute("href"), location.href);
+    var src = storedFirst();
+    UTM_KEYS.forEach(function(k){ if(src[k] && !u.searchParams.get(k)) u.searchParams.set(k, src[k]); });
+    a.setAttribute("href", u.pathname + u.search + u.hash);
+  });
+  var canonical = "https://tmbmagicbox.github.io/myticket/";
+  var q = new URLSearchParams();
+  var src = storedFirst();
+  UTM_KEYS.forEach(function(k){ if(src[k]) q.set(k, src[k]); });
+  var shareUrl = q.toString() ? canonical + "?" + q.toString() : canonical;
+  var blurb = "Tus tickets, a salvo. Tus deducciones, claras. " + shareUrl;
+  var wa = document.getElementById("shareWa");
+  var x = document.getElementById("shareX");
+  var fb = document.getElementById("shareFb");
+  if(wa) wa.href = "https://wa.me/?text=" + encodeURIComponent(blurb);
+  if(x) x.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent("Tus tickets, a salvo. Tus deducciones, claras.") + "&url=" + encodeURIComponent(shareUrl);
+  if(fb) fb.href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(shareUrl);
+  var copyBtn = document.getElementById("shareCopy");
+  if(copyBtn) copyBtn.addEventListener("click", function(){
+    var done = function(){ copyBtn.textContent = "Enlace copiado"; };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(shareUrl).then(done).catch(function(){ copyBtn.textContent = shareUrl; });
+    } else {
+      copyBtn.textContent = shareUrl;
+    }
+  });
+
+  function escapeHtml(str){
+    return String(str || "").replace(/[&<>"']/g, function(c){
+      return ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;" })[c];
+    });
+  }
+  function showBanners(list){
+    var frame = document.getElementById("landingBanner");
+    var note = document.getElementById("landingAdNote");
+    if(!frame || !list.length) return;
+    frame.innerHTML = list.map(function(b){
+      var href = b.link || "#anuncios";
+      var pos = (b.bgPosX == null ? 50 : b.bgPosX) + "% " + (b.bgPosY == null ? 50 : b.bgPosY) + "%";
+      return '<a class="ad-slide" href="'+escapeHtml(href)+'" target="_blank" rel="noopener">'
+        + '<img class="ad-bg" alt="" src="'+escapeHtml(b.bgImage)+'" style="object-position:'+pos+';">'
+        + '<div class="ad-copy"><p class="ad-kicker">Publicidad</p><strong>'+escapeHtml(b.title || "Anuncio")+'</strong>'
+        + (b.description ? '<span>'+escapeHtml(b.description)+'</span>' : '')
+        + '</div></a>';
+    }).join("");
+    frame.dataset.state = "live";
+    if(note) note.textContent = "Anuncios activos del carrusel. La imagen se muestra completa.";
+  }
+  var firebaseConfig = {
+    apiKey: "AIzaSyCxwN1C5mKvPG7x3murIuJxuYhUnLzkQvw",
+    authDomain: "outgo-77b3e.firebaseapp.com",
+    projectId: "outgo-77b3e",
+    storageBucket: "outgo-77b3e.firebasestorage.app",
+    messagingSenderId: "913961970596",
+    appId: "1:913961970596:web:1770c761f3ba4f40842f31"
+  };
+  try{
+    if(typeof firebase !== "undefined"){
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
+      Promise.all(["1","2","3","4","5","6"].map(function(id){ return db.collection("banners").doc(id).get(); }))
+        .then(function(snaps){
+          var list = snaps.filter(function(s){ return s.exists && s.data().enabled && s.data().bgImage; }).map(function(s){ return s.data(); });
+          if(list.length) showBanners(list);
+          else {
+            var frame = document.getElementById("landingBanner");
+            if(frame) frame.dataset.state = "slot";
+          }
+        })
+        .catch(function(){
+          var frame = document.getElementById("landingBanner");
+          if(frame) frame.dataset.state = "slot";
+        });
+    }
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
