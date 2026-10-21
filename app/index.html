@@ -519,6 +519,7 @@ header.top p{
   box-sizing: border-box;
 }
 .bank-mov-note{ font-size: 12.5px; line-height: 1.35; margin: 6px 0 0; color: #8a5a00; }
+#bankImportAdd{ margin-top: 4px; }
 #deleteConfirmInput{
   width: 100%;
   padding: 12px;
@@ -2189,7 +2190,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
 
       <div class="backup-box">
         <div class="section-title" style="margin-top:0;">🏦 Estado de cuenta</div>
-        <div class="hint" style="margin-bottom:10px;">Sube el PDF o el CSV de tu banco. Ves los movimientos, marcas cuáles son gastos o ingresos y los guardas. Se lee en este dispositivo: el archivo no se envía a ningún lado. Si el PDF es una foto escaneada, no trae texto y no se puede leer; pide el PDF original o el CSV. El cotejo solo compara un CSV con lo que ya registraste, sin crear gastos nuevos.</div>
+        <div class="hint" style="margin-bottom:10px;">Sube el PDF o el CSV de tu banco. Ves los movimientos, marcas cuáles son gastos o ingresos y los guardas. Se lee en este dispositivo: el archivo no se envía a ningún servidor. Si el PDF no trae texto, como varios estados de Santander, se lee aquí mismo como imagen. El cotejo solo compara un CSV con lo que ya registraste, sin crear gastos nuevos.</div>
         <div class="backup-actions">
           <button class="backup-btn" id="btnImportBankStatement" type="button">📑 Importar estado de cuenta (PDF o CSV)</button>
           <button class="backup-btn" id="btnImportBankCSV">📄 Solo cotejar un CSV</button>
@@ -2679,6 +2680,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <h2 id="bankImportTitle">Movimientos del estado de cuenta</h2>
     <p id="bankImportIntro"></p>
     <div id="bankImportList"></div>
+    <button type="button" class="backup-btn" id="bankImportAdd">+ Agregar movimiento</button>
     <div class="confirm-actions">
       <button type="button" class="save-btn" id="bankImportConfirm">Importar seleccionados</button>
       <button type="button" class="backup-btn" id="bankImportCancel">Cancelar</button>
@@ -6246,15 +6248,8 @@ document.getElementById("importFileInput").addEventListener("change", async (e)=
    cercanía de fecha) para ver qué falta registrar.
    ========================================================= */
 function parseFlexibleDate(str){
-  const s = (str||"").trim();
-  let m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
-  if(m) return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
-  m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
-  if(m){
-    let y = m[3]; if(y.length===2) y = "20"+y;
-    return `${y}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;
-  }
-  return "";
+  const hit = findDateToken(String(str||"").trim(), statementYear(str));
+  return hit ? hit.iso : "";
 }
 function parseFlexibleAmount(val){
   if(typeof val === "number") return Math.abs(val);
@@ -6428,8 +6423,11 @@ function statementYear(text){
   years.forEach(y => { count[y] = (count[y]||0)+1; });
   return Object.keys(count).sort((a,b)=> count[b]-count[a] || b.localeCompare(a))[0];
 }
+function normalizeBankText(s){
+  return String(s||"").replace(/[\u2212\u2013\u2014]/g,"-").replace(/\u00a0/g," ");
+}
 function findDateToken(line, year){
-  const src = String(line||"");
+  const src = normalizeBankText(line);
   let m = src.match(/(\d{4})-(\d{2})-(\d{2})/);
   if(m && validYMD(m[1], m[2], m[3])) return { iso: `${m[1]}-${m[2]}-${m[3]}`, index: m.index, length: m[0].length };
   m = src.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
@@ -6437,7 +6435,7 @@ function findDateToken(line, year){
     const y = m[3].length===2 ? "20"+m[3] : m[3];
     if(validYMD(y, m[2], m[1])) return { iso: isoDate(m[1], m[2], y), index: m.index, length: m[0].length };
   }
-  m = src.match(/(\d{1,2})[\/\s-](ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)[a-záéíóú]*[\/\s-](20\d{2})\b/i);
+  m = src.match(/(\d{1,2})[\/\s.-](ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)[a-záéíóúñ0-9]{0,2}[\/\s.-](\d{2,4})\b/i);
   if(m){
     const month = monthNumber(m[2]);
     const y = m[3].length===2 ? "20"+m[3] : m[3];
@@ -6468,10 +6466,11 @@ function stripLeadingDates(line, year){
   return { iso, rest };
 }
 function extractAmounts(line){
+  const src = normalizeBankText(line);
   const re = /([+-])?\s*\$?\s*(\d{1,3}(?:,\d{3})*\.\d{2}|\d+\.\d{2})\s*([+-])?/g;
   const out = [];
   let m;
-  while((m = re.exec(line))){
+  while((m = re.exec(src))){
     let n = parseFloat(m[2].replace(/,/g,""));
     if(!isFinite(n)) continue;
     if(m[1]==="-" || m[3]==="-") n = -Math.abs(n);
@@ -6495,14 +6494,50 @@ function suggestNoDeducible(desc){
 function isBankNoise(line){
   const n = normConcept(line);
   if(!n || n.length<3) return true;
-  if(/^(fecha|descripcion|concepto|cargos|abonos|saldo|retiro|deposito|referencia|movimientos)$/.test(n)) return true;
-  if(/saldo (inicial|final|anterior|actual)|total (de )?(cargos|abonos|retiros|depositos)|estado de cuenta|pagina \d|periodo del/.test(n)) return true;
+  if(/^(fecha|descripcion|concepto|cargos|abonos|saldo|retiro|deposito|referencia|movimientos|folio)$/.test(n)) return true;
+  const words = n.split(" ").filter(Boolean);
+  const headerWord = /^(fecha|folio|descripcion|concepto|detalle|deposito|retiro|cargo|abono|saldo|referencia|movimientos|cuenta|cheques|de)$/;
+  if(words.length>=4 && words.every(w => headerWord.test(w))) return true;
+  if(/saldo (inicial|final|anterior|actual)|saldo final del periodo|periodo anterior|total (de )?(cargos|abonos|retiros|depositos)|estado de cuenta|pagina \d|\bperiodo\b|detalle de movimientos/.test(n)) return true;
   return false;
+}
+function lineOpeningBalance(line){
+  const n = normConcept(line);
+  if(!/(saldo final del periodo anterior|saldo inicial|saldo anterior)/.test(n)) return null;
+  const amounts = extractAmounts(line);
+  if(!amounts.length) return null;
+  return amounts[amounts.length-1].amount;
+}
+function countDateTokens(line, year){
+  let rest = normalizeBankText(line);
+  let n = 0;
+  for(let i=0;i<4;i++){
+    const d = findDateToken(rest, year);
+    if(!d) break;
+    n++;
+    rest = rest.slice(d.index + d.length);
+  }
+  return n;
+}
+function rowDate(row, year){
+  const d = findDateToken(row.line, year);
+  if(d && d.index<=3) return d.iso;
+  const cells = row.cells || [];
+  for(let i=0;i<cells.length;i++){
+    const cd = findDateToken(cells[i].str, year);
+    if(cd && cd.index<=1 && String(cells[i].str||"").trim().length<=16) return cd.iso;
+  }
+  if(d && countDateTokens(row.line, year)===1 && extractAmounts(row.line).length) return d.iso;
+  return "";
 }
 function movementFromLine(line, year){
   if(isBankNoise(line)) return null;
-  const dated = stripLeadingDates(line, year);
-  if(!dated.iso) return null;
+  let dated = stripLeadingDates(line, year);
+  if(!dated.iso){
+    const d = findDateToken(line, year);
+    if(!d || countDateTokens(line, year)!==1) return null;
+    dated = { iso: d.iso, rest: (line.slice(0, d.index)+" "+line.slice(d.index+d.length)).trim() };
+  }
   const amounts = extractAmounts(dated.rest);
   if(!amounts.length) return null;
   const dropSaldo = amounts.length>=2 && amounts.every(a => a.amount>=0);
@@ -6510,10 +6545,11 @@ function movementFromLine(line, year){
   const chosen = body.find(a => a.amount!==0) || body[0];
   let desc = dated.rest;
   amounts.forEach(a => { desc = desc.replace(a.raw, " "); });
-  desc = desc.replace(/\s+/g," ").trim();
+  desc = desc.replace(/\b\d{7}\b/g," ").replace(/\s+/g," ").trim();
   if(!desc) desc = "Movimiento";
   const tipo = chosen.amount<0 ? "cargo" : tipoFromKeywords(desc);
-  return { date: dated.iso, description: desc.slice(0,180), amount: Math.round(Math.abs(chosen.amount)*100)/100, tipo };
+  const amount = Math.round(Math.abs(chosen.amount)*100)/100;
+  return { date: dated.iso, description: desc.slice(0,180), amount, tipo, signed: (tipo==="abono" ? 1 : -1) * amount };
 }
 function detectBankName(text){
   const t = normConcept(text);
@@ -6536,75 +6572,170 @@ function headerColumns(row){
   cells.forEach(c => {
     const t = normConcept(c.str);
     if(!t) return;
-    if(/fecha/.test(t)) cols.fecha = c.x;
-    else if(/descripcion|concepto|detalle|movimiento/.test(t)) cols.desc = c.x;
-    else if(/cargo|retiro|debito/.test(t)) cols.cargo = c.x;
-    else if(/abono|deposito|credito/.test(t)) cols.abono = c.x;
-    else if(/^(monto|importe|cantidad)/.test(t)) cols.monto = c.x;
-    else if(/saldo/.test(t)) cols.saldo = c.x;
+    const x = c.x;
+    if(/fecha/.test(t)) cols.fecha = x;
+    else if(/folio/.test(t)) cols.folio = x;
+    else if(/descripcion|concepto|detalle|movimiento/.test(t)) cols.desc = x;
+    else if(/deposito|abono/.test(t)) cols.abono = x;
+    else if(/retiro|cargo|debito/.test(t)) cols.cargo = x;
+    else if(/^(monto|importe|cantidad)/.test(t)) cols.monto = x;
+    else if(/saldo/.test(t)) cols.saldo = x;
   });
   if(cols.cargo==null && cols.abono==null && cols.monto==null) return null;
   if(cols.cargo!=null && cols.abono!=null && Math.abs(cols.cargo - cols.abono)<8) return null;
   return cols;
 }
-function nearestAmountCol(x, cols){
-  const options = [];
-  if(cols.cargo!=null) options.push(["cargo", cols.cargo]);
-  if(cols.abono!=null) options.push(["abono", cols.abono]);
-  if(cols.monto!=null) options.push(["monto", cols.monto]);
-  if(cols.saldo!=null) options.push(["saldo", cols.saldo]);
-  let best = null;
-  options.forEach(([name, cx]) => {
-    const d = Math.abs(x - cx);
-    if(!best || d<best.d) best = { name, d };
-  });
-  if(!best || best.d>70) return null;
-  return best.name;
+function columnMarks(cols){
+  const marks = [];
+  if(!cols) return marks;
+  if(cols.fecha!=null) marks.push(["fecha", cols.fecha]);
+  if(cols.folio!=null) marks.push(["folio", cols.folio]);
+  if(cols.desc!=null) marks.push(["desc", cols.desc]);
+  if(cols.abono!=null) marks.push(["abono", cols.abono]);
+  if(cols.cargo!=null) marks.push(["cargo", cols.cargo]);
+  if(cols.monto!=null) marks.push(["monto", cols.monto]);
+  if(cols.saldo!=null) marks.push(["saldo", cols.saldo]);
+  marks.sort((a,b)=> a[1]-b[1]);
+  return marks;
 }
-function movementFromColumns(row, cols, year){
-  if(isBankNoise(row.line)) return null;
-  const dated = stripLeadingDates(row.line, year);
-  if(!dated.iso) return null;
+function columnOfX(x, cols){
+  const marks = columnMarks(cols);
+  if(!marks.length || x==null || !isFinite(x)) return null;
+  for(let i=0;i<marks.length;i++){
+    const left = i===0 ? -Infinity : (marks[i-1][1] + marks[i][1]) / 2;
+    const right = i===marks.length-1 ? Infinity : (marks[i][1] + marks[i+1][1]) / 2;
+    if(x>=left && x<right) return marks[i][0];
+  }
+  return marks[marks.length-1][0];
+}
+function describeMovement(lines){
+  const clean = (lines||[]).map(l => String(l||"").replace(/\s+/g," ").trim()).filter(Boolean);
+  const first = clean[0] || "Movimiento";
+  const conceptoLine = clean.find(l => /^concepto\b/.test(normConcept(l)));
+  const concepto = conceptoLine ? conceptoLine.replace(/^concepto\s*/i, "").trim() : "";
+  const description = concepto ? `${first} · ${concepto}` : first;
+  return description.slice(0, 180);
+}
+function movementFromBlock(block, cols, year, prevSaldo){
+  const rows = block.rows || [];
+  if(!rows.length) return null;
+  const date = block.date;
   let tipo = null;
   let amount = null;
-  const descParts = [];
-  (row.cells||[]).forEach(c => {
-    const amounts = extractAmounts(c.str);
-    const letters = normConcept(c.str).replace(/[0-9 ]/g,"");
-    if(amounts.length===1 && letters.length<=2){
-      const col = nearestAmountCol(c.x, cols);
-      if(col==="cargo"){ tipo = "cargo"; amount = Math.abs(amounts[0].amount); }
-      else if(col==="abono"){ tipo = "abono"; amount = Math.abs(amounts[0].amount); }
-      else if(col==="monto"){ tipo = amounts[0].amount<0 ? "cargo" : tipoFromKeywords(row.line); amount = Math.abs(amounts[0].amount); }
-      return;
+  let saldo = null;
+  const descLines = [];
+  rows.forEach((row, idx) => {
+    const parts = [];
+    (row.cells||[]).forEach(c => {
+      const probe = c.xMid!=null ? c.xMid : c.x;
+      const col = columnOfX(probe, cols);
+      const amounts = extractAmounts(c.str);
+      const letters = normConcept(c.str).replace(/[0-9 ]/g,"");
+      const numeric = amounts.length===1 && letters.length<=1;
+      if(numeric){
+        if(col==="abono"){ tipo = "abono"; amount = Math.abs(amounts[0].amount); }
+        else if(col==="cargo"){ tipo = "cargo"; amount = Math.abs(amounts[0].amount); }
+        else if(col==="saldo"){ saldo = amounts[0].amount; }
+        else if(col==="monto" && amount==null){
+          amount = Math.abs(amounts[0].amount);
+          if(amounts[0].amount<0) tipo = "cargo";
+        }
+        return;
+      }
+      if(col==="folio" || /^\d{5,8}$/.test(String(c.str||"").trim())) return;
+      if(col==="fecha") return;
+      const token = findDateToken(c.str, year);
+      if(token && idx===0 && String(c.str||"").trim().length<=16) return;
+      if(c.str) parts.push(c.str);
+    });
+    let text = parts.join(" ").replace(/\s+/g," ").trim();
+    if(!text){
+      text = stripLeadingDates(row.line, year).rest
+        .replace(/[+-]?\s*\$?\s*(?:\d{1,3}(?:,\d{3})*|\d+)\.\d{2}\s*[+-]?/g," ")
+        .replace(/\b\d{7}\b/g," ")
+        .replace(/\s+/g," ").trim();
     }
-    const token = findDateToken(c.str, year);
-    if(token && token.index<=1 && c.str.trim().length<=12) return;
-    descParts.push(c.str);
+    if(text) descLines.push(text);
   });
-  if(!(amount>0)) return null;
-  let description = descParts.join(" ").replace(/\s+/g," ").trim();
-  if(!description){
-    description = dated.rest.replace(/[+-]?\s*\$?\s*(?:\d{1,3}(?:,\d{3})*|\d+)\.\d{2}\s*[+-]?/g," ").replace(/\s+/g," ").trim();
+  if(!(amount>0) && saldo!=null && prevSaldo!=null && isFinite(prevSaldo)){
+    const delta = Math.round((saldo - prevSaldo)*100)/100;
+    if(Math.abs(delta)>=0.01){
+      amount = Math.abs(delta);
+      tipo = delta>0 ? "abono" : "cargo";
+    }
   }
-  description = stripLeadingDates(description, year).rest || description;
-  if(!description) description = "Movimiento";
-  return { date: dated.iso, description: description.slice(0,180), amount: Math.round(amount*100)/100, tipo: tipo || "cargo" };
+  if(!(amount>0)){
+    const lineMov = movementFromLine(rows[0].line, year);
+    if(lineMov){
+      amount = lineMov.amount;
+      tipo = lineMov.tipo;
+    }
+  }
+  if(!(amount>0) || !date) return null;
+  if(!tipo) tipo = tipoFromKeywords(descLines.join(" "));
+  let description = describeMovement(descLines);
+  if(descLines.length===1 && extractAmounts(descLines[0]).length){
+    const cleaned = movementFromLine(rows[0].line, year);
+    if(cleaned && cleaned.description) description = cleaned.description;
+  }
+  const rounded = Math.round(amount*100)/100;
+  return {
+    date,
+    description,
+    amount: rounded,
+    tipo,
+    signed: (tipo==="abono" ? 1 : -1) * rounded,
+    saldo
+  };
 }
 function parseBankRows(rows, text){
-  const blob = text || (rows||[]).map(r=>r.line).join("\n");
+  const list = rows || [];
+  const blob = text || list.map(r=>r.line).join("\n");
   const bank = detectBankName(blob);
   const year = statementYear(blob);
-  const movements = [];
   let cols = null;
-  (rows||[]).forEach(row => {
+  let prevSaldo = null;
+  const blocks = [];
+  let current = null;
+  list.forEach(row => {
     const header = headerColumns(row);
     if(header){ cols = header; return; }
-    let mov = cols ? movementFromColumns(row, cols, year) : null;
-    if(!mov) mov = movementFromLine(row.line, year);
-    if(mov && mov.amount>0 && mov.date) movements.push(mov);
+    const opening = lineOpeningBalance(row.line);
+    if(opening!=null && prevSaldo==null) prevSaldo = opening;
+    if(isBankNoise(row.line)) return;
+    if(countDateTokens(row.line, year)>=2 && !extractAmounts(row.line).length) return;
+    const iso = rowDate(row, year);
+    if(iso){
+      if(current) blocks.push(current);
+      current = { date: iso, rows: [row] };
+      return;
+    }
+    if(current) current.rows.push(row);
+  });
+  if(current) blocks.push(current);
+  const movements = [];
+  blocks.forEach(block => {
+    const mov = movementFromBlock(block, cols, year, prevSaldo);
+    if(!mov) return;
+    if(mov.saldo!=null && isFinite(mov.saldo)) prevSaldo = mov.saldo;
+    movements.push(mov);
   });
   return { bank, movements };
+}
+function joinBankCells(cells){
+  let out = "";
+  for(let i=0;i<cells.length;i++){
+    const c = cells[i];
+    if(i>0){
+      const prev = cells[i-1];
+      const prevEnd = prev.x + (prev.w>0 ? prev.w : prev.str.length * Math.max(prev.h||8, 4) * 0.45);
+      const gap = c.x - prevEnd;
+      const threshold = Math.max(1.6, (prev.h||8) * 0.28);
+      if(gap > threshold) out += " ";
+    }
+    out += c.str;
+  }
+  return out.replace(/[ \t]+/g," ").trim();
 }
 function pdfItemsToRows(items){
   const buckets = [];
@@ -6612,32 +6743,137 @@ function pdfItemsToRows(items){
     const str = String(it.str||"").replace(/\s+/g," ").trim();
     if(!str) return;
     const tr = it.transform || [1,0,0,1,0,0];
-    const x = tr[4], y = tr[5];
-    let bucket = buckets.find(r => Math.abs(r.y - y) <= 2.2);
+    const x = tr[4];
+    const y = tr[5];
+    const h = Math.abs(tr[3]) || it.height || 8;
+    const w = it.width || 0;
+    const tol = Math.max(2.2, h * 0.45);
+    let bucket = buckets.find(r => Math.abs(r.y - y) <= tol);
     if(!bucket){ bucket = { y, cells: [] }; buckets.push(bucket); }
-    bucket.cells.push({ x, str });
+    bucket.cells.push({ x, xMid: x + (w>0 ? w/2 : 0), w, h, str });
   });
   buckets.sort((a,b)=> b.y - a.y);
   return buckets.map(b => {
     b.cells.sort((a,c)=> a.x - c.x);
-    return { y: b.y, cells: b.cells, line: b.cells.map(c=>c.str).join(" ").replace(/\s+/g," ").trim() };
+    return { y: b.y, cells: b.cells, line: joinBankCells(b.cells) };
   }).filter(r => r.line);
 }
-async function readPdfStatement(file){
+function ocrWordsToRows(words){
+  const cells = [];
+  (words||[]).forEach(w => {
+    const str = String(w.text||"").replace(/\s+/g," ").trim();
+    if(!str) return;
+    if(typeof w.confidence==="number" && w.confidence<20 && str.length<=1) return;
+    const b = w.bbox || {};
+    const x = Number(b.x0)||0;
+    const y = Number(b.y0)||0;
+    const x1 = Number(b.x1)||x;
+    const y1 = Number(b.y1)||y;
+    cells.push({ x, xMid:(x+x1)/2, y, w: Math.max(0, x1-x), h: Math.max(8, y1-y), str });
+  });
+  if(!cells.length) return [];
+  const heights = cells.map(c=>c.h).sort((a,b)=>a-b);
+  const median = heights[Math.floor(heights.length/2)] || 12;
+  const tol = Math.max(6, median * 0.55);
+  const buckets = [];
+  cells.forEach(c => {
+    let bucket = buckets.find(r => Math.abs(r.y - c.y) <= tol);
+    if(!bucket){ bucket = { y: c.y, cells: [] }; buckets.push(bucket); }
+    bucket.cells.push(c);
+  });
+  buckets.sort((a,b)=> a.y - b.y);
+  return buckets.map(b => {
+    b.cells.sort((a,c)=> a.x - c.x);
+    return { y: b.y, cells: b.cells, line: joinBankCells(b.cells) };
+  }).filter(r => r.line);
+}
+function statementHasTextLayer(text){
+  const letters = (String(text||"").match(/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/g) || []).length;
+  return letters >= 20;
+}
+const PDFJS_ASSET = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174";
+function pdfStatementOptions(data){
+  return {
+    data,
+    cMapUrl: PDFJS_ASSET + "/cmaps/",
+    cMapPacked: true,
+    standardFontDataUrl: PDFJS_ASSET + "/standard_fonts/"
+  };
+}
+async function ensureTesseract(){
+  if(typeof Tesseract !== "undefined") return;
+  await new Promise((resolve, reject)=>{
+    const src = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+    const s = document.createElement("script");
+    s.src = src;
+    s.onload = ()=> resolve();
+    s.onerror = ()=> reject(new Error("No se pudo cargar el reconocimiento de texto."));
+    document.head.appendChild(s);
+  });
+  if(typeof Tesseract === "undefined") throw new Error("No se pudo cargar el reconocimiento de texto.");
+}
+async function ocrPdfPages(pdf, onProgress){
+  await ensureTesseract();
+  const worker = await Tesseract.createWorker("spa", 1, { logger: ()=>{} });
+  try{
+    await worker.setParameters({
+      tessedit_pageseg_mode: "6",
+      preserve_interword_spaces: "1",
+      user_defined_dpi: "180"
+    });
+    let rows = [];
+    let text = "";
+    const pages = pdf.numPages;
+    for(let i=1; i<=pages; i++){
+      if(onProgress) onProgress(`Leyendo página ${i} de ${pages}…`);
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 2.5 });
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      const result = await worker.recognize(canvas);
+      const pageRows = ocrWordsToRows((result.data && result.data.words) || []);
+      rows = rows.concat(pageRows);
+      text += "\n" + ((result.data && result.data.text) || "");
+      canvas.width = 0;
+      canvas.height = 0;
+    }
+    return { rows, text };
+  }finally{
+    try{ await worker.terminate(); }catch(e){}
+  }
+}
+async function readPdfStatement(file, onProgress){
   await ensurePdfJs();
   const data = new Uint8Array(await file.arrayBuffer());
-  const pdf = await pdfjsLib.getDocument({ data }).promise;
-  const pages = Math.min(pdf.numPages, 12);
+  const pdf = await pdfjsLib.getDocument(pdfStatementOptions(data)).promise;
+  const pages = pdf.numPages;
   let rows = [];
   let text = "";
   for(let i=1; i<=pages; i++){
+    if(onProgress) onProgress(`Leyendo página ${i} de ${pages}…`);
     const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    const pageRows = pdfItemsToRows(content.items);
-    rows = rows.concat(pageRows);
-    text += "\n" + pageRows.map(r=>r.line).join("\n");
+    try{
+      const content = await page.getTextContent();
+      const pageRows = pdfItemsToRows(content.items);
+      rows = rows.concat(pageRows);
+      text += "\n" + pageRows.map(r=>r.line).join("\n");
+    }catch(err){
+      console.warn(err);
+    }
   }
-  return { rows, text, scanned: text.replace(/\s+/g,"").length < 40 };
+  if(statementHasTextLayer(text)) return { rows, text, ocr: false };
+  try{
+    const ocr = await ocrPdfPages(pdf, onProgress);
+    return { rows: ocr.rows, text: ocr.text, ocr: true };
+  }catch(err){
+    console.warn(err);
+    return { rows: [], text: "", ocr: true, ocrError: err && err.message ? err.message : "ocr" };
+  }
 }
 function movementsFromCsv(rows){
   if(!rows.length) return { bank:"CSV", movements:[] };
@@ -6669,7 +6905,10 @@ function movementsFromCsv(rows){
         tipo = n<0 ? "cargo" : tipoFromKeywords(description);
       }
     }
-    if(date && amount>0) movements.push({ date, description: description.slice(0,180), amount: Math.round(amount*100)/100, tipo });
+    if(date && amount>0){
+      const rounded = Math.round(amount*100)/100;
+      movements.push({ date, description: description.slice(0,180), amount: rounded, tipo, signed: (tipo==="abono"?1:-1)*rounded });
+    }
   });
   return { bank:"CSV", movements };
 }
@@ -6756,7 +6995,7 @@ function bankMovHTML(m){
       <span>
         <input type="date" class="bank-date" value="${escapeHtml(m.date)}" aria-label="Fecha">
         <input type="text" class="bank-desc" value="${escapeHtml(m.description)}" aria-label="Concepto">
-        <input type="number" class="bank-amt" min="0" step="0.01" inputmode="decimal" value="${Number(m.amount).toFixed(2)}" aria-label="Monto">
+        <input type="number" class="bank-amt" min="0" step="0.01" inputmode="decimal" value="${m.amount==="" || m.amount==null ? "" : Number(m.amount).toFixed(2)}" aria-label="Monto">
         <select class="bank-dest" aria-label="Gasto, ingreso o no importar" ${m.hasCfdi ? "disabled" : ""}>
           <option value="gasto" ${m.destino==="gasto"?"selected":""}>Gasto (cargo)</option>
           <option value="ingreso" ${m.destino==="ingreso"?"selected":""}>Ingreso (abono)</option>
@@ -6767,14 +7006,38 @@ function bankMovHTML(m){
     </label>
   </div>`;
 }
+function blankBankMovHTML(){
+  return bankMovHTML({
+    date: todayISO(),
+    description: "",
+    amount: "",
+    destino: "gasto",
+    include: true,
+    hasCfdi: false,
+    duplicate: false,
+    hint: ""
+  });
+}
 function openBankImportPreview(parsed, fileName){
   const all = parsed.movements || [];
   const shown = annotateBankMovements(all);
   bankImportMeta = { bank: parsed.bank || "" };
-  const extra = all.length>400 ? " Se muestran los primeros 400." : "";
-  document.getElementById("bankImportIntro").textContent = `${fileName}: ${shown.length} movimiento(s) de ${parsed.bank || "tu banco"}.${extra} Los cargos vienen como gasto y los abonos como ingreso. Lo que parece traspaso, retiro de efectivo o pago de tarjeta queda sin marcar. Los gastos se guardan con ⚠️ Falta la factura hasta que vincules el XML.`;
-  document.getElementById("bankImportList").innerHTML = shown.map(bankMovHTML).join("");
+  const intro = document.getElementById("bankImportIntro");
+  const list = document.getElementById("bankImportList");
+  if(!shown.length){
+    intro.textContent = parsed.ocr
+      ? `${fileName}: leí el PDF en este dispositivo y no reconocí movimientos. Captúralos aquí: fecha, concepto y monto. El archivo no se envía a ningún servidor.`
+      : `${fileName}: no reconocí movimientos con fecha y monto. Puedes capturarlos aquí. El archivo no sale de este dispositivo.`;
+    list.innerHTML = blankBankMovHTML();
+  } else {
+    const extra = all.length>400 ? " Se muestran los primeros 400." : "";
+    const via = parsed.ocr ? " Leído como imagen en este dispositivo." : "";
+    intro.textContent = `${fileName}: ${shown.length} movimiento(s) de ${parsed.bank || "tu banco"}.${extra}${via} Los cargos vienen como gasto y los abonos como ingreso. Lo que parece traspaso, retiro de efectivo o pago de tarjeta queda sin marcar. Los gastos se guardan con ⚠️ Falta la factura hasta que vincules el XML.`;
+    list.innerHTML = shown.map(bankMovHTML).join("");
+  }
   document.getElementById("bankImportOverlay").hidden = false;
+  const sync = document.getElementById("syncStatus");
+  if(sync) sync.classList.remove("show");
 }
 async function importBankStatementFile(file){
   const name = (file && file.name) || "estado de cuenta";
@@ -6785,18 +7048,14 @@ async function importBankStatementFile(file){
   try{
     let parsed;
     if(isPdf){
-      const extracted = await readPdfStatement(file);
-      if(extracted.scanned){
-        alert(name+": este PDF no trae texto. Parece una foto o un escaneo. Pide el PDF original del banco o el CSV. Una imagen no se puede leer aquí.");
-        return;
-      }
+      const extracted = await readPdfStatement(file, (msg)=> showSyncStatus(msg));
       parsed = parseBankRows(extracted.rows, extracted.text);
+      parsed.ocr = !!extracted.ocr;
+      if(extracted.ocrError && !(parsed.movements||[]).length){
+        parsed.ocr = true;
+      }
     } else {
       parsed = await parseBankCsvText(await file.text());
-    }
-    if(!parsed.movements.length){
-      alert(name+": no encontré movimientos con fecha, concepto y monto. Si el PDF está escaneado, no se puede leer. Prueba el CSV que descarga tu banco.");
-      return;
     }
     openBankImportPreview(parsed, name);
   }catch(err){
@@ -6816,9 +7075,14 @@ async function confirmBankImport(){
     const dest = row.querySelector(".bank-dest").value;
     if(!inc || inc.disabled || !inc.checked || dest==="omit") continue;
     const date = row.querySelector(".bank-date").value;
-    const description = row.querySelector(".bank-desc").value.trim() || "Movimiento";
-    const amount = Math.abs(parseFloat(row.querySelector(".bank-amt").value));
-    if(!date || !(amount>0)){ notes.push("Un movimiento no tiene fecha o monto."); continue; }
+    const rawDesc = row.querySelector(".bank-desc").value.trim();
+    const rawAmt = row.querySelector(".bank-amt").value.trim();
+    const description = rawDesc || "Movimiento";
+    const amount = Math.abs(parseFloat(rawAmt));
+    if(!date || !(amount>0)){
+      if(rawDesc || rawAmt) notes.push("Un movimiento no tiene fecha o monto.");
+      continue;
+    }
     if(findCfdiMatch(date, amount)){ notes.push(description+": ya hay factura con ese monto y fecha. No se duplicó."); continue; }
     if(dest==="ingreso"){
       ingresosCache.unshift({
@@ -6883,6 +7147,9 @@ document.getElementById("bankStatementInput").addEventListener("change", async (
 });
 document.getElementById("bankImportCancel").addEventListener("click", ()=>{
   document.getElementById("bankImportOverlay").hidden = true;
+});
+document.getElementById("bankImportAdd").addEventListener("click", ()=>{
+  document.getElementById("bankImportList").insertAdjacentHTML("beforeend", blankBankMovHTML());
 });
 document.getElementById("bankImportConfirm").addEventListener("click", ()=>{ confirmBankImport(); });
 document.getElementById("bankImportList").addEventListener("change", (e)=>{
