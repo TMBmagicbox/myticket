@@ -1,0 +1,50 @@
+rules_version = '2';
+// Administrador: la cuenta de Google con la que Diego entra a Firebase y al panel.
+// Si usas otro correo, cámbialo aquí ANTES de publicar.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() == "gntdment@gmail.com";
+    }
+
+    // Tickets de cada persona. El panel de anuncios cuenta todos los tickets
+    // con una consulta de grupo; por eso el admin también puede leerlos.
+    match /users/{userId}/tickets/{ticketId} {
+      allow read, write: if isOwner(userId);
+      allow read: if isAdmin();
+    }
+
+    // El panel cuenta los tickets de todas las cuentas con una consulta de grupo.
+    match /{path=**}/tickets/{ticketId} {
+      allow read: if isAdmin();
+    }
+
+    // Perfil: RFC, ingresos y presencia. Cada quien el suyo.
+    // El panel lista todos los perfiles para las estadísticas.
+    match /userProfiles/{userId} {
+      allow read, write: if isOwner(userId);
+      allow read: if isAdmin();
+    }
+
+    // Carrusel: quien ya inició sesión puede ver los 6 espacios.
+    // Solo el admin puede cambiarlos. Sin sesión la app no muestra el carrusel.
+    match /banners/{bannerId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Comercios extra: la app los lee; solo el admin los agrega o borra.
+    match /customStores/{storeId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+  }
+}

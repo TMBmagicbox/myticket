@@ -1,0 +1,9 @@
+rules_version = '2';
+// La app no sube archivos a Storage. Las fotos van dentro del ticket en Firestore.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
