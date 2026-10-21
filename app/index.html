@@ -7,9 +7,9 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Outgo · Control de gastos</title>
-<link rel="icon" href="../assets/outgo-mark.svg" type="image/svg+xml">
-<link rel="icon" href="../assets/outgo-mark-32.png" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/outgo-mark-180.png">
+<link rel="icon" href="../assets/outgo-icon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/outgo-icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/outgo-icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -19,10 +19,11 @@
 <style>
 /* =========================================================
    TOKENS DE DISEÑO — Marca "Outgo"
-   El logotipo es una sola imagen (assets/outgo-logo.svg). No se
-   arma con texto. Lavanda #8C7AE6 y menta #2ED9C3 son del isotipo;
-   la palabra va en tinta #2B2640. Poppins e Inter son para la
-   interfaz, no para reescribir el logo. Ver MARCA.md.
+   El logotipo es una sola imagen (assets/outgo-logo.png): el isotipo
+   oficial y la palabra de outgo_logotipo.png. No se arma con texto.
+   Lavanda #8C7AE6 y menta #2ED9C3 son del isotipo; la palabra va en
+   tinta #2B2640. Poppins e Inter son para la interfaz, no para
+   reescribir el logo. Ver MARCA.md.
    ========================================================= */
 :root{
   --bg:            #F6F4FC;   /* fondo general, blanco con tinte lavanda */
@@ -109,7 +110,10 @@ header.top{
   flex: 0 0 auto;
   align-self: center;
 }
-.outgo-logo--auth{ height: 64px; }
+.outgo-logo--auth{
+  width: min(280px, 78vw);
+  height: auto;
+}
 header.top p{
   margin: 6px 0 0;
   font-size: 12px;
@@ -2001,19 +2005,13 @@ nav.bottom button.active{ color: var(--brand-purple); }
 <body>
 
 <div id="rotateGate">
-  <picture>
-    <source srcset="../assets/outgo-logo.svg" type="image/svg+xml">
-    <img class="outgo-logo" src="../assets/outgo-logo.png" srcset="../assets/outgo-logo.png 1x, ../assets/outgo-logo@2x.png 2x, ../assets/outgo-logo@3x.png 3x" alt="outgo">
-  </picture>
+  <img class="outgo-logo" src="../assets/outgo-logo.png" alt="outgo">
   <p>Gira tu teléfono para usar Outgo</p>
 </div>
 
 <!-- ============ PANTALLA DE INICIO DE SESIÓN (Google) ============ -->
 <div id="authOverlay" class="auth-overlay">
-  <picture>
-    <source srcset="../assets/outgo-logo.svg" type="image/svg+xml">
-    <img class="outgo-logo outgo-logo--auth" src="../assets/outgo-logo.png" srcset="../assets/outgo-logo.png 1x, ../assets/outgo-logo@2x.png 2x, ../assets/outgo-logo@3x.png 3x" alt="outgo">
-  </picture>
+  <img class="outgo-logo outgo-logo--auth" src="../assets/outgo-logo-vertical.png" alt="outgo">
   <p class="auth-subtitle">Gastos de tu actividad, para cualquier profesionista independiente</p>
   <button class="google-btn" id="googleSignInBtn">
     <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.3 1 7.3 2.8l5.7-5.7C33.7 6.9 29.1 5 24 5 13.5 5 5 13.5 5 24s8.5 19 19 19 19-8.5 19-19c0-1.3-.1-2.5-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.6 15.9 18.9 13 24 13c2.8 0 5.3 1 7.3 2.8l5.7-5.7C33.7 6.9 29.1 5 24 5c-7.7 0-14.3 4.3-17.7 10.7z"/><path fill="#4CAF50" d="M24 43c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 34.1 26.7 35 24 35c-5.2 0-9.6-3.3-11.2-8l-6.5 5C9.6 38.6 16.2 43 24 43z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.6l6.2 5.2C39.9 37 44 31.5 44 24c0-1.3-.1-2.5-.4-3.5z"/></svg>
@@ -2030,10 +2028,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
   <header class="top">
     <div class="header-left">
       <h1 class="brand-row">
-        <picture>
-          <source srcset="../assets/outgo-logo.svg" type="image/svg+xml">
-          <img class="outgo-logo" src="../assets/outgo-logo.png" srcset="../assets/outgo-logo.png 1x, ../assets/outgo-logo@2x.png 2x, ../assets/outgo-logo@3x.png 3x" alt="outgo">
-        </picture>
+        <img class="outgo-logo" src="../assets/outgo-logo.png" alt="outgo">
       </h1>
       <p id="todayLabel">—</p>
     </div>
