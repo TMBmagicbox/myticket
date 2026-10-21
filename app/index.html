@@ -5787,33 +5787,57 @@ async function refreshDashboard(){
    CARRUSEL DE BANNERS (promocional, administrable)
    Los banners se configuran aparte, en admin-banners.html, y
    viven en Firestore bajo banners/1 .. banners/6 — la app solo
-   los lee. Si no hay ninguno activo, la sección se oculta sola.
+   los lee. Si no hay ninguno activo, o la lectura falla, se muestran
+   dos anuncios de la casa guardados en el repo. El carrusel no se oculta.
    ========================================================= */
 let bannerData = [];
 let bannerAutoTimer = null;
 let bannerUserInteracting = false;
 
+function houseBanners(){
+  const plate = (file, title, description, link)=>({
+    enabled: true,
+    title,
+    description,
+    link,
+    bgImage: "../assets/banners/" + file,
+    logoImage: "../assets/outgo-logo-blanco.png",
+    logoX: 22,
+    logoY: 32,
+    logoWidthPct: 32,
+    bgZoom: 100,
+    bgPosX: 50,
+    bgPosY: 50
+  });
+  return [
+    plate(
+      "casa-invita.svg",
+      "Invita a otro freelance",
+      "Comparte Outgo con alguien que también cobra por su cuenta.",
+      "https://tmbmagicbox.github.io/myticket/?utm_source=casa&utm_medium=banner&utm_campaign=invita"
+    ),
+    plate(
+      "casa-anuncia.svg",
+      "Anuncia tu negocio aquí",
+      "ventas@tmbmagicbox.studio",
+      "mailto:ventas@tmbmagicbox.studio"
+    )
+  ];
+}
+
 async function loadBanners(){
+  bannerData = [];
   try{
-    const ids = ["1","2","3","4","5","6"];
-    const snaps = await Promise.all(ids.map(id=> db.collection("banners").doc(id).get()));
-    bannerData = snaps.filter(s=> s.exists && s.data().enabled && s.data().bgImage).map(s=> s.data());
+    if(db){
+      const ids = ["1","2","3","4","5","6"];
+      const snaps = await Promise.all(ids.map(id=> db.collection("banners").doc(id).get()));
+      bannerData = snaps.filter(s=> s.exists && s.data().enabled && s.data().bgImage).map(s=> s.data());
+    }
   }catch(err){
     console.warn("No se pudieron cargar los banners (¿existen las reglas de Firestore para 'banners'?):", err);
     bannerData = [];
   }
-  if(isLocalPreview() && !bannerData.length && window.matchMedia("(min-width: 1024px)").matches){
-    bannerData = [{
-      enabled: true,
-      title: "Tu marca aquí",
-      description: "El anuncio se muestra completo, en el teléfono y en la computadora.",
-      link: "#",
-      bgImage: "../assets/landing/banner-ejemplo.png",
-      bgZoom: 140,
-      bgPosX: 50,
-      bgPosY: 50
-    }];
-  }
+  if(!bannerData.length) bannerData = houseBanners();
   renderBannerCarousel();
 }
 

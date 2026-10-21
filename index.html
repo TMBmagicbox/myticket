@@ -143,6 +143,10 @@ h1 .hl{ color:var(--brand-purple); }
 .ad-slide img.ad-bg{
   position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#2B2640;
 }
+.ad-logo{
+  position:absolute; z-index:2; transform:translate(-50%,-50%);
+  object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.35));
+}
 .ad-slide .ad-copy{ position:relative; z-index:1; }
 .ad-kicker{ font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; opacity:0.85; margin:0 0 6px; }
 .ad-slide strong{ font-family:var(--font-display); font-size:26px; font-weight:600; display:block; }
@@ -244,17 +248,27 @@ footer{ border-top:1px solid var(--glass-border); padding:40px 0 28px; }
     <p class="kicker">Publicidad</p>
     <h2>Tu marca, junto a la herramienta</h2>
     <p class="section-intro">Seis lugares del carrusel. Se ven en esta página y dentro de Outgo, en el teléfono y en la computadora, completos y sin recorte.</p>
-    <div class="ad-frame" id="landingBanner">
-      <div class="ad-slide" id="landingSlot">
-        <img class="ad-bg" alt="" src="assets/landing/banner-ejemplo.png">
+    <div class="ad-frame" id="landingBanner" data-state="live">
+      <a class="ad-slide" href="https://tmbmagicbox.github.io/myticket/?utm_source=casa&amp;utm_medium=banner&amp;utm_campaign=invita">
+        <img class="ad-bg" alt="" src="assets/banners/casa-invita.svg">
+        <img class="ad-logo" alt="outgo" src="assets/outgo-logo-blanco.png" style="left:22%;top:32%;width:32%;">
         <div class="ad-copy">
-          <p class="ad-kicker">Espacio publicitario</p>
-          <strong>Tu anuncio aquí</strong>
-          <span>Quien compra el lugar aparece en el carrusel, con su imagen completa.</span>
+          <p class="ad-kicker">Outgo</p>
+          <strong>Invita a otro freelance</strong>
+          <span>Comparte Outgo con alguien que también cobra por su cuenta.</span>
         </div>
-      </div>
+      </a>
+      <a class="ad-slide" href="mailto:ventas@tmbmagicbox.studio">
+        <img class="ad-bg" alt="" src="assets/banners/casa-anuncia.svg">
+        <img class="ad-logo" alt="outgo" src="assets/outgo-logo-blanco.png" style="left:22%;top:32%;width:32%;">
+        <div class="ad-copy">
+          <p class="ad-kicker">Publicidad</p>
+          <strong>Anuncia tu negocio aquí</strong>
+          <span>ventas@tmbmagicbox.studio</span>
+        </div>
+      </a>
     </div>
-    <p class="ad-note" id="landingAdNote">Si ya hay anuncios activos, esta franja los muestra. Si no, el lugar queda libre.</p>
+    <p class="ad-note" id="landingAdNote">Mientras no haya una campaña activa, aquí se ven los anuncios de Outgo.</p>
   </div>
 </section>
 
@@ -466,21 +480,47 @@ footer{ border-top:1px solid var(--glass-border); padding:40px 0 28px; }
       return ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;" })[c];
     });
   }
-  function showBanners(list){
+  function houseBanners(){
+    return [
+      {
+        title: "Invita a otro freelance",
+        description: "Comparte Outgo con alguien que también cobra por su cuenta.",
+        link: "https://tmbmagicbox.github.io/myticket/?utm_source=casa&utm_medium=banner&utm_campaign=invita",
+        bgImage: "assets/banners/casa-invita.svg",
+        logoImage: "assets/outgo-logo-blanco.png",
+        logoX: 22, logoY: 32, logoWidthPct: 32,
+        kicker: "Outgo"
+      },
+      {
+        title: "Anuncia tu negocio aquí",
+        description: "ventas@tmbmagicbox.studio",
+        link: "mailto:ventas@tmbmagicbox.studio",
+        bgImage: "assets/banners/casa-anuncia.svg",
+        logoImage: "assets/outgo-logo-blanco.png",
+        logoX: 22, logoY: 32, logoWidthPct: 32,
+        kicker: "Publicidad"
+      }
+    ];
+  }
+  function showBanners(list, noteText){
     var frame = document.getElementById("landingBanner");
     var note = document.getElementById("landingAdNote");
     if(!frame || !list.length) return;
     frame.innerHTML = list.map(function(b){
       var href = b.link || "#anuncios";
       var pos = (b.bgPosX == null ? 50 : b.bgPosX) + "% " + (b.bgPosY == null ? 50 : b.bgPosY) + "%";
+      var logo = b.logoImage
+        ? '<img class="ad-logo" alt="outgo" src="'+escapeHtml(b.logoImage)+'" style="left:'+(b.logoX==null?22:b.logoX)+'%;top:'+(b.logoY==null?34:b.logoY)+'%;width:'+(b.logoWidthPct==null?32:b.logoWidthPct)+'%;">'
+        : "";
       return '<a class="ad-slide" href="'+escapeHtml(href)+'" target="_blank" rel="noopener">'
         + '<img class="ad-bg" alt="" src="'+escapeHtml(b.bgImage)+'" style="object-position:'+pos+';">'
-        + '<div class="ad-copy"><p class="ad-kicker">Publicidad</p><strong>'+escapeHtml(b.title || "Anuncio")+'</strong>'
+        + logo
+        + '<div class="ad-copy"><p class="ad-kicker">'+escapeHtml(b.kicker || "Publicidad")+'</p><strong>'+escapeHtml(b.title || "Anuncio")+'</strong>'
         + (b.description ? '<span>'+escapeHtml(b.description)+'</span>' : '')
         + '</div></a>';
     }).join("");
     frame.dataset.state = "live";
-    if(note) note.textContent = "Anuncios activos del carrusel. La imagen se muestra completa.";
+    if(note) note.textContent = noteText || "Anuncios activos del carrusel. La imagen se muestra completa.";
   }
   var firebaseConfig = {
     apiKey: "AIzaSyCxwN1C5mKvPG7x3murIuJxuYhUnLzkQvw",
@@ -498,14 +538,10 @@ footer{ border-top:1px solid var(--glass-border); padding:40px 0 28px; }
         .then(function(snaps){
           var list = snaps.filter(function(s){ return s.exists && s.data().enabled && s.data().bgImage; }).map(function(s){ return s.data(); });
           if(list.length) showBanners(list);
-          else {
-            var frame = document.getElementById("landingBanner");
-            if(frame) frame.dataset.state = "slot";
-          }
+          else showBanners(houseBanners(), "Mientras no haya una campaña activa, aquí se ven los anuncios de Outgo.");
         })
         .catch(function(){
-          var frame = document.getElementById("landingBanner");
-          if(frame) frame.dataset.state = "slot";
+          showBanners(houseBanners(), "Mientras no haya una campaña activa, aquí se ven los anuncios de Outgo.");
         });
     }
   }catch(e){}
