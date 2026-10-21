@@ -41,4 +41,16 @@ El logotipo se usa siempre como una sola imagen. No se recompone con texto HTML 
 
 La app, la página pública, el aviso de privacidad y los términos usan el horizontal. La pantalla de entrar usa el vertical. El favicon y el ícono de la PWA usan el ícono sobre `#2B2640`.
 
-El panel `admin-banners.html` no se edita. Los logos de los anuncios son de quien compra el espacio, no son esta marca.
+El panel `admin-banners.html` no cambia el logotipo ni el flujo de los anuncios. Los logos de los anuncios son de quien compra el espacio, no son esta marca. El panel sí sigue la regla de iconos de abajo.
+
+## Iconos, no emojis
+
+Outgo no usa emojis. Vale para la app, la página pública, el tutorial, los avisos, los botones, el semáforo, las categorías, los estados vacíos, el manifest y `admin-banners.html`.
+
+Los iconos son un solo juego, de trazo uniforme, en `assets/icons.svg`. Estilo Lucide: lienzo 24×24, trazo 2, puntas redondas. En la interfaz van en línea, con `stroke="currentColor"`, para tomar la paleta: lavanda `#8C7AE6`, menta `#2ED9C3` y tinta `#2B2640`.
+
+El semáforo no es un carácter. Es un círculo SVG de color: menta `#2ED9C3` con palomita (deducible), rojo `#E0554A` con admiración (falta algo) y gris con cruz (no deducible).
+
+Las flechas de texto (← → ↑ ↓) no son emojis. Se quedan en «Volver» y en los cambios de precio.
+
+Antes de publicar hay que buscar pictogramas en los rangos Unicode de emoji, incluidos ✅ ❌ ⚠️ ⭐ y el selector de variación FE0F. No debe quedar ninguno.
