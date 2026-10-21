@@ -53,6 +53,7 @@
 
 *{ box-sizing: border-box; }
 html,body{ margin:0; padding:0; }
+html{ -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body{
   background-color: var(--bg);
   background-image:
@@ -60,11 +61,12 @@ body{
     radial-gradient(circle at 85% 18%, rgba(46,217,195,0.30), transparent 38%),
     radial-gradient(circle at 25% 92%, rgba(46,217,195,0.22), transparent 42%),
     radial-gradient(circle at 90% 88%, rgba(140,122,230,0.28), transparent 40%);
-  background-attachment: fixed;
+  background-attachment: scroll;
   background-repeat: no-repeat;
   color: var(--ink);
   font-family: var(--font-body);
   min-height: 100vh;
+  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -72,14 +74,16 @@ body{
   max-width: 480px;
   margin: 0 auto;
   min-height: 100vh;
+  min-height: 100dvh;
   background: transparent;
-  padding-bottom: 100px; /* espacio para el nav flotante inferior */
+  padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px));
   position: relative;
 }
 
 /* ---------- Header ---------- */
 header.top{
   padding: 18px 20px 14px;
+  padding-top: max(18px, calc(env(safe-area-inset-top, 0px) + 8px));
   background: var(--glass-bg-2);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -258,7 +262,7 @@ header.top p{
 .tarifa-table input{
   width: 100%;
   min-width: 0;
-  font-size: 12px;
+  font-size: 16px;
   padding: 6px 4px;
   border-radius: 8px;
   border: 1px solid var(--line);
@@ -856,7 +860,7 @@ section{ padding: 6px 20px 10px; }
   border: 1px solid var(--line);
   background: var(--paper);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   margin-bottom: 10px;
 }
 .product-search:focus{ outline: 2px solid var(--accent); outline-offset:1px; }
@@ -970,7 +974,7 @@ section{ padding: 6px 20px 10px; }
   border: 1px solid var(--line);
   background: var(--paper);
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
 }
 .field input:focus, .field select:focus{ outline: 2px solid var(--accent); outline-offset: 1px; }
@@ -1109,7 +1113,7 @@ section{ padding: 6px 20px 10px; }
 .item-row .row-top input.desc{ flex:1; }
 .item-row .row-bottom{
   display:grid;
-  grid-template-columns: 1.3fr 50px 70px;
+  grid-template-columns: minmax(0, 1.3fr) 72px 96px;
   gap: 6px;
 }
 .item-row .row-discount{
@@ -1118,8 +1122,8 @@ section{ padding: 6px 20px 10px; }
 }
 .item-row .row-discount span{ font-size:10.5px; color:var(--muted); white-space:nowrap; }
 .item-row .row-discount input{
-  width:90px; font-family:var(--font-mono); text-align:right;
-  padding:5px 7px; font-size:12px;
+  width:120px; font-family:var(--font-mono); text-align:right;
+  padding:8px 8px; font-size:16px;
 }
 .item-row input, .item-row select{
   width: 100%;
@@ -1128,9 +1132,9 @@ section{ padding: 6px 20px 10px; }
   border: 1px solid var(--line);
   background: #fff;
   font-family: var(--font-body);
-  font-size: 12.5px;
+  font-size: 16px;
 }
-.item-row select.cat{ font-size: 12px; }
+.item-row select.cat{ font-size: 16px; }
 .item-row input.qty, .item-row input.cost{ font-family: var(--font-mono); text-align:right; }
 .item-row .item-del{
   background:none; border:none; color: var(--muted);
@@ -1195,7 +1199,7 @@ section{ padding: 6px 20px 10px; }
   margin-bottom: 10px;
 }
 .tax-row{ display:flex; gap:8px; }
-.tax-row .field input{ font-size:13px; padding: 9px 8px; }
+.tax-row .field input{ font-size:16px; padding: 9px 8px; }
 .tax-row .field label{ font-size: 10px; }
 
 .deducible-box{
@@ -1401,7 +1405,8 @@ section{ padding: 6px 20px 10px; }
 /* ---------- Nav inferior ---------- */
 nav.bottom{
   position: fixed;
-  bottom: 14px; left:50%; transform: translateX(-50%);
+  bottom: max(14px, calc(env(safe-area-inset-bottom, 0px) + 8px));
+  left:50%; transform: translateX(-50%);
   width: calc(100% - 32px); max-width: 448px;
   background: var(--glass-bg-2);
   backdrop-filter: var(--glass-blur);
@@ -1460,7 +1465,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
   border: 1px solid var(--glass-border);
   border-bottom: none;
   border-radius: 22px 22px 0 0;
-  padding: 10px 16px 24px;
+  padding: 10px 16px calc(24px + env(safe-area-inset-bottom, 0px));
 }
 .action-sheet-btn{
   width:100%;
@@ -3541,8 +3546,44 @@ async function updatePresence(){
   }
 }
 
+function showAuthError(message){
+  const errEl = document.getElementById("authError");
+  if(!errEl) return;
+  errEl.textContent = message;
+  errEl.style.display = "block";
+}
+function shouldUseRedirectAuth(){
+  const ua = navigator.userAgent || "";
+  const iOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  let standalone = false;
+  try{
+    standalone = navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
+  }catch(e){}
+  return !!(iOS || standalone);
+}
+async function signInWithGoogle(){
+  const provider = new firebase.auth.GoogleAuthProvider();
+  if(shouldUseRedirectAuth()){
+    await auth.signInWithRedirect(provider);
+    return;
+  }
+  try{
+    await auth.signInWithPopup(provider);
+  }catch(err){
+    if(err && err.code==="auth/popup-blocked"){
+      await auth.signInWithRedirect(provider);
+      return;
+    }
+    throw err;
+  }
+}
 function initAuth(){
   if(!firebaseReady) return; // ya se mostró el error en authError
+  auth.getRedirectResult().catch(err=>{
+    console.error("Error al volver del acceso con Google:", err);
+    if(err && err.code==="auth/popup-closed-by-user") return;
+    showAuthError("No se pudo iniciar sesión: " + (err && err.message ? err.message : "intenta de nuevo."));
+  });
   auth.onAuthStateChanged(async (user)=>{
     if(user){
       currentUser = user;
@@ -3553,6 +3594,7 @@ function initAuth(){
       updatePresence();
       clearInterval(presenceInterval);
       presenceInterval = setInterval(updatePresence, 60000);
+      if(await maybeResumeAccountDeletion()) return;
       loadCustomStores();
       await loadFiscalProfile();
       await refreshDashboard();
@@ -3576,10 +3618,10 @@ document.getElementById("googleSignInBtn").addEventListener("click", async ()=>{
     return;
   }
   try{
-    const provider = new firebase.auth.GoogleAuthProvider();
-    await auth.signInWithPopup(provider);
+    await signInWithGoogle();
   }catch(err){
     console.error("Error al iniciar sesión:", err);
+    if(err && err.code==="auth/popup-closed-by-user") return;
     errEl.textContent = "No se pudo iniciar sesión: " + err.message;
     errEl.style.display = "block";
   }
@@ -6826,6 +6868,45 @@ async function deleteAllCloudTickets(){
     await batch.commit();
   }
 }
+let deletionResume = false;
+async function maybeResumeAccountDeletion(){
+  let pending = false;
+  try{ pending = sessionStorage.getItem("outgo.pendingDelete")==="1"; }catch(e){}
+  if(!pending || !currentUser || isLocalPreview()) return false;
+  try{ sessionStorage.removeItem("outgo.pendingDelete"); }catch(e){}
+  deletionResume = true;
+  openDeleteOverlay();
+  document.getElementById("deleteStep1").hidden = true;
+  document.getElementById("deleteStep2").hidden = false;
+  document.getElementById("deleteConfirmInput").value = "ELIMINAR";
+  await performAccountDeletion();
+  return true;
+}
+async function reauthenticateThenDelete(){
+  const provider = new firebase.auth.GoogleAuthProvider();
+  const useRedirect = shouldUseRedirectAuth();
+  if(!useRedirect){
+    try{
+      await currentUser.reauthenticateWithPopup(provider);
+      await currentUser.delete();
+      return;
+    }catch(err){
+      if(!(err && err.code==="auth/popup-blocked")) throw err;
+    }
+  }
+  if(deletionResume){
+    const again = new Error("Google no confirmó la sesión. Entra de nuevo y vuelve a pedir el borrado.");
+    again.code = "auth/requires-recent-login";
+    throw again;
+  }
+  try{ sessionStorage.setItem("outgo.pendingDelete", "1"); }catch(e){}
+  try{
+    await currentUser.reauthenticateWithRedirect(provider);
+  }catch(err){
+    try{ sessionStorage.removeItem("outgo.pendingDelete"); }catch(e){}
+    throw err;
+  }
+}
 async function performAccountDeletion(){
   const status = document.getElementById("deleteStatus");
   const confirmBtn = document.getElementById("btnDeleteConfirm");
@@ -6843,10 +6924,10 @@ async function performAccountDeletion(){
         await currentUser.delete();
       }catch(err){
         if(err && err.code==="auth/requires-recent-login"){
-          status.textContent = "Google pide confirmar tu sesión. Se abrirá el acceso y después se borra la cuenta.";
-          const provider = new firebase.auth.GoogleAuthProvider();
-          await currentUser.reauthenticateWithPopup(provider);
-          await currentUser.delete();
+          status.textContent = shouldUseRedirectAuth()
+            ? "Google pide confirmar tu sesión. Te llevamos a Google y, al volver, se borra la cuenta."
+            : "Google pide confirmar tu sesión. Se abrirá el acceso y después se borra la cuenta.";
+          await reauthenticateThenDelete();
         } else {
           throw err;
         }
