@@ -1725,13 +1725,11 @@ nav.bottom button.active{ color: var(--brand-purple); }
     grid-row: 3;
     margin: 0 20px;
   }
-  #view-dashboard > .tabs,
-  #view-dashboard > .period-nav,
-  #view-dashboard > .period-today,
-  #view-dashboard > #periodContent,
-  #view-dashboard > .products-in-home{
-    grid-column: 1 / -1;
-  }
+  #view-dashboard > .tabs{ grid-column: 1 / -1; grid-row: 4; }
+  #view-dashboard > .period-nav{ grid-column: 1 / -1; grid-row: 5; }
+  #view-dashboard > .period-today{ grid-column: 1 / -1; grid-row: 6; }
+  #view-dashboard > #periodContent{ grid-column: 1 / -1; grid-row: 7; }
+  #view-dashboard > .products-in-home{ grid-column: 1 / -1; grid-row: 8; }
 }
 
 /* Formularios en dos columnas desde tablet. El celular no usa este bloque. */
@@ -1785,6 +1783,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
     grid-template-columns: 1fr 1fr;
     column-gap: 16px;
   }
+  #view-form .form-view > .field:has(#fDate){ grid-column: 1 / -1; }
   #view-ajustes .form-view > .field:has(#fRfc){ grid-column: 1 / -1; }
   #reporteMesPanel,
   #reporteAnioPanel{
@@ -1864,7 +1863,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
     background: rgba(140,122,230,0.16);
   }
   .nav-label{
-    display: inline;
+    display: block;
     font-family: var(--font-body);
     font-weight: 600;
     font-size: 14.5px;
@@ -1929,13 +1928,11 @@ nav.bottom button.active{ color: var(--brand-purple); }
     grid-row: 2;
     margin: 0;
   }
-  #view-dashboard > .tabs,
-  #view-dashboard > .period-nav,
-  #view-dashboard > .period-today,
-  #view-dashboard > #periodContent,
-  #view-dashboard > .products-in-home{
-    grid-column: 1 / -1;
-  }
+  #view-dashboard > .tabs{ grid-column: 1 / -1; grid-row: 3; }
+  #view-dashboard > .period-nav{ grid-column: 1 / -1; grid-row: 4; }
+  #view-dashboard > .period-today{ grid-column: 1 / -1; grid-row: 5; }
+  #view-dashboard > #periodContent{ grid-column: 1 / -1; grid-row: 6; }
+  #view-dashboard > .products-in-home{ grid-column: 1 / -1; grid-row: 7; }
   #view-dashboard > .tabs,
   #view-dashboard > .period-nav,
   #view-dashboard > section{
