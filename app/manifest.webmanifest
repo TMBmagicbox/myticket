@@ -1,0 +1,51 @@
+{
+  "name": "Outgo",
+  "short_name": "Outgo",
+  "description": "Control de gastos para profesionistas independientes",
+  "lang": "es-MX",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F6F4FC",
+  "theme_color": "#8C7AE6",
+  "icons": [
+    {
+      "src": "../assets/outgo-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "../assets/outgo-mark-32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../assets/outgo-mark.png",
+      "sizes": "122x122",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../assets/outgo-mark-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../assets/outgo-mark@2x.png",
+      "sizes": "244x244",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../assets/outgo-mark@3x.png",
+      "sizes": "366x366",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

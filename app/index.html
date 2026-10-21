@@ -10,6 +10,7 @@
 <link rel="icon" href="../assets/outgo-mark.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/outgo-mark-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/outgo-mark-180.png">
+<link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Outgo">
@@ -1648,9 +1649,367 @@ nav.bottom button.active{ color: var(--brand-purple); }
   font-size: 13.5px;
   cursor:pointer;
 }
+
+/* Etiquetas del nav: en el celular la barra sigue siendo solo iconos. */
+.nav-label{ display:none; }
+
+/* Pantalla de giro. Solo teléfonos horizontales (puntero grueso y poca altura).
+   Tablets y PC no entran: el alto de un iPad en horizontal supera 500px
+   y el puntero de un mouse es fino. */
+#rotateGate{
+  display:none;
+}
+@media (orientation: landscape) and (pointer: coarse) and (max-height: 500px) and (max-width: 980px){
+  #rotateGate{
+    display:flex;
+    position:fixed;
+    inset:0;
+    z-index:4000;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    padding: 20px 24px;
+    text-align:center;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(140,122,230,0.35), transparent 40%),
+      radial-gradient(circle at 85% 18%, rgba(46,217,195,0.30), transparent 38%),
+      radial-gradient(circle at 25% 92%, rgba(46,217,195,0.22), transparent 42%),
+      radial-gradient(circle at 90% 88%, rgba(140,122,230,0.28), transparent 40%);
+  }
+  #rotateGate .outgo-logo{ height: 52px; }
+  #rotateGate p{
+    margin:0;
+    max-width: 16em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+}
+
+/* Tablet: misma barra inferior, columna más ancha y arranque en dos zonas. */
+@media (min-width: 768px) and (max-width: 1023px){
+  #app{ max-width: 920px; }
+  nav.bottom{ max-width: 560px; }
+  #view-dashboard.active{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+    row-gap: 12px;
+    align-items: start;
+  }
+  #view-dashboard > .banner-carousel-wrap{
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+    width: 100%;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #view-dashboard > .summary-row{
+    grid-column: 1;
+    grid-row: 2;
+    padding: 8px 0 4px 20px;
+  }
+  #view-dashboard > .discover-block{
+    grid-column: 2;
+    grid-row: 2;
+    padding: 8px 20px 0 0;
+  }
+  #view-dashboard > #homeReminder{
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin: 0 20px;
+  }
+  #view-dashboard > .tabs,
+  #view-dashboard > .period-nav,
+  #view-dashboard > .period-today,
+  #view-dashboard > #periodContent,
+  #view-dashboard > .products-in-home{
+    grid-column: 1 / -1;
+  }
+}
+
+/* Formularios en dos columnas desde tablet. El celular no usa este bloque. */
+@media (min-width: 768px){
+  #view-form .form-view,
+  #view-ingresos .form-view,
+  #view-ajustes .form-view,
+  #view-reporte .form-view{
+    max-width: 880px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #view-form .form-view,
+  #view-ingresos .form-view,
+  #view-ajustes .form-view{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+    align-items: start;
+  }
+  #view-form .form-view > .back,
+  #view-form .form-view > .preview-wrap,
+  #view-form .form-view > .hint,
+  #view-form .form-view > .items-section,
+  #view-form .form-view > .tax-section,
+  #view-form .form-view > .field.amount,
+  #view-form .form-view > #satTicketFields,
+  #view-form .form-view > .deducible-box,
+  #view-form .form-view > .save-btn,
+  #view-form .form-view > .cancel-link,
+  #view-ingresos .form-view > .back,
+  #view-ingresos .form-view > .section-title,
+  #view-ingresos .form-view > .hint,
+  #view-ingresos .form-view > #ingresosList,
+  #view-ingresos .form-view > .tax-row,
+  #view-ingresos .form-view > .backup-btn,
+  #view-ingresos .form-view > .save-btn,
+  #view-ingresos .form-view > .fiscal-disclaimer,
+  #view-ingresos .form-view > #tarifaEditor,
+  #view-ajustes .form-view > .back,
+  #view-ajustes .form-view > .section-title,
+  #view-ajustes .form-view > .hint,
+  #view-ajustes .form-view > .save-btn,
+  #view-ajustes .form-view > .backup-btn,
+  #view-ajustes .form-view > .backup-actions,
+  #view-ajustes .form-view > .app-legal{
+    grid-column: 1 / -1;
+  }
+  #view-form #satTicketFields{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+  }
+  #view-ajustes .form-view > .field:has(#fRfc){ grid-column: 1 / -1; }
+  #reporteMesPanel,
+  #reporteAnioPanel{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+    align-items: start;
+  }
+  #reporteAnioPanel > .tax-row,
+  #reporteAnioPanel > .hint{ grid-column: 1 / -1; }
+  #periodContent,
+  #historyList,
+  #productsList{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 12px;
+    align-items: start;
+  }
+  #periodContent > :not(.ticket),
+  #historyList > :not(.ticket),
+  #productsList > :not(.product-card){
+    grid-column: 1 / -1;
+  }
+}
+
+/* PC: navegación lateral y el ancho de la ventana. */
+@media (min-width: 1024px){
+  #app{
+    max-width: none;
+    margin-left: 220px;
+    padding-bottom: 28px;
+  }
+  #app:has(#view-camera.active),
+  #app:has(#view-crop.active){
+    margin-left: 0;
+  }
+  #view-camera .camera-wrap{
+    max-width: 420px;
+  }
+  #view-crop .crop-stage{
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  nav.bottom{
+    top: 0;
+    bottom: 0;
+    left: 0;
+    transform: none;
+    width: 220px;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    border-radius: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 6px;
+    padding: 22px 14px;
+    border-right: 1px solid var(--glass-border);
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+  }
+  nav.bottom button{
+    flex: none;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+  }
+  nav.bottom button:not(.fab-btn):hover{
+    background: rgba(140,122,230,0.1);
+  }
+  nav.bottom button.active{
+    background: rgba(140,122,230,0.16);
+  }
+  .nav-label{
+    display: inline;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14.5px;
+  }
+  nav.bottom .fab-btn{
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 48px;
+    margin-top: 8px;
+    border-radius: 16px !important;
+  }
+  .sync-status{
+    left: auto;
+    right: 24px;
+    transform: none;
+    bottom: 24px;
+  }
+  .offline-banner{
+    left: calc(50% + 110px);
+  }
+  .action-sheet-overlay{ align-items: center; padding: 24px; }
+  .action-sheet{
+    border-radius: 22px;
+    border-bottom: 1px solid var(--glass-border);
+    max-width: 420px;
+  }
+  #view-dashboard.active{
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 18px;
+    row-gap: 14px;
+    align-items: stretch;
+    padding: 8px 28px 0;
+  }
+  #view-dashboard > .banner-carousel-wrap{
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+    width: 100%;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px 0 4px;
+  }
+  #view-dashboard > .summary-row{
+    grid-column: 1;
+    grid-row: 2;
+    flex-direction: column;
+    padding: 0;
+    height: auto;
+  }
+  #view-dashboard > .summary-row .summary-card{ flex: 1; }
+  #view-dashboard > .discover-block{
+    grid-column: 2;
+    grid-row: 2;
+    padding: 0;
+  }
+  #view-dashboard > .discover-block .report-entry{ flex: 1; }
+  #view-dashboard > #homeReminder{
+    grid-column: 3;
+    grid-row: 2;
+    margin: 0;
+  }
+  #view-dashboard > .tabs,
+  #view-dashboard > .period-nav,
+  #view-dashboard > .period-today,
+  #view-dashboard > #periodContent,
+  #view-dashboard > .products-in-home{
+    grid-column: 1 / -1;
+  }
+  #view-dashboard > .tabs,
+  #view-dashboard > .period-nav,
+  #view-dashboard > section{
+    padding-left: 0;
+    padding-right: 0;
+  }
+  #view-reporte .form-view{ max-width: 1080px; }
+  #reporteBody .report-stats{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  body:not(.desk-split) #view-history > section{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 18px;
+    padding-left: 28px;
+    padding-right: 28px;
+    align-items: start;
+  }
+  body:not(.desk-split) #view-history > section > .backup-box:nth-child(3),
+  body:not(.desk-split) #view-history > section > .section-title,
+  body:not(.desk-split) #view-history > section > .verdict-filters,
+  body:not(.desk-split) #view-history > section > #historyList{
+    grid-column: 1 / -1;
+  }
+  body:not(.desk-split) #view-history .backup-box:nth-child(3) .backup-actions{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .ticket:hover{ background: rgba(255,255,255,0.72); }
+  #historyList .ticket.is-open{
+    border-color: rgba(140,122,230,0.95);
+    box-shadow: 0 0 0 2px rgba(140,122,230,0.35);
+  }
+  body.desk-split #stage{
+    display:grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 400px);
+    gap: 18px;
+    align-items: start;
+    padding: 4px 28px 28px;
+  }
+  body.desk-split #view-history,
+  body.desk-split #view-receipt{
+    min-width: 0;
+  }
+  body.desk-split #view-history > section{
+    padding-left: 0;
+    padding-right: 0;
+  }
+  body.desk-split #historyList{
+    display:block;
+  }
+  body.desk-split #view-receipt{
+    position: sticky;
+    top: 88px;
+    max-height: calc(100dvh - 104px);
+    overflow: auto;
+    background: var(--glass-bg-2);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    box-shadow: var(--glass-shadow);
+  }
+  body.desk-split #view-receipt .receipt-page{
+    padding: 14px 14px 18px;
+  }
+}
 </style>
 </head>
 <body>
+
+<div id="rotateGate">
+  <picture>
+    <source srcset="../assets/outgo-logo.svg" type="image/svg+xml">
+    <img class="outgo-logo" src="../assets/outgo-logo.png" srcset="../assets/outgo-logo.png 1x, ../assets/outgo-logo@2x.png 2x, ../assets/outgo-logo@3x.png 3x" alt="outgo">
+  </picture>
+  <p>Gira tu teléfono para usar Outgo</p>
+</div>
 
 <!-- ============ PANTALLA DE INICIO DE SESIÓN (Google) ============ -->
 <div id="authOverlay" class="auth-overlay">
@@ -1690,6 +2049,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
     </div>
   </header>
 
+  <div id="stage">
   <!-- ============ VISTA: DASHBOARD ============ -->
   <div class="view active" id="view-dashboard">
 
@@ -1752,7 +2112,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
       <span class="period-label" id="periodLabel">—</span>
       <button id="btnPeriodNext" aria-label="Periodo siguiente">›</button>
     </div>
-    <div style="text-align:center; padding: 0 20px 4px;">
+    <div class="period-today" style="text-align:center; padding: 0 20px 4px;">
       <button class="today-link" id="btnPeriodToday">Ir a hoy</button>
     </div>
 
@@ -2134,6 +2494,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
       </div>
     </div>
   </div>
+  </div>
 
 <!-- Hoja de cuenta: perfil fiscal, reporte y cierre de sesión -->
 <div id="accountSheetOverlay" class="action-sheet-overlay">
@@ -2192,12 +2553,15 @@ nav.bottom button.active{ color: var(--brand-purple); }
 <nav class="bottom">
   <button data-view="dashboard" class="active" aria-label="Inicio">
     <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9"/></svg>
+    <span class="nav-label" aria-hidden="true">Inicio</span>
   </button>
   <button class="fab-btn" id="navFabBtn" aria-label="Nuevo">
     <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    <span class="nav-label" aria-hidden="true">Nuevo</span>
   </button>
   <button data-view="history" aria-label="Tickets">
     <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v17l-2.5-1.6L13 20l-2.5-1.6L8 20l-2-1.6V3Z"/><path d="M8.5 8h7M8.5 11.5h7M8.5 15h4"/></svg>
+    <span class="nav-label" aria-hidden="true">Tickets</span>
   </button>
 </nav>
 
@@ -4032,6 +4396,7 @@ let pendingCfdiData = null; // datos de CFDI detectados por QR (si los hay) para
 
 function showView(name){
   if(name!=="camera") stopCameraStream();
+  document.body.classList.remove("desk-split");
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   document.getElementById("view-"+name).classList.add("active");
   document.querySelectorAll("nav.bottom button").forEach(b=>b.classList.remove("active"));
@@ -4050,6 +4415,42 @@ function showView(name){
     syncReporteInputsFromProfile();
     renderReporte();
   }
+}
+
+function appIsInstalled(){
+  try{
+    if(window.matchMedia("(display-mode: standalone)").matches) return true;
+    if(window.matchMedia("(display-mode: fullscreen)").matches) return true;
+    if(window.navigator.standalone===true) return true;
+  }catch(e){}
+  return false;
+}
+function tryLockPortrait(){
+  if(!appIsInstalled()) return;
+  try{
+    const orientation = screen.orientation;
+    if(!orientation || typeof orientation.lock!=="function") return;
+    const pending = orientation.lock("portrait");
+    if(pending && typeof pending.catch==="function") pending.catch(function(){});
+  }catch(e){}
+}
+tryLockPortrait();
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState==="visible") tryLockPortrait();
+});
+try{
+  const installMq = window.matchMedia("(display-mode: standalone)");
+  if(installMq.addEventListener) installMq.addEventListener("change", tryLockPortrait);
+}catch(e){}
+
+function markOpenTicket(id){
+  const root = document.getElementById("historyList");
+  if(!root) return;
+  root.querySelectorAll(".ticket.is-open").forEach(el=>el.classList.remove("is-open"));
+  if(!id) return;
+  const safe = window.CSS && CSS.escape ? CSS.escape(String(id)) : String(id);
+  const el = root.querySelector('.ticket[data-id="'+safe+'"]');
+  if(el) el.classList.add("is-open");
 }
 
 /* Poblar selects del formulario */
@@ -5205,10 +5606,26 @@ function openReceiptView(id){
   const content = document.getElementById("receiptContent");
   content.innerHTML = renderReceiptHTML(t);
   attachLogoFallbacks(content);
+  if(window.matchMedia("(min-width: 1024px)").matches){
+    const historyOn = document.getElementById("view-history").classList.contains("active");
+    if(!(historyOn && document.body.classList.contains("desk-split"))) showView("history");
+    document.getElementById("view-receipt").classList.add("active");
+    document.body.classList.add("desk-split");
+    markOpenTicket(id);
+    return;
+  }
   showView("receipt");
 }
 
-document.getElementById("btnReceiptBack").addEventListener("click", ()=> showView("dashboard"));
+document.getElementById("btnReceiptBack").addEventListener("click", ()=>{
+  if(document.body.classList.contains("desk-split")){
+    document.body.classList.remove("desk-split");
+    document.getElementById("view-receipt").classList.remove("active");
+    markOpenTicket(null);
+    return;
+  }
+  showView("dashboard");
+});
 
 document.getElementById("btnReceiptPDF").addEventListener("click", async ()=>{
   const t = ticketsById[currentReceiptId];
@@ -5312,6 +5729,11 @@ document.addEventListener("click", async (e)=>{
     const id = e.target.dataset.id;
     if(confirm("¿Eliminar este ticket?")){
       await deleteTicket(id);
+      if(String(id)===String(currentReceiptId)){
+        currentReceiptId = null;
+        document.body.classList.remove("desk-split");
+        document.getElementById("view-receipt").classList.remove("active");
+      }
       ticketsCacheReady = false;
       await refreshDashboard();
       await refreshHistory();
@@ -6239,6 +6661,7 @@ async function refreshHistory(){
   if(filters) filters.innerHTML = verdictFilterButtonsHTML();
   historyEl.innerHTML = renderTicketList(list);
   attachLogoFallbacks(historyEl);
+  if(document.body.classList.contains("desk-split") && currentReceiptId) markOpenTicket(currentReceiptId);
 }
 
 /* =========================================================
@@ -6248,6 +6671,22 @@ document.querySelectorAll("nav.bottom button[data-view]").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     showView(btn.dataset.view);
   });
+});
+
+let deskWide = window.matchMedia("(min-width: 1024px)").matches;
+window.addEventListener("resize", ()=>{
+  const wide = window.matchMedia("(min-width: 1024px)").matches;
+  if(wide===deskWide) return;
+  deskWide = wide;
+  const receipt = document.getElementById("view-receipt");
+  const receiptOn = receipt && receipt.classList.contains("active");
+  if(!wide){
+    if(!document.body.classList.contains("desk-split")) return;
+    document.body.classList.remove("desk-split");
+    if(receiptOn) showView("receipt");
+    return;
+  }
+  if(receiptOn && currentReceiptId) openReceiptView(currentReceiptId);
 });
 
 /* =========================================================
@@ -6302,8 +6741,8 @@ document.querySelectorAll(".report-tab").forEach(btn=>{
     document.querySelectorAll(".report-tab").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     reporteModo = btn.dataset.reporte;
-    document.getElementById("reporteMesPanel").style.display = reporteModo==="mes" ? "block" : "none";
-    document.getElementById("reporteAnioPanel").style.display = reporteModo==="anio" ? "block" : "none";
+    document.getElementById("reporteMesPanel").style.display = reporteModo==="mes" ? "" : "none";
+    document.getElementById("reporteAnioPanel").style.display = reporteModo==="anio" ? "" : "none";
     renderReporte();
   });
 });
