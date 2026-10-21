@@ -61,10 +61,15 @@ header .wrap{ display:flex; align-items:center; justify-content:space-between; g
 .outgo-logo--min{ height:28px; }
 .header-nav{ display:flex; align-items:center; gap:18px; }
 .header-nav a{ text-decoration:none; font-size:14px; font-weight:600; color:var(--ink); }
+.header-nav a.nav-cta{ color:#fff; }
 .nav-cta{
-  background:var(--brand-purple); color:#fff !important; text-decoration:none;
-  padding:10px 18px; border-radius:30px; font-weight:600; font-size:14px; white-space:nowrap;
+  background: #7868c5; color:#fff; text-decoration:none;
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height: 44px;
+  padding: 10px 18px; border-radius: 999px; font-weight:700; font-size:14px; white-space:nowrap;
 }
+.nav-cta:hover{ background:#6a56b8; }
+.nav-cta:focus-visible{ outline: 2px solid #2B2640; outline-offset: 2px; }
 .hero{ padding:64px 0 28px; }
 .hero-grid{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(260px,0.8fr); gap:36px; align-items:center; }
 .kicker{
@@ -79,19 +84,31 @@ h1 .hl{ color:var(--brand-purple); }
 .fine{ font-size:13px; color:var(--muted); margin:0 0 22px; }
 .hero-ctas{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
 .btn-primary{
-  background:linear-gradient(135deg, var(--brand-purple), var(--accent));
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height: 48px;
+  background: #7868c5;
   color:#fff; text-decoration:none; font-weight:700; font-size:15.5px;
-  padding:16px 26px; border-radius:30px; box-shadow:var(--glass-shadow); border:none; cursor:pointer;
+  padding: 14px 26px; border-radius: 999px; border:none; cursor:pointer;
 }
+.btn-primary:hover{ background:#6a56b8; }
+.btn-primary:focus-visible{ outline: 2px solid #2B2640; outline-offset: 2px; }
 .btn-secondary{
-  background:var(--glass-bg); border:1px solid var(--glass-border); color:var(--ink);
-  text-decoration:none; font-weight:600; font-size:15px; padding:15px 22px; border-radius:30px;
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height: 48px;
+  background: rgba(140,122,230,0.12); border: 1px solid #8C7AE6; color: #2B2640;
+  text-decoration:none; font-weight:700; font-size:15px; padding: 14px 22px; border-radius:999px;
 }
+.btn-secondary:hover{ background: rgba(140,122,230,0.22); }
+.btn-secondary:focus-visible{ outline: 2px solid #2B2640; outline-offset: 2px; }
 .share-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
 .share-row a, .share-row button{
-  border:1px solid var(--line); background:#fff; color:var(--ink); text-decoration:none;
-  border-radius:999px; padding:8px 12px; font-size:13px; font-weight:600; cursor:pointer; font-family:var(--font-body);
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height: 44px;
+  border:1px solid #8C7AE6; background:rgba(140,122,230,0.12); color:#2B2640; text-decoration:none;
+  border-radius:999px; padding:8px 16px; font-size:14px; font-weight:700; cursor:pointer; font-family:var(--font-body);
 }
+.share-row a:hover, .share-row button:hover{ background:rgba(140,122,230,0.22); }
+.share-row a:focus-visible, .share-row button:focus-visible{ outline:2px solid #2B2640; outline-offset:2px; }
 .phone{
   background:#2B2640; border-radius:32px; padding:10px;
   box-shadow:var(--glass-shadow);
@@ -105,7 +122,7 @@ h1 .hl{ color:var(--brand-purple); }
   background:var(--glass-bg-2); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);
 }
 .ad-frame{
-  position:relative; aspect-ratio:16/7.5; border-radius:20px; overflow:hidden;
+  position:relative; aspect-ratio:16 / 7.125; border-radius:20px; overflow:hidden;
   background:#2B2640; color:#fff;
 }
 .ad-frame[data-state="live"]{
@@ -113,7 +130,7 @@ h1 .hl{ color:var(--brand-purple); }
   scrollbar-width:none;
 }
 .ad-frame[data-state="live"] .ad-slide{
-  position:relative; flex:0 0 100%; min-height:0; aspect-ratio:16/7.5; scroll-snap-align:start;
+  position:relative; flex:0 0 100%; min-height:0; aspect-ratio:16 / 7.125; scroll-snap-align:start;
 }
 .ad-slide{
   position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end;

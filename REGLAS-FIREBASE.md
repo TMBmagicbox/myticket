@@ -32,12 +32,14 @@ Si Storage nunca se activó en el proyecto, puedes saltar este paso. La app no g
 1. Entra a Outgo con tu cuenta normal y confirma que ves tus tickets.
 2. Entra a `admin-banners.html` con **gntdment@gmail.com** y confirma que puedes guardar un banner.
 3. Con otra cuenta de Google, abre la app: debe ver sus propios datos y el carrusel, y no debe poder guardar banners.
+4. Sin iniciar sesión, abre la página pública: el carrusel de anuncios puede leerse. Esa visita no puede escribir banners ni ver tickets.
 
 ## Qué hacen
 
 - Cada persona solo lee y escribe sus tickets (`users/{su uid}/tickets`) y su perfil (`userProfiles/{su uid}`).
-- Sin iniciar sesión no se lee ni se escribe nada.
-- Quien ya inició sesión puede leer los banners (el carrusel está detrás del inicio de sesión) y los comercios personalizados.
+- Sin iniciar sesión no se leen tickets, perfiles ni comercios, y no se escribe nada.
+- Los banners (`banners`) sí se pueden leer sin iniciar sesión, para que el carrusel salga en la landing. Escribirlos sigue reservado al admin.
+- Quien ya inició sesión también puede leer los comercios personalizados.
 - Solo gntdment@gmail.com puede cambiar banners y comercios, listar perfiles y leer los tickets de todas las cuentas. El panel los usa para contar usuarios y tickets. Firestore no deja contar sin permiso de lectura, así que esa cuenta de admin sí puede ver el contenido de los tickets.
 - Storage queda cerrado.
 

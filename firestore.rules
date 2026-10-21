@@ -34,10 +34,10 @@ service cloud.firestore {
       allow read: if isAdmin();
     }
 
-    // Carrusel: quien ya inició sesión puede ver los 6 espacios.
-    // Solo el admin puede cambiarlos. Sin sesión la app no muestra el carrusel.
+    // Carrusel: cualquiera puede leer los 6 espacios, también la landing
+    // sin iniciar sesión. Solo el admin puede cambiarlos.
     match /banners/{bannerId} {
-      allow read: if signedIn();
+      allow read: if true;
       allow write: if isAdmin();
     }
 
