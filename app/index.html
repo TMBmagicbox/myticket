@@ -1622,7 +1622,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <polygon points="83.9,34.4 81.3,47.1 72.2,40.0" fill="#2ED9C3"/>
   </svg>
   <h1 class="auth-title"><span class="brand-out">OUT</span><span class="brand-dash">-</span><span class="brand-go">GO</span></h1>
-  <p class="auth-subtitle">Control de gastos con respaldo en la nube</p>
+  <p class="auth-subtitle">Gastos de tu actividad, para cualquier profesionista independiente</p>
   <button class="google-btn" id="googleSignInBtn">
     <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.3 1 7.3 2.8l5.7-5.7C33.7 6.9 29.1 5 24 5 13.5 5 5 13.5 5 24s8.5 19 19 19 19-8.5 19-19c0-1.3-.1-2.5-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.6 15.9 18.9 13 24 13c2.8 0 5.3 1 7.3 2.8l5.7-5.7C33.7 6.9 29.1 5 24 5c-7.7 0-14.3 4.3-17.7 10.7z"/><path fill="#4CAF50" d="M24 43c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 34.1 26.7 35 24 35c-5.2 0-9.6-3.3-11.2-8l-6.5 5C9.6 38.6 16.2 43 24 43z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.6l6.2 5.2C39.9 37 44 31.5 44 24c0-1.3-.1-2.5-.4-3.5z"/></svg>
     Iniciar sesión con Google
@@ -1725,7 +1725,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
 
     <section class="products-in-home">
       <div class="section-title">Qué compras y cuánto te cuesta</div>
-      <input type="text" id="productSearch" class="product-search" placeholder="Buscar producto (ej. leche, refresco...)">
+      <input type="text" id="productSearch" class="product-search" placeholder="Buscar producto (ej. café, tóner, medicamento)">
       <div class="sort-toggle">
         <button class="sort-btn active" data-sort="spent">Por gasto total</button>
         <button class="sort-btn" data-sort="qty">Por más comprado</button>
@@ -1833,7 +1833,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
 
       <div class="field">
         <label for="fDescription">Descripción</label>
-        <input type="text" id="fDescription" placeholder="Ej. Despensa de la semana">
+        <input type="text" id="fDescription" placeholder="Ej. papelería, software o material de tu oficio">
       </div>
 
       <div class="field">
@@ -1842,7 +1842,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
       </div>
 
       <div class="items-section">
-        <div class="items-title">Productos (opcional) — para saber cuánto gastas por tipo (carne, bebidas, etc.)</div>
+        <div class="items-title">Productos (opcional) — para saber cuánto gastas por tipo (material, comida, servicios, etc.)</div>
         <div id="itemsContainer"></div>
         <div class="items-empty" id="itemsEmptyMsg">Agrega los productos del ticket si quieres llevar el detalle.</div>
         <button type="button" class="add-item-btn" id="btnAddItem">+ Agregar producto</button>
@@ -1913,7 +1913,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <div class="form-view">
       <button class="back" id="btnAjustesBack" type="button">← Volver</button>
       <div class="section-title" style="margin-top:0;">Perfil fiscal</div>
-      <div class="hint" style="margin-bottom:12px;">Pensado para un freelance en Régimen 612 (actividades empresariales y profesionales). El RFC se guarda en tu cuenta y sirve para comprobar si la factura está a tu nombre. La UMA y el ingreso anual solo se usan en el reporte de deducciones personales.</div>
+      <div class="hint" style="margin-bottom:12px;">Para profesionistas independientes en México —diseño, programación, consultoría, fotografía, terapia, arquitectura, contabilidad, contenido y oficios parecidos— en Régimen 612. No se asume un giro: lo que importa es si el gasto es de tu actividad. El RFC se guarda en tu cuenta y sirve para comprobar si la factura está a tu nombre. La UMA y el ingreso anual solo se usan en el reporte de deducciones personales.</div>
       <div class="field">
         <label for="fRfc">RFC</label>
         <input type="text" id="fRfc" maxlength="18" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="ABCD010101XX1">
@@ -1998,7 +1998,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
     <div class="form-view">
       <button class="back" id="btnIngresosBack" type="button">← Volver</button>
       <div class="section-title" style="margin-top:0;">Ingresos del mes</div>
-      <div class="hint" style="margin-bottom:12px;">Honorarios y otros ingresos que cobraste. Si subes el XML que tú emitiste, se llenan el cliente, el subtotal y las retenciones. El IVA trasladado de estos ingresos entra al estimado del mes.</div>
+      <div class="hint" style="margin-bottom:12px;">Lo que te pagaron por tu trabajo, sea cual sea tu oficio. Si subes el XML que tú emitiste, se llenan el cliente, el subtotal y las retenciones. El IVA trasladado de estos ingresos entra al estimado del mes.</div>
       <div class="field">
         <label for="ingresosMes">Mes</label>
         <input type="month" id="ingresosMes">
@@ -2310,8 +2310,10 @@ const CATEGORIES = [
   "Ferretería/Hogar","Tienda departamental","Comida/Restaurante","Gasolina",
   "Gas LP (cocina)","Transporte","Servicios (agua, luz, internet)","Streaming y plataformas",
   "Compras en línea","Banca y transferencias","Entretenimiento",
-  "Equipo audiovisual","Computadora y almacenamiento","Software y suscripciones",
+  "Equipo y herramientas de trabajo","Computadora y almacenamiento","Software y suscripciones",
   "Cursos y capacitación","Internet y telefonía (uso laboral)",
+  "Renta de oficina o coworking","Papelería","Publicidad",
+  "Honorarios de contador y otros profesionistas",
   "Médico/dental/psicólogo/nutriólogo","Hospital y análisis","Lentes ópticos (tope 2,500 MXN)",
   "Seguro de gastos médicos","Colegiaturas","Donativos","Aportaciones voluntarias al retiro",
   "Gastos funerarios","Intereses hipotecarios","Otros"
@@ -2326,15 +2328,21 @@ const DEDUCIBLE_HINTS = {
   "Gas LP (cocina)": "Deducible solo como gasto de trabajo con factura a tu RFC (el uso doméstico normalmente no aplica).",
   "Servicios (agua, luz, internet)": "Gasto de trabajo solo por la parte que usas para tu actividad, con CFDI a tu RFC. Si la factura es del servicio completo de casa, anota únicamente esa proporción.",
   "Salud/Farmacia": "Suele ser deducción personal en la declaración anual (medicinas y honorarios con CFDI a tu RFC y pago electrónico).",
-  "Comida/Restaurante": "Solo como gasto de trabajo: CFDI, pago electrónico y dentro del porcentaje que el SAT admite para consumos.",
-  "Ferretería/Hogar": "Solo si es gasto de trabajo con CFDI a tu RFC.",
-  "Compras en línea": "Solo si es gasto de trabajo con CFDI a tu RFC. Muchas compras en línea son de uso personal.",
+  "Comida/Restaurante": "Solo como gasto de trabajo (una comida con un cliente, por ejemplo): CFDI, pago electrónico y dentro del porcentaje que el SAT admite para consumos. La comida personal no entra.",
+  "Ferretería/Hogar": "Solo si es material de tu actividad, con CFDI a tu RFC. Lo de la casa, en general, no.",
+  "Compras en línea": "Solo si es gasto de tu actividad con CFDI a tu RFC. Muchas compras en línea son de uso personal.",
   "Banca y transferencias": "Las comisiones bancarias pueden ser gasto de trabajo con el CFDI que emite el banco.",
-  "Equipo audiovisual": "Cámara, lentes de producción, audio e iluminación: gasto de trabajo si los usas en tu actividad, con CFDI a tu RFC y pago electrónico. Algunos bienes se deducen por partes, no de un solo golpe.",
-  "Computadora y almacenamiento": "Computadora, discos y respaldos para tu trabajo: gasto de trabajo con CFDI a tu RFC. El equipo de cómputo a veces se deduce en parcialidades.",
-  "Software y suscripciones": "Licencias y suscripciones que uses para producir pueden ser gasto de trabajo con factura a tu RFC.",
-  "Cursos y capacitación": "Capacitación ligada a tu actividad suele ser gasto de trabajo con CFDI. Un curso personal, no relacionado, normalmente no.",
-  "Internet y telefonía (uso laboral)": "Solo la parte de internet o teléfono que usas para el trabajo, con CFDI a tu RFC. Si pagas el servicio completo de casa, separa la proporción laboral.",
+  "Transporte": "Traslado ligado al trabajo (a un cliente, a la oficina o a un curso) puede ser gasto de trabajo con CFDI. El traslado personal no. La gasolina tiene reglas aparte.",
+  "Equipo y herramientas de trabajo": "Equipo y herramientas de tu oficio (computadora, software, material propio del trabajo): gasto de trabajo si los usas en tu actividad, con CFDI a tu RFC y pago electrónico. Algunos bienes se deducen por partes, no de un solo golpe. Da igual el giro.",
+  "Equipo audiovisual": "Equipo y herramientas de tu oficio (computadora, software, material propio del trabajo): gasto de trabajo si los usas en tu actividad, con CFDI a tu RFC y pago electrónico. Algunos bienes se deducen por partes, no de un solo golpe. Da igual el giro.",
+  "Computadora y almacenamiento": "Computadora, teléfono, discos o respaldos que uses para trabajar: gasto de trabajo con CFDI a tu RFC. El equipo a veces se deduce en parcialidades.",
+  "Software y suscripciones": "Licencias y suscripciones de tu oficio (diseño, programación, consulta, administración u otro) pueden ser gasto de trabajo con factura a tu RFC.",
+  "Cursos y capacitación": "Un curso de tu profesión suele ser gasto de trabajo con CFDI. Un curso personal, sin relación con tu actividad, normalmente no.",
+  "Internet y telefonía (uso laboral)": "Solo la parte proporcional de internet o teléfono que usas para el trabajo, con CFDI a tu RFC. Si la factura es del servicio completo de casa, anota únicamente esa proporción.",
+  "Renta de oficina o coworking": "La renta de una oficina o un espacio de coworking puede ser gasto de trabajo con CFDI a tu RFC. La renta de tu casa habitación, en general, no.",
+  "Papelería": "Papelería y material de oficina de tu actividad: gasto de trabajo con CFDI a tu RFC.",
+  "Publicidad": "Anuncios, redes o impresión para dar a conocer tu trabajo: gasto de trabajo con CFDI a tu RFC.",
+  "Honorarios de contador y otros profesionistas": "Lo que pagas a tu contador, a un abogado u otro profesionista por tu actividad puede ser gasto de trabajo, con CFDI y pago electrónico.",
   "Médico/dental/psicólogo/nutriólogo": "Deducción personal en la anual: honorarios médicos, dentales, de psicología o nutrición, con CFDI y pago electrónico.",
   "Hospital y análisis": "Hospitalización, honorarios hospitalarios y análisis clínicos: deducción personal en la anual, con factura a tu RFC.",
   "Lentes ópticos (tope 2,500 MXN)": "Deducción personal por lentes ópticos graduados, con tope de 2,500 pesos por persona al año. El armazón sin graduación normalmente no entra.",
@@ -2344,7 +2352,7 @@ const DEDUCIBLE_HINTS = {
   "Aportaciones voluntarias al retiro": "Aportaciones voluntarias a tu subcuenta de retiro. Quedan fuera del tope general y tienen su propio límite. Esta guía muestra el total, no aplica ese segundo tope.",
   "Gastos funerarios": "Gastos funerarios de cónyuge, padres, hijos o abuelos: deducción personal, con un tope orientativo de una UMA anual que esta guía no recorta sola.",
   "Intereses hipotecarios": "Solo los intereses reales del crédito hipotecario de tu casa habitación, no la mensualidad completa. El banco emite la constancia. Deducción personal en la anual.",
-  "default": "En general no es deducible si es gasto personal. Si es de tu actividad, puede ser gasto de trabajo con CFDI a tu RFC."
+  "default": "Si es gasto personal, en general no es deducible. Si lo usas en tu actividad, puede ser gasto de trabajo con CFDI a tu RFC, sea cual sea tu oficio."
 };
 
 /* =========================================================
@@ -2383,11 +2391,17 @@ const METODO_LABELS = {
   transferencia: "Transferencia"
 };
 const TIPO_SUGERIDO = {
+  "Equipo y herramientas de trabajo": "trabajo",
   "Equipo audiovisual": "trabajo",
   "Computadora y almacenamiento": "trabajo",
   "Software y suscripciones": "trabajo",
   "Cursos y capacitación": "trabajo",
   "Internet y telefonía (uso laboral)": "trabajo",
+  "Renta de oficina o coworking": "trabajo",
+  "Papelería": "trabajo",
+  "Publicidad": "trabajo",
+  "Honorarios de contador y otros profesionistas": "trabajo",
+  "Transporte": "trabajo",
   "Gasolina": "trabajo",
   "Comida/Restaurante": "trabajo",
   "Banca y transferencias": "trabajo",
@@ -2415,8 +2429,13 @@ let reporteReturn = "dashboard";
 let ajustesReturn = "dashboard";
 let lastReporte = null;
 
+function canonicalCategory(name){
+  if(name==="Equipo audiovisual") return "Equipo y herramientas de trabajo";
+  return name || "";
+}
 function suggestTipo(category){
-  return TIPO_SUGERIDO[category] || "ninguno";
+  const key = canonicalCategory(category);
+  return TIPO_SUGERIDO[key] || TIPO_SUGERIDO[category] || "ninguno";
 }
 function normalizeRFC(raw){
   return String(raw||"").toUpperCase().replace(/[^A-ZÑ&0-9]/g, "");
@@ -2604,7 +2623,7 @@ function buildYearlyReport(tickets, year, userRfc, ingresoAnual, umaDiaria){
   });
   const sumCat = {};
   validPersonal.forEach(r=>{
-    const c = r.ticket.category || "Otros";
+    const c = canonicalCategory(r.ticket.category) || "Otros";
     sumCat[c] = (sumCat[c]||0) + (Number(r.ticket.amount)||0);
   });
   const lentesBruto = sumCat[LENTES_CATEGORY] || 0;
@@ -2784,7 +2803,7 @@ function reportRowHTML(row, mode){
   return `
     <div class="report-row">
       <div class="report-row-top"><b>${escapeHtml(t.store||"Sin comercio")}</b><span class="report-row-amt">${money}</span></div>
-      <div class="report-row-meta">${escapeHtml(t.date||"")} · ${escapeHtml(t.category||"")} · ${escapeHtml(METODO_LABELS[t.metodoPago||""]||"")}${t.cfdi && t.cfdi.uuid ? " · "+escapeHtml(t.cfdi.uuid) : ""}</div>
+      <div class="report-row-meta">${escapeHtml(t.date||"")} · ${escapeHtml(canonicalCategory(t.category)||"")} · ${escapeHtml(METODO_LABELS[t.metodoPago||""]||"")}${t.cfdi && t.cfdi.uuid ? " · "+escapeHtml(t.cfdi.uuid) : ""}</div>
       ${verdictBadgeHTML(t, true)}
       ${notes}${reasons}
     </div>`;
@@ -2907,7 +2926,7 @@ function exportReporteCSV(){
       const t = r.ticket;
       const v = ticketVerdict(t);
       rows.push([
-        estado, t.date, t.store, t.category, TIPO_LABELS[r.assessment.tipo], METODO_LABELS[t.metodoPago||""]||"",
+        estado, t.date, t.store, canonicalCategory(t.category), TIPO_LABELS[r.assessment.tipo], METODO_LABELS[t.metodoPago||""]||"",
         v.label, v.reason,
         ticketSubtotalTrabajo(t)??"", ticketIva(t)??"", t.amount,
         t.cfdi?.uuid||"", t.cfdi?.rfcReceptor||"",
@@ -2949,7 +2968,7 @@ function exportReporteCSV(){
   const pushY = (row, estado)=>{
     const t = row.ticket;
     rows.push([
-      estado, t.date, t.store, t.category, METODO_LABELS[t.metodoPago||""]||"", t.amount,
+      estado, t.date, t.store, canonicalCategory(t.category), METODO_LABELS[t.metodoPago||""]||"", t.amount,
       t.cfdi?.uuid||"", row.assessment.issues.map(i=>i.text).join(" | ")
     ].map(csvEscapeCell));
   };
@@ -2998,7 +3017,7 @@ function exportReportePDF(){
       if(!lastReporte.included.length) write("Ninguno.", 10, "normal", 6);
       lastReporte.included.forEach(r=>{
         const t = r.ticket;
-        write(`${t.date}  ${t.store}  ${t.category}`, 10, "bold", 1);
+        write(`${t.date}  ${t.store}  ${canonicalCategory(t.category)}`, 10, "bold", 1);
         write(`Subtotal ${ticketSubtotalTrabajo(t)==null?"s/d":fmtMoney(ticketSubtotalTrabajo(t))}   IVA ${ticketIva(t)==null?"s/d":fmtMoney(ticketIva(t))}   Total ${fmtMoney(t.amount)}   ${METODO_LABELS[t.metodoPago||""]||""}`, 9, "normal", 1);
         if(t.cfdi?.uuid) write(`UUID ${t.cfdi.uuid}`, 8, "normal", 1);
         (r.assessment.notes||[]).forEach(n=>write(n, 8, "italic", 1));
@@ -3008,7 +3027,7 @@ function exportReportePDF(){
       if(!lastReporte.excluded.length) write("Ninguno.", 10, "normal", 6);
       lastReporte.excluded.forEach(r=>{
         const t = r.ticket;
-        write(`${t.date}  ${t.store}  ${fmtMoney(t.amount)}  ${t.category}`, 10, "bold", 1);
+        write(`${t.date}  ${t.store}  ${fmtMoney(t.amount)}  ${canonicalCategory(t.category)}`, 10, "bold", 1);
         r.assessment.issues.forEach(i=>write(i.text, 8, "normal", 1));
         y += 4;
       });
@@ -3034,7 +3053,7 @@ function exportReportePDF(){
     if(!r.excluded.length) write("Ninguno.", 10, "normal", 4);
     r.excluded.forEach(row=>{
       const t = row.ticket;
-      write(`${t.date}  ${t.store}  ${fmtMoney(t.amount)}  ${t.category}`, 10, "bold", 1);
+      write(`${t.date}  ${t.store}  ${fmtMoney(t.amount)}  ${canonicalCategory(t.category)}`, 10, "bold", 1);
       row.assessment.issues.forEach(i=>write(i.text, 8, "normal", 1));
       y += 3;
     });
@@ -3066,12 +3085,12 @@ function startLocalPreview(){
   const rfc = fiscalProfile.rfc;
   const cfdi = (uuid, receptor, total)=>({ uuid, rfcEmisor:"XAXX010101000", rfcReceptor: receptor, total:String(total) });
   allTicketsCache = [
-    { id:"prev1", store:"Renta de equipo", category:"Equipo audiovisual", description:"Cámara y lentes", date:"2026-10-05", amount:11600, subtotal:10000, iva:1600, isr:null, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"transferencia", cfdi: cfdi("11111111-1111-1111-1111-111111111111", rfc, 11600) },
-    { id:"prev2", store:"Telmex", category:"Internet y telefonía (uso laboral)", description:"Parte laboral", date:"2026-10-08", amount:580, subtotal:500, iva:80, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"transferencia", cfdi: cfdi("22222222-2222-2222-2222-222222222222", rfc, 580) },
-    { id:"prev3", store:"Pemex", category:"Gasolina", description:"Carga set", date:"2026-10-03", amount:800, subtotal:689.66, iva:110.34, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"efectivo", cfdi: cfdi("33333333-3333-3333-3333-333333333333", rfc, 800) },
-    { id:"prev4", store:"Restaurante set", category:"Comida/Restaurante", description:"Comida de rodaje", date:"2026-10-11", amount:2500, subtotal:2155.17, iva:344.83, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"efectivo", cfdi: cfdi("44444444-4444-4444-4444-444444444444", rfc, 2500) },
-    { id:"prev5", store:"Adobe", category:"Software y suscripciones", description:"Plan mensual", date:"2026-10-02", amount:600, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"credito", cfdi:null },
-    { id:"prev6", store:"Proveedor ajeno", category:"Equipo audiovisual", description:"Factura a otro RFC", date:"2026-10-09", amount:4000, subtotal:3448.28, iva:551.72, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"debito", cfdi: cfdi("55555555-5555-5555-5555-555555555555", "XAXX010101000", 4000) },
+    { id:"prev1", store:"Apple", category:"Equipo y herramientas de trabajo", description:"Computadora de trabajo", date:"2026-10-05", amount:11600, subtotal:10000, iva:1600, isr:null, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"transferencia", cfdi: cfdi("11111111-1111-1111-1111-111111111111", rfc, 11600) },
+    { id:"prev2", store:"Telmex", category:"Internet y telefonía (uso laboral)", description:"Parte proporcional del teléfono", date:"2026-10-08", amount:580, subtotal:500, iva:80, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"transferencia", cfdi: cfdi("22222222-2222-2222-2222-222222222222", rfc, 580) },
+    { id:"prev3", store:"Pemex", category:"Gasolina", description:"Traslado con un cliente", date:"2026-10-03", amount:800, subtotal:689.66, iva:110.34, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"efectivo", cfdi: cfdi("33333333-3333-3333-3333-333333333333", rfc, 800) },
+    { id:"prev4", store:"Restaurante del centro", category:"Comida/Restaurante", description:"Comida con un cliente", date:"2026-10-11", amount:2500, subtotal:2155.17, iva:344.83, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"efectivo", cfdi: cfdi("44444444-4444-4444-4444-444444444444", rfc, 2500) },
+    { id:"prev5", store:"Adobe", category:"Software y suscripciones", description:"Licencia de software", date:"2026-10-02", amount:600, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"credito", cfdi:null },
+    { id:"prev6", store:"Proveedor ajeno", category:"Papelería", description:"Factura a otro RFC", date:"2026-10-09", amount:4000, subtotal:3448.28, iva:551.72, items:[], tipoDeduccion:"trabajo", deducible:true, metodoPago:"debito", cfdi: cfdi("55555555-5555-5555-5555-555555555555", "XAXX010101000", 4000) },
     { id:"prev7", store:"OXXO", category:"Conveniencia/Tiendita", description:"Ticket viejo", date:"2026-10-01", amount:150, items:[], deducible:true, metodoPago:"efectivo" },
     { id:"prev8", store:"Consultorio", category:"Médico/dental/psicólogo/nutriólogo", description:"Consulta", date:"2026-09-18", amount:4000, items:[], tipoDeduccion:"personal", deducible:true, metodoPago:"debito", cfdi: cfdi("66666666-6666-6666-6666-666666666666", rfc, 4000) },
     { id:"prev9", store:"Farmacia", category:"Salud/Farmacia", description:"Medicamento", date:"2026-08-02", amount:900, items:[], tipoDeduccion:"personal", deducible:true, metodoPago:"debito", cfdi: cfdi("77777777-7777-7777-7777-777777777777", rfc, 900) },
@@ -3087,7 +3106,7 @@ function startLocalPreview(){
   ingresosCache = [{
     id:"ing1",
     fecha:"2026-10-12",
-    cliente:"Productora Norte",
+    cliente:"Cliente del mes",
     rfcCliente:"PNO010101AA1",
     subtotal:40000,
     descuento:0,
@@ -3966,13 +3985,14 @@ fStore.addEventListener("change", ()=>{
   const otherWrap = document.getElementById("fStoreOtherWrap");
   otherWrap.style.display = fStore.value==="Otro" ? "block" : "none";
   const found = findStoreDef(fStore.value);
-  if(found && found.category) fCategory.value = found.category;
+  if(found && found.category) fCategory.value = canonicalCategory(found.category);
   onCategoryPicked();
 });
 
 function updateDeducibleHint(){
   const hintEl = document.getElementById("deducibleHint");
-  hintEl.textContent = DEDUCIBLE_HINTS[fCategory.value] || DEDUCIBLE_HINTS.default;
+  const cat = canonicalCategory(fCategory.value);
+  hintEl.textContent = DEDUCIBLE_HINTS[cat] || DEDUCIBLE_HINTS[fCategory.value] || DEDUCIBLE_HINTS.default;
 }
 fCategory.addEventListener("change", onCategoryPicked);
 document.getElementById("fTipoDeduccion").addEventListener("change", ()=>{
@@ -4125,7 +4145,7 @@ function openForm({ image=null, store="", date="", total="", items=[], ocrMessag
   document.getElementById("fStoreOther").value = matchStore ? "" : store;
 
   // Categoría (si viene explícita, ej. al editar, se respeta; si no, se deriva del comercio)
-  fCategory.value = category || (matchStore && matchStore.category ? matchStore.category : "Otros");
+  fCategory.value = canonicalCategory(category) || canonicalCategory(matchStore && matchStore.category) || "Otros";
 
   document.getElementById("fDescription").value = description || "";
   document.getElementById("fDate").value = date || todayISO();
@@ -4792,7 +4812,7 @@ document.getElementById("btnPeriodToday").addEventListener("click", ()=>{
   renderPeriodContent();
 });
 
-/* Desglose de gasto por categoría de PRODUCTO (carne, bebidas, etc.)
+/* Desglose de gasto por categoría de producto (material, comida, servicios, etc.)
    Los tickets sin productos detallados se agrupan aparte, para no
    mezclar cifras exactas (por producto) con montos globales del ticket. */
 function aggregateByProductCategory(list){
@@ -4927,7 +4947,7 @@ function renderTicketList(list){
       ${t.image ? `<div class="avatar-wrap">${storeBadgeHTML(t.store)}<span class="photo-dot">📷</span></div>` : storeBadgeHTML(t.store)}
       <div class="info">
         <div class="store">${escapeHtml(t.store)}</div>
-        <div class="meta">${t.category} · ${t.date}${t.description ? " · "+escapeHtml(t.description) : ""}${t.items && t.items.length ? " · "+t.items.length+" producto"+(t.items.length>1?"s":"") : ""}${tipoMetaHTML(t)}</div>
+        <div class="meta">${escapeHtml(canonicalCategory(t.category)||"")} · ${t.date}${t.description ? " · "+escapeHtml(t.description) : ""}${t.items && t.items.length ? " · "+t.items.length+" producto"+(t.items.length>1?"s":"") : ""}${tipoMetaHTML(t)}</div>
         ${verdictBadgeHTML(t)}
       </div>
       <div class="amount">${fmtMoney(t.amount)}</div>
@@ -4975,7 +4995,7 @@ function renderReceiptHTML(t){
     : `<span class="chip cfdi">CFDI leído</span>`;
   const pagoChip = t.metodoPago ? `<span class="chip">${escapeHtml(METODO_LABELS[t.metodoPago]||t.metodoPago)}</span>` : "";
   const chips = `
-    <span class="chip">${escapeHtml(t.category)}</span>
+    <span class="chip">${escapeHtml(canonicalCategory(t.category)||"")}</span>
     ${tipoChip}
     ${pagoChip}
     ${cfdiChip}`;
@@ -5056,7 +5076,7 @@ document.getElementById("btnReceiptPDF").addEventListener("click", async ()=>{
     doc.text(t.store, 160, y, { align:"center" }); y+=18;
     doc.setFont("courier","normal"); doc.setFontSize(9);
     doc.text(t.date, 160, y, { align:"center" }); y+=10;
-    doc.text(`Categoría: ${t.category}`, 160, y, { align:"center" }); y+=18;
+    doc.text(`Categoría: ${canonicalCategory(t.category)}`, 160, y, { align:"center" }); y+=18;
     doc.setLineDashPattern([2,2],0); doc.line(20,y,300,y); y+=16;
 
     if(t.items && t.items.length){
@@ -5893,7 +5913,7 @@ function uuidExists(uuid){
 function ticketFromParsedCfdi(parsed){
   const nombre = parsed.nombreEmisor || parsed.rfcEmisor || "Factura";
   const match = findStoreDef(nombre);
-  const category = (match && match.category) || "Otros";
+  const category = canonicalCategory((match && match.category) || "Otros") || "Otros";
   const decision = classifyScannedCfdi(parsed, category, fiscalProfile.rfc);
   return {
     store: match ? nombre : nombre,
@@ -6516,7 +6536,7 @@ const TUTORIAL_STEPS = [
   {
     kicker: "5 · Facturas y SAT",
     title: "Qué suele contar y qué no",
-    html: "<ul><li>Efectivo de más de 2,000 pesos: no cuenta.</li><li>Gasolina en efectivo: nunca es deducible.</li><li>Sin factura a tu RFC, el ticket no alcanza.</li></ul><p>En la lista cada gasto trae semáforo: <strong>✅ Deducible</strong>, <strong>⚠️ Falta algo</strong> (sin factura, RFC, pago…) o <strong>❌ No deducible</strong>. Puedes filtrar por ese resultado. Si el gasto es de este mes y no tiene factura, te recordamos pedirla antes de que cierre el mes.</p><p>Suele ser gasto de trabajo lo que usas para producir (cámara, software, internet laboral). Suele ser deducción personal lo médico, los lentes, el seguro, las colegiaturas y el retiro. La despensa y el entretenimiento, en general, no.</p>",
+    html: "<ul><li>Efectivo de más de 2,000 pesos: no cuenta.</li><li>Gasolina en efectivo: nunca es deducible.</li><li>Sin factura a tu RFC, el ticket no alcanza.</li></ul><p>En la lista cada gasto trae semáforo: <strong>✅ Deducible</strong>, <strong>⚠️ Falta algo</strong> (sin factura, RFC, pago…) o <strong>❌ No deducible</strong>. Puedes filtrar por ese resultado. Si el gasto es de este mes y no tiene factura, te recordamos pedirla antes de que cierre el mes.</p><p>Suele ser gasto de trabajo lo que usas en tu actividad, sea cual sea tu oficio: equipo y herramientas (computadora, software o material propio), internet y teléfono solo en la parte proporcional, renta de oficina o coworking, papelería, cursos de tu profesión, publicidad, honorarios de tu contador y transporte de trabajo. Sirve igual si eres diseñador, programador, consultor, fotógrafo, terapeuta, arquitecto, contador o creador de contenido. Suele ser deducción personal lo médico, los lentes graduados, el seguro, las colegiaturas y el retiro. La despensa y el entretenimiento, en general, no.</p>",
     view: "form",
     preset: "alerta",
     target: "#fiscalAlerts"
@@ -6631,8 +6651,8 @@ function prepareTutorialView(step){
     } else {
       openForm({
         store:"Otro",
-        category:"Equipo audiovisual",
-        description:"Ejemplo: renta de cámara",
+        category:"Equipo y herramientas de trabajo",
+        description:"Ejemplo: computadora, software o material de tu oficio",
         total:"1160",
         subtotal:"1000",
         iva:"160",
