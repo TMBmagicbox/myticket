@@ -514,6 +514,24 @@ header.top p{
   max-width: 280px;
 }
 
+.offline-banner{
+  position: fixed;
+  z-index: 80;
+  left: 50%;
+  transform: translateX(-50%);
+  top: max(8px, env(safe-area-inset-top, 0px));
+  width: calc(100% - 24px);
+  max-width: 448px;
+  background: #6e2a26;
+  color: #fff;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.35;
+  box-shadow: 0 8px 24px rgba(60,20,20,0.25);
+}
+.offline-banner[hidden]{ display: none !important; }
+
 /* ---------- Indicador de sincronización ---------- */
 .sync-status{
   position:fixed;
@@ -1637,6 +1655,7 @@ nav.bottom button.active{ color: var(--brand-purple); }
 </div>
 
 <div id="app" style="display:none;">
+  <div id="offlineBanner" class="offline-banner" hidden role="status"></div>
 
   <!-- ============ HEADER ============ -->
   <header class="top">
@@ -3442,15 +3461,49 @@ function withTimeout(promise, ms=20000, label="La operación"){
     new Promise((_, reject)=> setTimeout(()=> reject(new Error(`${label} tardó demasiado. Revisa tu conexión a internet e intenta de nuevo.`)), ms))
   ]);
 }
+function showOfflineBanner(message){
+  const el = document.getElementById("offlineBanner");
+  if(!el) return;
+  el.textContent = message;
+  el.hidden = false;
+}
+function hideOfflineBanner(){
+  const el = document.getElementById("offlineBanner");
+  if(el) el.hidden = true;
+}
+function isOfflineError(err){
+  if(typeof navigator!=="undefined" && navigator.onLine===false) return true;
+  const msg = String((err && (err.code || err.message)) || "").toLowerCase();
+  return /conexi[oó]n|internet|offline|network|unavailable|deadline|failed to fetch|tard[oó] demasiado/.test(msg);
+}
+const TICKET_DOC_SAFE_BYTES = 1000000;
+function utf8Bytes(value){
+  const json = JSON.stringify(value);
+  try{ return new Blob([json]).size; }catch(e){ return json.length; }
+}
+function fitTicketDocument(clean){
+  if(utf8Bytes(clean) <= TICKET_DOC_SAFE_BYTES) return clean;
+  if(clean.image){
+    const without = { ...clean, image: null };
+    if(utf8Bytes(without) <= TICKET_DOC_SAFE_BYTES){
+      alert("El gasto con la foto pasa de 1 MB, el límite de la nube. Se guarda sin foto.");
+      return without;
+    }
+  }
+  const err = new Error("Este gasto pasa de 1 MB y no cabe en la nube. Quita texto de más o un XML muy largo, y vuelve a guardar.");
+  err.code = "outgo/doc-too-big";
+  throw err;
+}
 
 function addTicket(ticket){
   return (async ()=>{
     showSyncStatus("Guardando…");
     const image = await prepareTicketImageForSave(ticket.image);
-    const clean = stripUndefinedDeep({ ...ticket, image: image || null });
+    const clean = fitTicketDocument(stripUndefinedDeep({ ...ticket, image: image || null }));
     delete clean.id;
     const ref = await withTimeout(ticketsCollection().add(clean), 20000, "Guardar el gasto");
     showSyncStatus("Sincronizado ✓");
+    hideOfflineBanner();
     return ref.id;
   })();
 }
@@ -3469,10 +3522,11 @@ function updateTicket(ticket){
     showSyncStatus("Guardando…");
     const id = ticket.id;
     const image = await prepareTicketImageForSave(ticket.image);
-    const clean = stripUndefinedDeep({ ...ticket, image: image || null });
+    const clean = fitTicketDocument(stripUndefinedDeep({ ...ticket, image: image || null }));
     delete clean.id;
     await withTimeout(ticketsCollection().doc(String(id)).set(clean), 20000, "Guardar el gasto");
     showSyncStatus("Sincronizado ✓");
+    hideOfflineBanner();
     return id;
   })();
 }
@@ -3596,10 +3650,18 @@ function initAuth(){
       presenceInterval = setInterval(updatePresence, 60000);
       if(await maybeResumeAccountDeletion()) return;
       loadCustomStores();
-      await loadFiscalProfile();
-      await refreshDashboard();
-      await refreshHistory();
-      maybeStartTutorial();
+      try{
+        await loadFiscalProfile();
+        await refreshDashboard();
+        await refreshHistory();
+        hideOfflineBanner();
+        maybeStartTutorial();
+      }catch(err){
+        console.error(err);
+        showOfflineBanner(isOfflineError(err)
+          ? "Sin conexión. No se pudieron cargar tus gastos. Revisa tu red y recarga la página."
+          : "No se pudieron cargar tus gastos. Recarga la página.");
+      }
     } else {
       currentUser = null;
       clearInterval(presenceInterval);
@@ -4274,6 +4336,9 @@ document.getElementById("btnSave").addEventListener("click", async ()=>{
   }catch(err){
     console.error("Error guardando el ticket:", err);
     document.getElementById("syncStatus").classList.remove("show");
+    if(isOfflineError(err)){
+      showOfflineBanner("Sin conexión. El gasto sigue en el formulario, pero no se guardó. Intenta de nuevo cuando vuelva la red.");
+    }
     alert("No se pudo guardar el gasto: " + err.message + "\n\nRevisa tu conexión e intenta de nuevo — tus datos no se perdieron, siguen en el formulario.");
     return;
   }
@@ -6962,6 +7027,11 @@ document.getElementById("btnDeleteConfirm").addEventListener("click", ()=>{
   document.getElementById("deleteConfirmError").style.display = "none";
   performAccountDeletion();
 });
+
+window.addEventListener("offline", ()=>{
+  showOfflineBanner("Sin conexión. Puedes ver lo que ya cargó. Lo nuevo se guarda cuando vuelva la red.");
+});
+window.addEventListener("online", ()=> hideOfflineBanner());
 
 (async function init(){
   document.getElementById("todayLabel").textContent =
