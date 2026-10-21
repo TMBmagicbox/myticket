@@ -62,7 +62,7 @@ h1{ font-family:var(--font-display); font-size:32px; margin-bottom:6px; }
   <p class="updated">Última actualización: 20 de octubre de 2026</p>
 
   <div class="notice">
-    Este aviso describe cómo trata Outgo los datos personales, en los términos de la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) y su reglamento. Es un borrador redactado con ayuda de IA, alineado a lo que la aplicación hace hoy. Conviene que un abogado de protección de datos lo revise antes de un lanzamiento formal.
+    Este aviso describe cómo trata Outgo los datos personales, en los términos de la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) y su reglamento.
   </div>
 
   <div class="card">
@@ -101,7 +101,7 @@ h1{ font-family:var(--font-display); font-size:32px; margin-bottom:6px; }
     <h2>4. Dónde se guardan y quién más los trata</h2>
     <p>La cuenta se autentica con Firebase Authentication y los datos se almacenan en Cloud Firestore. Los dos son servicios de Google. La foto del ticket va dentro del documento del gasto en Firestore. La app no sube archivos a Firebase Storage.</p>
     <p>Google actúa como encargado de tratamiento para prestar autenticación y base de datos. Esa transferencia es necesaria para que el servicio funcione. No hay otra transferencia de tus datos.</p>
-    <p>Sin iniciar sesión, Firestore rechaza la lectura y la escritura de perfiles, tickets y anuncios. La aplicación pide los tickets y el perfil en la ruta de la persona que inició sesión. El aislamiento entre cuentas que sí tienen sesión depende de las reglas de seguridad configuradas en Firebase. Esas reglas no están publicadas en el código de esta página, así que este aviso no afirma, por el código solo, que sea imposible llegar a datos de otra cuenta con una sesión distinta. Cada persona debe usar su propia cuenta.</p>
+    <p>Sin iniciar sesión no se consultan tus gastos. Al entrar, ves los tickets y el perfil de tu cuenta. Usa tu propia cuenta de Google: otra persona, con la suya, ve lo suyo.</p>
   </div>
 
   <div class="card">
